@@ -89,6 +89,8 @@ build_prompt() {
 build_right_prompt() {
     prompt_vi_mode
     prompt_segment default magenta $(get_sandbox_info)
+    prompt_battery
+    prompt_end
 }
 
 prompt_host() {
@@ -105,7 +107,11 @@ prompt_vi_mode() {
 }
 
 prompt_git() {
-    prompt_segment default default "$(git_prompt_info)"    
+    prompt_segment default default " $(git_prompt_info)"    
+}
+
+prompt_battery() {
+    echo -n "$(battery_pct_prompt)"
 }
 
 prompt_new_line() {
