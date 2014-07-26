@@ -54,15 +54,6 @@ function vi_mode_prompt_info() {
   echo "${${KEYMAP/vicmd/$VI_NORMAL_MODE}/(main|viins)/$VI_INSERT_MODE}"
 }
 
-## YELP STUFF
-
-function get_sandbox_info() {
-	if [ x"$YELP_MYSQL_RW_PORT" = x ]; then
-		return
-	else
-		echo RW:$YELP_MYSQL_RW_PORT $PGNAME 
-	fi
-}
 
 ## Python
 
@@ -88,7 +79,6 @@ build_prompt() {
 
 build_right_prompt() {
     prompt_vi_mode
-    prompt_segment default magenta $(get_sandbox_info)
     prompt_battery
     prompt_end
 }
@@ -111,6 +101,7 @@ prompt_git() {
 }
 
 prompt_battery() {
+    prompt_segment default default
     echo -n "$(battery_pct_prompt)"
 }
 
@@ -118,5 +109,6 @@ prompt_new_line() {
     prompt_segment default magenta "
  $"
 }
+
 RPROMPT='$(build_right_prompt)'
 PROMPT='$(build_prompt)'
