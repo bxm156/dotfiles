@@ -108,7 +108,5 @@ prompt_new_line() {
     prompt_segment default magenta "
  $"
 }
-PROMPT='%{$fg[cyan]%}%m: %{$fg[yellow]%}$(get_pwd) $(vi_mode_prompt_info) $(git_prompt_info)%{$reset_color%}
-$ '
 RPROMPT='%{$fg[magenta]%}$(get_sandbox_info)%{$reset_color%}'
 PROMPT='$(build_prompt)'
