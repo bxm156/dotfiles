@@ -81,10 +81,14 @@ function get_pwd() {
 build_prompt() {
     prompt_host
     prompt_directory
-    prompt_vi_mode
     prompt_git
     prompt_new_line
     prompt_end
+}
+
+build_right_prompt() {
+    prompt_vi_mode
+    prompt_segment default magenta $(get_sandbox_info)
 }
 
 prompt_host() {
@@ -97,7 +101,7 @@ prompt_directory() {
 }
 
 prompt_vi_mode() {
-    prompt_segment green black "$(vi_mode_prompt_info)"
+    prompt_segment green black " $(vi_mode_prompt_info)"
 }
 
 prompt_git() {
@@ -108,5 +112,5 @@ prompt_new_line() {
     prompt_segment default magenta "
  $"
 }
-RPROMPT='%{$fg[magenta]%}$(get_sandbox_info)%{$reset_color%}'
+RPROMPT='$(build_right_prompt)'
 PROMPT='$(build_prompt)'
