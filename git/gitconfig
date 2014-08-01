@@ -17,6 +17,11 @@
 [color]
     ui = true
     diff = true
+[color "status"]
+    added = green
+    changed = blue
+    untracked = magenta
+    deleted = red
 [rerere]
     enabled =1
 [core]
