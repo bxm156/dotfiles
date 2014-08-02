@@ -56,6 +56,8 @@ export PATH=/nail/workflow:$PATH
 export PATH=/nail/scripts/:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
+bindkey "^R" history-incremental-search-backward
+
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
