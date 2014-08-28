@@ -52,8 +52,6 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/nail/workflow:$PATH
-export PATH=/nail/scripts/:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
 bindkey "^R" history-incremental-search-backward

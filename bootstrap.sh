@@ -1,4 +1,6 @@
 #!/bin/bash
+(cd ~/bmarty-dotfiles && git submodule init && git submodule update)
+
 ln -s ~/bmarty-dotfiles/oh-my-zsh .oh-my-zsh
 ln -s ~/bmarty-dotfiles/zsh .zsh
 ln -s ~/.zsh/zshrc .zshrc
