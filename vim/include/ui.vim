@@ -36,3 +36,16 @@ set softtabstop=4
 "Code Folding
 set foldmethod=indent
 set foldlevel=99
+
+"Window Control
+function! CloseQuickfix()
+    if(len(getqflist()) <= 1)
+        echo "No errors! Yippe!"
+        execute ":ccl"
+    endif
+endfunction
+autocmd BufWritePost,FileWritePost *.py call CloseQuickfix()
+aug QFClose
+    au!
+    au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
+aug END
