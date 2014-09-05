@@ -17,6 +17,9 @@ source ~/.vim/include/ui.vim
 source ~/.vim/include/python.vim
 
 
+"CTags
+source ~/.vim/include/ctags.vim
+
 "Swapfiles
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup

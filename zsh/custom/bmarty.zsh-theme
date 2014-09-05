@@ -78,7 +78,7 @@ build_prompt() {
 }
 
 build_right_prompt() {
-    prompt_vi_mode
+#    prompt_vi_mode
     prompt_battery
     prompt_end
 }

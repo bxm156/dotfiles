@@ -9,6 +9,8 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'rkulla/pydiction'
+Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'klen/python-mode'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
