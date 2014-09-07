@@ -26,6 +26,7 @@
     enabled =1
 [core]
     pager = less -F -X
+    editor = /usr/local/bin/vim
 [push]
     default = matching
 [help]
