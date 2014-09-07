@@ -50,7 +50,8 @@ plugins=(git vi-mode battery)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
+export PATH=$HOME/.zsh/scripts:$PATH
+export PATH=/usr/local/Cellar:$PATH
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
