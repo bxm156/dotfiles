@@ -1,0 +1,4 @@
+--python-kinds=-i
+--exclude=*/build/*
+--exclude=*/bower_components/*
+--exclude=*/static/*
