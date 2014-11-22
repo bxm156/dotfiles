@@ -32,5 +32,5 @@
 [help]
     autocorrect = 1
 [user]
-	name = Bryan Marty
-	email = bryan@bryanmarty.com
+    name = "Bryan Marty"
+    email = "bryanmarty@gmail.com"

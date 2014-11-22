@@ -45,7 +45,6 @@ ZSH_CUSTOM=$HOME/.zsh/custom
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-
 WORKON_HOME=$HOME/.env
 
 plugins=(git vi-mode battery virtualenvwrapper)
@@ -53,8 +52,8 @@ plugins=(git vi-mode battery virtualenvwrapper)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
 export PATH=$HOME/.zsh/scripts:$PATH
+export PATH=/usr/local/Cellar:$PATH
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
