@@ -14,4 +14,6 @@ ln -s ~/bmarty-dotfiles/tmux/tmux.conf .tmux.conf
 ln -s ~/bmarty-dotfiles/git/gitconfig .gitconfig
 ln -s ~/bmarty-dotfiles/ctags .ctags
 
+mkdir ~/.env
+
 chsh -s /bin/zsh
