@@ -1,20 +1,33 @@
+" Colors And Fonts
 colorscheme solarized
 set background="dark"
 set gfn=Monaco:h12
+syntax on
+
+" Line Numbering
+set number relativenumber
+
+" UI
+set showcmd
 set ruler
+set scrolloff=5 "Scroll Offset
+set report=0 " Always display lines X'd
+set title
+set cursorline
+
+" Command Menu
 set wildmenu
 set wildmode=list:longest,full
+
+" Preview Window
 set previewheight=17
+
+" Behavior
 set nostartofline
-set noshowcmd
-set backspace=2
-set report=0
-set scrolloff=2
-syntax on
-set title
+set backspace=indent,eol,start
+set hidden
 
 
-set number
 set showmatch
 set incsearch
 set hlsearch
@@ -22,10 +35,8 @@ set laststatus=2
 set ignorecase
 set smartcase
 set nobk
-set hidden
-set cursorline
-set showtabline=2
 
+" Python Indenting
 set smartindent
 set autoindent
 set expandtab
@@ -35,17 +46,4 @@ set softtabstop=4
 
 "Code Folding
 set foldmethod=indent
-set foldlevel=99
-
-"Window Control
-function! CloseQuickfix()
-    if(len(getqflist()) <= 1)
-        echo "No errors! Yippe!"
-        execute ":ccl"
-    endif
-endfunction
-autocmd BufWritePost,FileWritePost *.py call CloseQuickfix()
-aug QFClose
-    au!
-    au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
-aug END
+set foldlevel=100
