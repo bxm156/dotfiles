@@ -8,13 +8,14 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/syntastic'
-Plugin 'rkulla/pydiction'
-Plugin 'jmcantrell/vim-virtualenv'
-Plugin 'klen/python-mode'
-Plugin 'vim-scripts/TaskList.vim'
-Plugin 'vim-scripts/django.vim'
-Plugin 'bling/vim-airline'
-" The following are examples of different formats supported.
+"Plugin 'rkulla/pydiction'
+"Plugin 'jmcantrell/vim-virtualenv'
+"Plugin 'klen/python-mode'
+"Plugin 'vim-scripts/TaskList.vim'
+"Plugin 'vim-scripts/django.vim'
+"Plugin 'bling/vim-airline'
+
+"The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 "Plugin 'tpope/vim-fugitive'
