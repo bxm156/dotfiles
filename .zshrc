@@ -19,6 +19,9 @@ if ! zgen saved; then
   zgen load zsh-users/zsh-syntax-highlighting
   # generate the init script from plugins above
   vim +PluginInstall +qall
+  if ! python -c "import powerline" &> /dev/null; then
+    pip install --user powerline-status
+  fi
   zgen save
 fi
 
