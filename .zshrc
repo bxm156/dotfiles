@@ -83,7 +83,6 @@ ZSH_CUSTOM=$HOME/.zsh/custom
 
 plugins=(git battery) # vi-mode battery virtualenvwrapper)
 
-source $ZSH/oh-my-zsh.sh
 # User configuration
 #export PATH=$HOME/.zsh/scripts:$PATH
 #export PATH=/usr/local/Cellar:$PATH
