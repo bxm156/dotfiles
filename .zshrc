@@ -1,3 +1,6 @@
+PYTHONUSERBASE=$HOME/.local
+export PATH=$PYTHONUSERBASE:$PATH
+
 if [[ ! -d "$HOME/.zgen" ]]; then
     git clone https://github.com/tarjoilija/zgen.git $HOME/.zgen
 fi
