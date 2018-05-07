@@ -12,6 +12,9 @@ fi
 source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
+  if ! python -c "import powerline" &> /dev/null; then
+    pip install --user powerline-status
+  fi
 
   # specify plugins here
   zgen oh-my-zsh
@@ -20,13 +23,17 @@ if ! zgen saved; then
   zgen oh-my-zsh plugins/sudo
   zgen oh-my-zsh plugins/command-not-found
   zgen load zsh-users/zsh-syntax-highlighting
+
+  # Powerline bindings
+  zgen powerline/powerline powerline/bindings/zsh/powerline.zsh
+
   # generate the init script from plugins above
   vim +PluginInstall +qall
-  if ! python -c "import powerline" &> /dev/null; then
-    pip install --user powerline-status
-  fi
   zgen save
 fi
+
+
+powerline-daemon -q
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
