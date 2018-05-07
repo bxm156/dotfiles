@@ -1,5 +1,5 @@
 if [[ ! -d "$HOME/.zgen" ]]; then
-    git clone https://github.com/tarjoilija/zgen.git
+    git clone https://github.com/tarjoilija/zgen.git $HOME/.zgen
 fi
 
 if [[ ! -d "$HOME/.vim/bundle/Vundle.vim" ]]; then
