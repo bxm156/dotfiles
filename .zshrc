@@ -18,6 +18,7 @@ if ! zgen saved; then
   zgen oh-my-zsh plugins/command-not-found
   zgen load zsh-users/zsh-syntax-highlighting
   # generate the init script from plugins above
+  vim +PluginInstall +qall
   zgen save
 fi
 
