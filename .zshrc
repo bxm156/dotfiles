@@ -25,7 +25,7 @@ if ! zgen saved; then
   zgen load zsh-users/zsh-syntax-highlighting
 
   # Powerline bindings
-  zgen powerline/powerline powerline/bindings/zsh/powerline.zsh
+  zgen load powerline/powerline powerline/bindings/zsh/powerline.zsh
 
   # generate the init script from plugins above
   vim +PluginInstall +qall
