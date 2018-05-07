@@ -1,6 +1,6 @@
 " set the runtime path to include Vundle and initialize
-set rtp+=~/bmarty-dotfiles/vim/bundle/Vundle.vim
-set rtp+=~/bmarty-dotfiles/vim/vundles
+set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/vundles
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
