@@ -4,7 +4,7 @@
     cl = clone
     ci = commit
     co = checkout
-    br = branch 
+    br = branch
     diff = diff --word-diff
     dc = diff --cached
 
@@ -26,6 +26,8 @@
     enabled =1
 [core]
     pager = less -F -X
+    editor = /usr/local/bin/vim
+	excludesfile = /Users/bryanmarty/.gitignore_global
 [push]
     default = matching
 [help]
@@ -33,3 +35,7 @@
 [user]
     name = "Bryan Marty"
     email = "bryanmarty@gmail.com"
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true

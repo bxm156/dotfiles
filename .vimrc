@@ -6,8 +6,6 @@ set nocompatible
 set t_Co=256
 
 imap jj <Esc>
-nnoremap <F7> :tabp<CR>
-nnoremap <F8> :tabn<CR>
 
 "UI
 source ~/.vim/include/ui.vim

@@ -1,8 +1,0 @@
-#!/bin/bash
-
-script_path=`dirname $0`
-find . -name "*.py" \
-    -print0 \
-| xargs -0 grep -n --exclude="*.svn*" --exclude="*.tox*" "$@" \
-| awk -f $script_path/formatfind.awk \
-| grep "$@" --color=auto
