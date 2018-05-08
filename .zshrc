@@ -92,6 +92,15 @@ export PATH=/usr/local/sbin:$PATH
 
 bindkey "^R" history-incremental-search-backward
 
+# Predictable SSH authentication socket location.
+SOCK="/tmp/ssh-agent-$USER"
+if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]
+then
+    ln -sf $SSH_AUTH_SOCK $SOCK
+fi
+export SSH_AUTH_SOCK=$SOCK
+
+
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
@@ -121,11 +130,11 @@ bindkey "^R" history-incremental-search-backward
 ### Added by the Heroku Toolbelt
 #export PATH="/usr/local/heroku/bin:$PATH"
 #source ~/perl5/perlbrew/etc/bashrc
-export SSH_AUTH_SOCK=/Users/bryanmarty/.gnupg/S.gpg-agent.ssh
+#export SSH_AUTH_SOCK=/Users/bryanmarty/.gnupg/S.gpg-agent.ssh
 #source /usr/local/share/zsh/site-functions/_aws
 
 #export PYTHONPATH="/usr/local/google_appengine:$PYTHONPATH"
-export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
+#export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 
 # The next line updates PATH for the Google Cloud SDK.
 #if [ -f '/Users/bryanmarty/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/bryanmarty/Downloads/google-cloud-sdk/path.zsh.inc'; fi
