@@ -133,4 +133,4 @@ bindkey "^R" history-incremental-search-backward
 # The next line enables shell command completion for gcloud.
 #if [ -f '/Users/bryanmarty/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/bryanmarty/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 #[[ -s "$HOME/.avn/bin/avn.sh" ]] && source "$HOME/.avn/bin/avn.sh" # load avn
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
