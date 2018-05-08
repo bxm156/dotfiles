@@ -92,15 +92,6 @@ export PATH=/usr/local/sbin:$PATH
 
 bindkey "^R" history-incremental-search-backward
 
-# Predictable SSH authentication socket location.
-SOCK="/tmp/ssh-agent-$USER"
-if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]
-then
-    ln -sf $SSH_AUTH_SOCK $SOCK
-fi
-export SSH_AUTH_SOCK=$SOCK
-
-
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
