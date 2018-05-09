@@ -23,7 +23,7 @@ if ! zgen saved; then
   zgen oh-my-zsh
   zgen oh-my-zsh plugins/git
   zgen oh-my-zsh plugins/battery
-  zgen oh-my-zsh plugins/sudo
+  # zgen oh-my-zsh plugins/sudo
   zgen oh-my-zsh plugins/command-not-found
   zgen load zsh-users/zsh-syntax-highlighting
 
@@ -90,6 +90,8 @@ plugins=(git battery) # vi-mode battery virtualenvwrapper)
 export PATH=/usr/local/sbin:$PATH
 #export MANPATH="/usr/local/man:$MANPATH"
 
+bindkey -v
+bindkey jj vi-cmd-mode
 bindkey "^R" history-incremental-search-backward
 
 # You may need to manually set your language environment
