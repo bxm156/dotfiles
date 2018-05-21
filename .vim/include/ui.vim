@@ -15,6 +15,8 @@ set report=0 " Always display lines X'd
 set title
 set cursorline
 
+set colorcolumn=79 "Python max length line indicator
+
 " Command Menu
 set wildmenu
 set wildmode=list:longest,full
