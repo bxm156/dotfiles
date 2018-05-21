@@ -26,6 +26,8 @@ if ! zgen saved; then
   # zgen oh-my-zsh plugins/sudo
   zgen oh-my-zsh plugins/command-not-found
   zgen load zsh-users/zsh-syntax-highlighting
+  # NVM
+  zgen load lukechilds/zsh-nvm
 
   # Powerline bindings
   zgen load powerline/powerline powerline/bindings/zsh/powerline.zsh
