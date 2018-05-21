@@ -1,4 +1,7 @@
 --python-kinds=-i
---exclude=*/build/*
---exclude=*/bower_components/*
---exclude=*/static/*
+--exclude=build
+--exclude=bower_components
+--exclude=static
+--exclude=node_modules
+--exclude=virtualenv_run
+--exclude=docker-venv
