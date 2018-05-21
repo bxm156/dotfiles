@@ -26,7 +26,7 @@
     enabled =1
 [core]
     pager = less -F -X
-    editor = /usr/local/bin/vim
+    editor = vim
 	excludesfile = /Users/bryanmarty/.gitignore_global
 [push]
     default = matching
