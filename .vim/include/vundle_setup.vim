@@ -8,6 +8,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'majutsushi/tagbar'
 "Plugin 'rkulla/pydiction'
 "Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'klen/python-mode'
