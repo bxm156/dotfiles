@@ -9,6 +9,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'majutsushi/tagbar'
+Plugin 'davidhalter/jedi-vim'
 "Plugin 'rkulla/pydiction'
 "Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'klen/python-mode'

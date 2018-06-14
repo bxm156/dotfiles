@@ -18,6 +18,9 @@ if ! zgen saved; then
   if ! python -c "import powerline" &> /dev/null; then
     pip install --user powerline-status
   fi
+  if ! python -c "import jedi" &> /dev/null; then
+    pip install --user jedi
+  fi
 
   # specify plugins here
   zgen oh-my-zsh
