@@ -1,3 +1,4 @@
+[[ -r ~/.bashrc ]] && . ~/.bashrc
 # Predictable SSH authentication socket location.
 # Keeping the symlink in $HOME allows pam_ssh_agent_auth to work
 SOCK="$HOME/.agent-sshmosh-$USER.sock"
