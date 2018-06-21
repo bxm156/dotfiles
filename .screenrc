@@ -1,5 +1,17 @@
 defshell -zsh
-term xterm-color
+
+# Enable 256 color term
+term xterm-256color
+
+# Allow bold colors - necessary for some reason
 attrcolor b ".I"
-termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+
+# Don't think we need this anymore...
+#termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+
+# Erase background with current bg color
 defbce "on"
+
+#Screen will wait no more than 5 milliseconds between characters when detecting an input sequence
+# https://vi.stackexchange.com/questions/11382/delay-between-hitting-esc-in-insert-mode-and-switching-to-normal-mode-within
+> maptimeout 5 
