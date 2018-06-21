@@ -22,3 +22,5 @@ source ~/.vim/include/ctags.vim
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 
+"Disable viminfo for now
+set viminfo=""
