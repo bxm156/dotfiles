@@ -15,3 +15,7 @@ defbce "on"
 #Screen will wait no more than 5 milliseconds between characters when detecting an input sequence
 # https://vi.stackexchange.com/questions/11382/delay-between-hitting-esc-in-insert-mode-and-switching-to-normal-mode-within
 maptimeout 5
+
+# Disable lockscreen
+bind ^x
+bind x
