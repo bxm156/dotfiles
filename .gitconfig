@@ -34,8 +34,13 @@
     autocorrect = 1
 [user]
     name = "Bryan Marty"
-    email = "bryanmarty@gmail.com"
+	email = bryan@bryanmarty.com
+	signingkey = 5E83944D
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg2
