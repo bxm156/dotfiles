@@ -21,10 +21,10 @@ source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
   if ! python -c "import powerline" &> /dev/null; then
-    pip install --user powerline-status
+    pip install --user powerline-status -i https://pypi.org/simple
   fi
   if ! python -c "import jedi" &> /dev/null; then
-    pip install --user jedi
+    pip install --user jedi -i https://pypi.org/simple
   fi
 
   # specify plugins here
