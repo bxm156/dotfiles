@@ -1,0 +1,10 @@
+call plug#begin()
+Plug 'tpope/vim-sensible'    
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+call plug#end()
+
+filetype indent on
+syntax on
+
+silent! colorscheme catpuccin_moca
+
