@@ -4,17 +4,19 @@
 # Inserts a blank line between shell prompts
 add_newline = true
 
-palette = "catppuccin_frappe"
+palette = "catppuccin_mocha"
 
 [container]
 disabled = true
 
 [character]
 # Note the use of Catppuccin color 'peach'
-success_symbol = "[[󰄛](green) ❯](peach)"
-error_symbol = "[[󰄛](red) ❯](peach)"
-vimcmd_symbol = "[󰄛 ❮](subtext1)" # For use with zsh-vi-mode
+success_symbol = "[[](green) ❯](peach)"
+error_symbol = "[󰯉[](red) ❯](peach)"
+vimcmd_symbol = "[ ❮](subtext1)" # For use with zsh-vi-mode
 
+[username]
+show_always = true
 
 [localip]
 ssh_only = false
