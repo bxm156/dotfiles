@@ -1,0 +1,14 @@
+Include ~/.ssh/1Password/config
+
+Host yelp
+  HostName dev165-uswest1adevc.dev.yelpcorp.com
+  User bmarty
+  ForwardAgent yes
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/1Password/SHA256_4+g+jD4sPccDAkNQEQ42dvRk8F_2xxUFQwruaQtnlZw.pub
+
+Host engineering-bay
+  HostName 192.168.5.6
+  ForwardAgent yes
+  User bryanmarty
+
