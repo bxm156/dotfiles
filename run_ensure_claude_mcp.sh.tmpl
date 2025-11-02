@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CLAUDE_FILE="$HOME/.claude.json"
+SOURCE_DIR="{{ .chezmoi.sourceDir }}"   # chezmoi variable for your source state dir
+MCP_FILE="$SOURCE_DIR/data/mcp.json"
+
+# Ensure target exists
+if [ ! -f "$CLAUDE_FILE" ]; then
+  exit 0
+fi
+
+
+# Read forced values
+forced_json=$(jq -c '.' "$MCP_FILE")
+
+# Merge: for each key in forced_json, set it in CLAUDE_FILE
+tmp=$(mktemp)
+jq --argjson forced "$forced_json" '(
+  . as $orig |
+  $forced as $f |
+  reduce ( $f | keys[] ) as $k ( $orig;
+    .[$k] = $f[$k]
+  )
+)' "$CLAUDE_FILE" > "$tmp" && mv "$tmp" "$CLAUDE_FILE"

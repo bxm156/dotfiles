@@ -1,0 +1,24 @@
+{
+ "mcpServers": {
+    "firecrawl": {
+      "type": "http",
+      "url": "http://192.168.6.99/firecrawl"
+    },
+    "github": {
+      "type": "http",
+      "url": "http://192.168.6.99/github"
+    },
+    "sequentialthinking": {
+      "type": "http",
+      "url": "http://192.168.6.99/sequentialthinking"
+    },
+    "context7": {
+      "type": "http",
+      "url": "http://192.168.6.99/context7"
+    },
+    "brave-search": {
+      "type": "http",
+      "url": "http://192.168.6.99/brave-search"
+    }
+  }
+ }
