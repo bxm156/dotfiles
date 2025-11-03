@@ -5,6 +5,16 @@ CLAUDE_FILE="$HOME/.claude.json"
 SOURCE_DIR="{{ .chezmoi.sourceDir }}"   # chezmoi variable for your source state dir
 MCP_FILE="$SOURCE_DIR/data/mcp.json"
 
+# Use local jq if system jq is not available
+if command -v jq &> /dev/null; then
+  JQ="jq"
+elif [ -x "$HOME/.local/bin/jq" ]; then
+  JQ="$HOME/.local/bin/jq"
+else
+  echo "Error: jq is not installed. Please install jq or run chezmoi to install the local binary."
+  exit 1
+fi
+
 # Ensure target exists
 if [ ! -f "$CLAUDE_FILE" ]; then
   exit 0
@@ -12,11 +22,11 @@ fi
 
 
 # Read forced values
-forced_json=$(jq -c '.' "$MCP_FILE")
+forced_json=$("$JQ" -c '.' "$MCP_FILE")
 
 # Merge: for each key in forced_json, set it in CLAUDE_FILE
 tmp=$(mktemp)
-jq --argjson forced "$forced_json" '(
+"$JQ" --argjson forced "$forced_json" '(
   . as $orig |
   $forced as $f |
   reduce ( $f | keys[] ) as $k ( $orig;
