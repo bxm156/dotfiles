@@ -3,5 +3,8 @@
   isWork = {{ contains "yelp" .chezmoi.hostname }}
   isHome = {{ contains "home" .chezmoi.hostname }}
 
+  # Devcontainer detection - checks for common devcontainer environment variables
+  isDevContainer = {{ or (env "REMOTE_CONTAINERS") (env "CODESPACES") (env "VSCODE_REMOTE_CONTAINERS_SESSION") | not | not }}
+
   # Centralized auth token
   authToken = "bmarty/claudecode"
