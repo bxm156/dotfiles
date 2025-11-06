@@ -1,10 +1,12 @@
 [data]
   # Centralized hostname checks - modify these patterns as needed
-  isWork = {{ contains "yelp" .chezmoi.hostname }}
-  isHome = {{ contains "home" .chezmoi.hostname }}
+  isWork = {{ or (eq .chezmoi.hostname "H3HDJW2R12") (eq .chezmoi.hostname "yhap" ) }}
+  isHome = {{ eq .chezmoi.hostname "GAMING-RIG" }}
 
   # Devcontainer detection - checks for common devcontainer environment variables
   isDevContainer = {{ or (env "REMOTE_CONTAINERS") (env "CODESPACES") (env "VSCODE_REMOTE_CONTAINERS_SESSION") | not | not }}
 
+{{ if .isWork }}
   # Centralized auth token
   authToken = "bmarty/claudecode"
+{{ end }}

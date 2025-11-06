@@ -29,8 +29,21 @@
       "url": "https://chatproxy.yelpcorp.com/github/mcp",
       "headers": {
         "x-litellm-api-key": "Bearer {{ .authToken }}"
-        
+
       }
+    },
+    "sourcegraph": {
+      "type": "http",
+      "url": "https://yelp-ai-tools-platform.yelpcorp.com/sourcegraph_mcp/mcp/"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--extension",
+        "--browser",
+        "chrome"
+      ]
     },
     "yelp-google-drive": {
       "type": "http",
