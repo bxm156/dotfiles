@@ -1,0 +1,7 @@
+[data]
+  # Centralized hostname checks - modify these patterns as needed
+  isWork = {{ contains "yelp" .chezmoi.hostname }}
+  isHome = {{ contains "home" .chezmoi.hostname }}
+
+  # Centralized auth token
+  authToken = "bmarty/claudecode"
