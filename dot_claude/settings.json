@@ -12,7 +12,10 @@
     "LITELLM_BASE_URL": "https://chatproxy.yelpcorp.com"
   },
   "mcpServers": {
-    "firecrawl": {
+      "basic-memory": {
+        "type": "http",
+        "url": "http://192.168.6.99/basic-memory"
+    },
       "type": "http",
       "url": "http://192.168.6.99/firecrawl"
     },
