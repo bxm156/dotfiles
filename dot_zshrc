@@ -111,6 +111,13 @@ alias cme='chezmoi edit'
 alias cma='chezmoi apply'
 alias cm='chezmoi'
 
+# Load modern CLI tools (fzf, zoxide, eza, bat)
+if [[ -d "$HOME/.config/zsh/tools" ]]; then
+    for tool_config in "$HOME/.config/zsh/tools"/*.zsh; do
+        [[ -f "$tool_config" ]] && source "$tool_config"
+    done
+fi
+
 #Star ship
 eval "$(starship init zsh)"
 

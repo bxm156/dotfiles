@@ -1,12 +1,13 @@
+# oh-my-zsh doesn't use version tags, using master branch (2025-11-03)
 [".oh-my-zsh"]
     type = "archive"
-    url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
+    url = "https://github.com/ohmyzsh/ohmyzsh/archive/refs/heads/master.tar.gz"
     exact = true
     stripComponents = 1
     refreshPeriod = "168h"
 [".oh-my-zsh/custom/plugins/zsh-vi-mode"]
     type = "archive"
-    url = "https://github.com/jeffreytse/zsh-vi-mode/archive/refs/tags/v0.11.0.tar.gz"
+    url = "https://github.com/jeffreytse/zsh-vi-mode/archive/refs/tags/v0.12.0.tar.gz"
     exact = true
     stripComponents = 1
     refreshPeriod = "168h"
@@ -27,6 +28,62 @@
 {{- end }}
 [".local/bin/jq"]
     type = "file"
-    url = "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-{{ $jqOS }}-{{ $jqArch }}"
+    url = "https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-{{ $jqOS }}-{{ $jqArch }}"
     executable = true
     refreshPeriod = "672h"
+
+# fzf - Fuzzy finder for command-line (Ctrl+R history, Ctrl+T files, Alt+C dirs)
+{{- $fzfArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $fzfArch = "amd64" }}
+{{- else if eq .chezmoi.arch "arm64" }}
+{{-   $fzfArch = "arm64" }}
+{{- end }}
+[".local/bin/fzf"]
+    type = "archive"
+    url = "https://github.com/junegunn/fzf/releases/download/v0.66.1/fzf-0.66.1-{{ .chezmoi.os }}_{{ $fzfArch }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+
+# zoxide - Smart cd replacement that learns your habits
+{{- $zoxideTarget := "" }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if eq .chezmoi.arch "amd64" }}
+{{-     $zoxideTarget = "x86_64-unknown-linux-musl" }}
+{{-   else if eq .chezmoi.arch "arm64" }}
+{{-     $zoxideTarget = "aarch64-unknown-linux-musl" }}
+{{-   end }}
+{{- else if eq .chezmoi.os "darwin" }}
+{{-   if eq .chezmoi.arch "amd64" }}
+{{-     $zoxideTarget = "x86_64-apple-darwin" }}
+{{-   else if eq .chezmoi.arch "arm64" }}
+{{-     $zoxideTarget = "aarch64-apple-darwin" }}
+{{-   end }}
+{{- end }}
+[".local/bin/zoxide"]
+    type = "archive"
+    url = "https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.8/zoxide-0.9.8-{{ $zoxideTarget }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+
+# bat - cat with syntax highlighting and git integration
+{{- $batTarget := "" }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if eq .chezmoi.arch "amd64" }}
+{{-     $batTarget = "x86_64-unknown-linux-musl" }}
+{{-   else if eq .chezmoi.arch "arm64" }}
+{{-     $batTarget = "aarch64-unknown-linux-musl" }}
+{{-   end }}
+{{- else if eq .chezmoi.os "darwin" }}
+{{-   if eq .chezmoi.arch "amd64" }}
+{{-     $batTarget = "x86_64-apple-darwin" }}
+{{-   else if eq .chezmoi.arch "arm64" }}
+{{-     $batTarget = "aarch64-apple-darwin" }}
+{{-   end }}
+{{- end }}
+[".local/bin/bat"]
+    type = "archive"
+    url = "https://github.com/sharkdp/bat/releases/download/v0.26.0/bat-v0.26.0-{{ $batTarget }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    stripComponents = 1
