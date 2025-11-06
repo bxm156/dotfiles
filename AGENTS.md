@@ -1,256 +1,577 @@
-# AGENTS.md
+# AGENTS.md - Chezmoi Dotfiles Implementation Guide
 
-This repository manages dotfiles using **chezmoi** - a dotfile management tool with templating support.
+Comprehensive guide for AI agents working with this chezmoi-managed dotfiles repository.
 
-## Overview
+## Critical Path Definitions
 
-**Repository Type:** Dotfiles configuration
-**Primary Tool:** chezmoi
-**Languages:** Shell, Go Templates, TOML, JSON
-**Target:** Linux/macOS personal development environment
+### Source Directory (This Repository)
+- **Path in Devcontainer**: `/workspaces/dotfiles`
+- **Path on Local Machine**: `~/.local/share/chezmoi`
+- **Purpose**: Contains chezmoi source files with special naming conventions
+- **Key Point**: This is where you edit files and manage the dotfiles configuration
 
-## Dev Environment Setup
+### Target Directory (Applied Dotfiles)
+- **Path**: `~` (user's home directory, e.g., `/home/user` or `/home/vscode`)
+- **Purpose**: Where dotfiles are actually used by the system
+- **Key Point**: Never edit files here directly - always edit in source directory
 
-### Initial Setup
-```bash
-# Clone and initialize
-sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply bxm156
+### Test Container Paths
+- **Source Mount**: `/home/user/.local/share/chezmoi` (read-only, mounted from `/workspaces/dotfiles`)
+- **Target**: `/home/user` (where dotfiles get applied during test)
+- **Working Directory**: `/home/user`
 
-# Navigate to source directory
-chezmoi cd
+## Understanding Chezmoi
+
+**⚠️ CRITICAL WARNING FOR AI AGENTS: NEVER run `chezmoi apply` in the devcontainer or main development environment. ONLY test changes using `mise run test` which runs in an isolated container. The devcontainer is for editing source files only.**
+
+Chezmoi manages dotfiles across multiple machines using:
+- **Templating**: Machine-specific configurations with Go templates
+- **External Dependencies**: Auto-downloads tools, plugins, binaries
+- **Safe Workflows**: Preview before applying changes
+- **State Tracking**: Knows what's been applied and when
+
+### File Naming Conventions
+
+| Source Filename | Target Result | Notes |
+|----------------|---------------|-------|
+| `dot_zshrc` | `~/.zshrc` | `dot_` prefix becomes `.` |
+| `dot_config/starship.toml` | `~/.config/starship.toml` | Directory structure preserved |
+| `file.tmpl` | `~/file` | Template processed, `.tmpl` removed |
+| `dot_zshrc.tmpl` | `~/.zshrc` | Both transformations applied |
+| `run_once_install.sh` | Executed once | Runs on first apply only |
+| `run_script.sh` | Executed always | Runs every apply |
+| `executable_script` | Made executable | Preserves executable bit |
+
+### Template Processing Flow
+
+```
+Source File (with .tmpl) → Go Template Processing → Target File
+                              ↓
+                    Uses variables from .chezmoi.toml.tmpl
 ```
 
-### Directory Structure
-- Source state: `~/.local/share/chezmoi`
-- Target state: `~` (home directory)
-- All files in source are prefixed/suffixed according to chezmoi conventions
+## Repository Structure
 
-### Required Tools
-- **chezmoi** - Dotfile manager
-- **git** - Version control
-- **jq** - JSON processor (auto-installed via .chezmoiexternal.toml.tmpl)
-- **curl/wget** - For downloading external dependencies
-
-## Commands
-
-### Primary Workflow
-```bash
-# Check status
-chezmoi status
-
-# See what would change
-chezmoi diff
-
-# Apply changes
-chezmoi apply
-
-# Refresh external dependencies (oh-my-zsh, plugins, binaries)
-chezmoi apply --refresh-externals
-
-# Edit a file in source state
-chezmoi edit ~/.vimrc
-
-# Add new file to chezmoi
-chezmoi add ~/.newfile
-
-# Test template rendering
-chezmoi execute-template < path/to/file.tmpl
+```
+/workspaces/dotfiles/          # SOURCE DIRECTORY (edit here)
+├── .chezmoi.toml.tmpl         # Template variables & configuration
+├── .chezmoiexternal.toml.tmpl # External dependencies (oh-my-zsh, tools)
+├── .chezmoiignore             # Files to skip during apply
+├── .chezmoiscripts/           # Scripts executed during apply
+│   └── run_once_install-starship.sh
+├── data/                      # Data files for templates
+│   └── mcp.json.tmpl         # Claude MCP configuration
+├── dot_zshrc.tmpl            # → ~/.zshrc (Zsh config)
+├── dot_config/               # → ~/.config/ directory
+│   └── starship.toml         # → ~/.config/starship.toml
+├── dot_claude/               # → ~/.claude/ directory
+│   └── settings.json.tmpl    # → ~/.claude/settings.json
+├── .mise.toml                # Task automation (test commands)
+├── docker-compose.yml        # Test container configuration
+├── CLAUDE.md                 # Quick reference rules
+└── AGENTS.md                 # This file - detailed guide
 ```
 
-### File Operations
-```bash
-# Navigate to source directory
-chezmoi cd
+## Template System
 
-# Update from git and apply
-chezmoi update
+### Template Variables in `.chezmoi.toml.tmpl`
 
-# Pull latest without applying
-cd ~/.local/share/chezmoi && git pull
+```toml
+[data]
+  # Hostname-based environment detection
+  isWork = {{ contains "yelp" .chezmoi.hostname }}
+  isHome = {{ contains "home" .chezmoi.hostname }}
+
+  # Devcontainer detection
+  isDevContainer = {{ or (env "REMOTE_CONTAINERS") (env "CODESPACES") | not | not }}
+
+  # Auth token (safe - references keychain)
+  authToken = "bmarty/claudecode"
 ```
 
-## Code Conventions
-
-### Do ✅
-
-**File Naming:**
-- Use chezmoi naming conventions:
-  - `dot_` → creates `.` prefix in home dir
-  - `.tmpl` → template file (Go templating)
-  - `run_once_` → script runs once
-  - `executable_` → sets executable permissions
-  - `private_` → sets 0600 permissions
-
-**Shell Scripts:**
-- Start with `#!/usr/bin/env bash`
-- Include `set -euo pipefail` for safety
-- Quote all variables: `"$VAR"` not `$VAR`
-- Use `command -v` to check for commands
-- Use `[[ ]]` for conditionals
-
-**Templates:**
-- Use `{{- }}` to trim whitespace
-- Keep template logic simple
-- Test with `chezmoi execute-template`
-- Document complex logic
-
-**External Dependencies:**
-- Add to `.chezmoiexternal.toml.tmpl`
-- Include `refreshPeriod` for auto-updates
-- Set `executable = true` for binaries
-- Use template variables for OS/arch-specific URLs
-
-**Git Workflow:**
-- Test with `chezmoi diff` before applying
-- Commit from source directory: `chezmoi cd`
-- Write clear commit messages
-- Never commit secrets
-
-### Don't ❌
-
-- Don't edit files in `~` directly - use `chezmoi edit`
-- Don't commit secrets or API keys
-- Don't use hardcoded paths - use chezmoi template variables
-- Don't skip `chezmoi diff` before applying
-- Don't modify managed files outside of chezmoi
-- Don't use `which` - use `command -v` instead
-- Don't use unquoted variables in shell scripts
-- Don't add external dependencies as manual scripts - use `.chezmoiexternal.toml.tmpl`
-
-## Architecture
-
-### Template System
-Chezmoi uses Go's `text/template` syntax. Key variables:
+### Built-in Chezmoi Variables
 
 ```go
-{{ .chezmoi.os }}           // "linux", "darwin", etc.
-{{ .chezmoi.arch }}         // "amd64", "arm64", etc.
-{{ .chezmoi.hostname }}     // machine hostname
-{{ .chezmoi.username }}     // current user
-{{ .chezmoi.sourceDir }}    // source directory path
-{{ .chezmoi.homeDir }}      // home directory path
+{{ .chezmoi.os }}           // Operating system: "linux", "darwin", "windows"
+{{ .chezmoi.arch }}         // Architecture: "amd64", "arm64", "386"
+{{ .chezmoi.hostname }}     // Machine hostname
+{{ .chezmoi.username }}     // Current username
+{{ .chezmoi.homeDir }}      // Home directory absolute path
+{{ .chezmoi.sourceDir }}    // Source directory absolute path
 ```
 
-### External Dependency Management
-`.chezmoiexternal.toml.tmpl` handles:
-- Git repositories (oh-my-zsh, plugins)
-- Binary downloads (jq, tools)
-- Archives and compressed files
-- OS/architecture-specific assets
+### Template Examples
 
-Types: `file`, `archive`, `archive-file`, `git-repo`
-
-### Scripts
-- `run_once_*.sh` - Execute once (tracked in state)
-- `run_*.sh` - Execute on every `chezmoi apply`
-- Scripts run in sorted order
-
-### Configuration Data
-`data/*.json` files provide data for templates:
-- `mcp.json` - Claude MCP server configuration
-
-## Testing
-
-### Before Committing
-```bash
-# 1. Check diff
-chezmoi diff
-
-# 2. Test templates
-chezmoi execute-template < file.tmpl
-
-# 3. Verify apply works
-chezmoi apply --dry-run --verbose
-
-# 4. Apply for real
-chezmoi apply
-
-# 5. Test in clean environment if possible
-```
-
-### Validation Commands
-```bash
-# Verify shell scripts
-shellcheck script.sh
-
-# Check JSON validity
-jq empty data/mcp.json
-
-# Verify TOML syntax
-chezmoi execute-template < .chezmoiexternal.toml.tmpl | grep -v '^$'
-```
-
-## Pull Request Instructions
-
-### Before Submitting
-1. Run `chezmoi diff` to verify changes
-2. Test template rendering for `.tmpl` files
-3. Verify no secrets are committed
-4. Update CLAUDE.md or AGENTS.md if adding new patterns
-5. Test on target system if possible
-
-### Title Format
-```
-type: brief description
-
-Examples:
-feat: add neovim configuration
-fix: correct jq download URL for macOS
-docs: update CLAUDE.md with new conventions
-chore: update oh-my-zsh to latest
-```
-
-### Checklist
-- [ ] No secrets or sensitive data
-- [ ] Templates render correctly
-- [ ] Shell scripts pass shellcheck
-- [ ] External URLs are valid and accessible
-- [ ] Changes tested with `chezmoi apply`
-
-## Project-Specific Notes
-
-### MCP Integration
-- Claude MCP configuration managed via `data/mcp.json`
-- Synced to `~/.claude.json` via `run_ensure_claude_mcp.sh.tmpl`
-- Uses local or system `jq` (auto-downloaded if missing)
-
-### Zsh Setup
-- Framework: oh-my-zsh (auto-updated weekly)
-- Plugins: git, cp, zsh-vi-mode, zsh-autosuggestions, mise
-- Prompt: Starship
-- Vi mode with `jj` escape
-
-### SSH Configuration
-- Templated configs in `.chezmoitemplates/.ssh/`
-- Manage keys and config separately
-
-## Common Patterns
-
-### Adding OS-Specific Config
-```toml
-{{- if eq .chezmoi.os "darwin" }}
-# macOS-specific config
-{{- else if eq .chezmoi.os "linux" }}
-# Linux-specific config
+**Conditional Configuration:**
+```go
+{{- if .isWork }}
+export WORK_VAR="internal-value"
+{{- else }}
+export PERSONAL_VAR="public-value"
 {{- end }}
 ```
 
-### Adding External Binary
-```toml
-[".local/bin/tool"]
-    type = "file"
-    url = "https://example.com/tool-{{ .chezmoi.os }}-{{ .chezmoi.arch }}"
-    executable = true
-    refreshPeriod = "672h"  # 4 weeks
+**Platform-Specific:**
+```go
+{{- if eq .chezmoi.os "darwin" }}
+alias ls='ls -G'
+export HOMEBREW_PREFIX="/opt/homebrew"
+{{- else if eq .chezmoi.os "linux" }}
+alias ls='ls --color=auto'
+{{- end }}
 ```
 
-### Creating Run-Once Script
-1. Create `.chezmoiscripts/run_once_install-something.sh`
-2. Make executable: `chmod +x script.sh`
-3. Chezmoi will execute it once on next apply
+**Including External Data:**
+```go
+{{- $mcpData := includeTemplate "data/mcp.json.tmpl" . | fromJson }}
+"mcpServers": {{ $mcpData.mcpServers | toPrettyJson | indent 2 }}
+```
 
-## Help & Resources
+## Testing Workflow
 
-- Chezmoi docs: https://www.chezmoi.io/
-- Template reference: https://www.chezmoi.io/reference/templates/
-- External format: https://www.chezmoi.io/reference/special-files/chezmoiexternal-format/
+### Overview
+
+Testing happens in an isolated Debian container that simulates a fresh user environment.
+
+### Running Tests
+
+```bash
+# Automated test (runs chezmoi apply and validates)
+mise run test
+
+# Interactive test (drops into shell for manual testing)
+mise run test:interactive
+```
+
+### What `mise run test` Does
+
+1. **Starts container** as UID 3000 (matches devcontainer user)
+2. **Creates user** named `user` with home at `/home/user`
+3. **Installs dependencies**: curl, zsh via apt
+4. **Installs chezmoi** to `/home/user/.local/bin`
+5. **Mounts source** at `/home/user/.local/share/chezmoi` (read-only)
+6. **Applies dotfiles**: Runs `chezmoi apply -v`
+7. **Executes scripts**: Installs starship, sets up oh-my-zsh
+8. **Validates**:
+   - Zsh starts successfully
+   - Starship binary is available
+   - Shell config loads without errors
+
+### Test Container Configuration
+
+**docker-compose.yml key settings:**
+- `image: debian:bookworm-slim` - Clean, minimal Debian environment
+- `user: "3000:3000"` - Matches devcontainer UID to avoid permission issues
+- `volumes: ./:/home/user/.local/share/chezmoi:ro` - Mounts repo as read-only
+- `platform: linux/amd64` - Ensures consistent architecture
+
+**Why these choices:**
+- **Debian** - Standard, well-supported Linux distribution
+- **UID 3000** - Matches devcontainer user, prevents permission problems
+- **Read-only mount** - Prevents accidental modifications to source
+- **Regular user** - Tests realistic non-root usage
+
+### Testing Workflow
+
+1. **Edit files** in `/workspaces/dotfiles/`
+2. **Run test**: `mise run test`
+3. **Check output** for errors/warnings
+4. **Fix issues** and retest
+5. **Apply locally** (optional): `chezmoi apply`
+6. **Commit** when satisfied
+
+### Interactive Testing
+
+```bash
+# Open shell in test container
+mise run test:interactive
+
+# Inside container, manually test:
+mkdir -p ~/.local/bin
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
+~/.local/bin/chezmoi apply -v
+
+# Explore applied configuration
+cat ~/.zshrc
+zsh
+starship --version
+exit
+```
+
+## Common Tasks
+
+### Adding a New Dotfile
+
+```bash
+# 1. Create source file with chezmoi naming
+touch dot_gitconfig           # For static file
+touch dot_zshrc.tmpl          # For template file
+
+# 2. Edit with your configuration
+vim dot_gitconfig
+
+# 3. Test in container
+mise run test
+
+# 4. Preview what will be applied (optional, requires local chezmoi)
+chezmoi diff
+
+# 5. Commit
+git add dot_gitconfig
+git commit -m "Add gitconfig with core settings"
+```
+
+### Adding External Dependencies
+
+Edit `.chezmoiexternal.toml.tmpl`:
+
+```toml
+# Download binary from GitHub releases
+[".local/bin/tool"]
+    type = "file"
+    url = "https://github.com/owner/repo/releases/download/v1.0.0/tool-{{ .chezmoi.os }}-{{ .chezmoi.arch }}"
+    executable = true
+    refreshPeriod = "672h"  # Recheck weekly
+
+# Extract from tar.gz archive
+[".local/bin/another-tool"]
+    type = "archive"
+    url = "https://releases.example.com/tool-{{ .chezmoi.os }}.tar.gz"
+    stripComponents = 1
+    executable = true
+    refreshPeriod = "168h"
+
+# Clone git repository
+[".oh-my-zsh/custom/plugins/my-plugin"]
+    type = "archive"
+    url = "https://github.com/user/plugin/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"
+```
+
+**Platform-specific URLs:**
+```toml
+{{- $myArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $myArch = "x86_64" }}
+{{- end }}
+
+[".local/bin/tool"]
+    url = "https://example.com/tool-{{ .chezmoi.os }}-{{ $myArch }}"
+```
+
+### Adding Installation Scripts
+
+Create in `.chezmoiscripts/`:
+
+**Run once (e.g., install tool):**
+```bash
+# .chezmoiscripts/run_once_install-tool.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v tool >/dev/null 2>&1; then
+    echo "tool already installed"
+    exit 0
+fi
+
+# Non-interactive installation
+curl -sS https://install.example.com/tool.sh | sh -s -- -y
+```
+
+**Run on every apply:**
+```bash
+# .chezmoiscripts/run_update-something.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Update configuration that changes frequently
+echo "Updating timestamps..."
+```
+
+**Platform-specific script:**
+```bash
+# .chezmoiscripts/run_once_install-linux-tool.sh.tmpl
+{{- if eq .chezmoi.os "linux" }}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Linux-specific installation
+{{- end }}
+```
+
+### Modifying Template Variables
+
+Edit `.chezmoi.toml.tmpl` to add/modify variables:
+
+```toml
+[data]
+  # Add new variable
+  isDevelopment = {{ not .isWork }}
+
+  # Conditional value
+  apiEndpoint = {{ if .isWork }}"https://internal.api"{{ else }}"https://api.example.com"{{ end }}
+
+  # Environment-based
+  useProxy = {{ ne (env "HTTP_PROXY") "" }}
+```
+
+**Using in templates:**
+```go
+# In dot_zshrc.tmpl
+{{- if .isDevelopment }}
+export DEV_MODE=true
+{{- end }}
+
+export API_ENDPOINT="{{ .apiEndpoint }}"
+```
+
+## Troubleshooting
+
+### Template Errors
+
+**Error:** `template: file.tmpl:5:7: map has no entry for key "variable"`
+
+**Cause:** Variable not defined in `.chezmoi.toml.tmpl`
+
+**Solution:** Add to `.chezmoi.toml.tmpl`:
+```toml
+[data]
+  variable = "default_value"
+```
+
+### Permission Errors in Test
+
+**Error:** `permission denied` accessing mounted volume
+
+**Cause:** UID mismatch between container user and files
+
+**Solution:** Container uses UID 3000 to match devcontainer. Verify:
+```bash
+id -u  # Should output: 3000
+```
+
+If files have wrong ownership, Docker handles it via the user mapping.
+
+### Starship Installation Fails
+
+**Error:** `cannot open /dev/tty` or `yn: parameter not set`
+
+**Cause:** Interactive installer can't prompt in non-TTY environment
+
+**Solution:** Use `-y` flag for non-interactive install (already implemented):
+```bash
+curl -sS https://starship.rs/install.sh | sh -s -- --bin-dir ~/.local/bin -y
+```
+
+### Chezmoi Can't Find Source
+
+**Error:** `stat /root/.local/share/chezmoi: no such file or directory`
+
+**Cause:** Running as root when source mounted for regular user
+
+**Solution:** Ensure container runs as correct user (UID 3000) and source is mounted to `/home/user/.local/share/chezmoi`.
+
+### Test Container Package Install Fails
+
+**Error:** `E: Unable to locate package`
+
+**Cause:** Package cache not updated
+
+**Solution:** Always update before installing:
+```bash
+apt-get update && apt-get install -y package-name
+```
+
+### Template Won't Render
+
+**Error:** Syntax error in template
+
+**Debug:** Test template rendering:
+```bash
+chezmoi execute-template < dot_zshrc.tmpl
+```
+
+**Common issues:**
+- Missing closing `}}` or `end`
+- Using undefined variable
+- Incorrect function syntax
+
+## Best Practices
+
+### Security
+
+1. ✅ **Never commit secrets** - use environment variables or keychain references
+2. ✅ **Use `.chezmoiignore`** for files containing sensitive data
+3. ✅ **Review diffs carefully** - run `chezmoi diff` before applying
+4. ✅ **Use placeholder values** in templates for credentials
+5. ✅ **Test in container first** - catch issues before applying to real system
+
+### Template Design
+
+1. ✅ **Provide defaults** for all variables
+2. ✅ **Use descriptive names** - `isWork` not `w`
+3. ✅ **Comment complex logic** - Go templates can be cryptic
+4. ✅ **Keep templates simple** - move complex logic to scripts
+5. ✅ **Test rendering** - use `chezmoi execute-template`
+
+### Script Guidelines
+
+1. ✅ **Make scripts idempotent** - check before installing/modifying
+2. ✅ **Use `-y` flags** - avoid interactive prompts
+3. ✅ **Handle errors** - use `set -euo pipefail`
+4. ✅ **Log actions** - echo what's happening
+5. ✅ **Exit cleanly** - return appropriate exit codes
+
+### Testing
+
+1. ✅ **Test before committing** - `mise run test` catches issues early
+2. ✅ **Test on target platform** - containers can't catch OS-specific issues
+3. ✅ **Document requirements** - note required OS versions, tools
+4. ✅ **Pin versions** - avoid `latest` tags in production configs
+
+### Maintenance
+
+1. ✅ **Update regularly** - check for new versions of external tools
+2. ✅ **Clean up** - remove obsolete configurations
+3. ✅ **Document changes** - update AGENTS.md for new patterns
+4. ✅ **Version external dependencies** - explicit versions > `latest`
+
+## Detailed Workflows
+
+### Making Changes to Existing Dotfiles
+
+```bash
+# 1. Edit source file in repository
+vim /workspaces/dotfiles/dot_zshrc.tmpl
+
+# 2. Test in isolated container
+mise run test
+
+# 3. If test passes, optionally preview on local machine
+chezmoi diff
+
+# 4. Apply locally (optional)
+chezmoi apply -v
+
+# 5. Verify in your shell
+source ~/.zshrc
+
+# 6. Commit changes
+git add dot_zshrc.tmpl
+git commit -m "feat: add fzf keybindings to zshrc"
+git push
+```
+
+### Setting Up Dotfiles on New Machine
+
+```bash
+# 1. Install chezmoi
+sh -c "$(curl -fsLS get.chezmoi.io)"
+
+# 2. Initialize from this repository
+chezmoi init https://github.com/username/dotfiles.git
+
+# 3. Preview what will be applied
+chezmoi diff
+
+# 4. Apply dotfiles
+chezmoi apply -v
+
+# 5. External dependencies auto-install
+# (oh-my-zsh, starship, jq, etc.)
+
+# 6. Restart shell or source config
+exec zsh
+```
+
+### Updating External Dependencies
+
+```bash
+# 1. Edit version in .chezmoiexternal.toml.tmpl
+vim .chezmoiexternal.toml.tmpl
+# Change: url = "https://github.com/tool/releases/download/v1.0.0/..."
+#     To: url = "https://github.com/tool/releases/download/v2.0.0/..."
+
+# 2. Test in container
+mise run test
+
+# 3. Apply update and refresh externals
+chezmoi apply --refresh-externals
+
+# 4. Verify new version
+tool --version
+
+# 5. Commit
+git add .chezmoiexternal.toml.tmpl
+git commit -m "chore: update tool to v2.0.0"
+```
+
+### Debugging Template Issues
+
+```bash
+# 1. Test template rendering
+chezmoi execute-template < dot_zshrc.tmpl
+
+# 2. Check available variables
+chezmoi data
+
+# 3. Dry-run apply to see what would happen
+chezmoi apply --dry-run --verbose
+
+# 4. View rendered file without applying
+chezmoi cat ~/.zshrc
+```
+
+## Quick Command Reference
+
+```bash
+# Preview changes
+chezmoi diff
+
+# Apply changes
+chezmoi apply -v
+
+# Apply and refresh external dependencies
+chezmoi apply --refresh-externals
+
+# Edit managed file
+chezmoi edit ~/.zshrc
+
+# See what chezmoi manages
+chezmoi managed
+
+# Navigate to source directory
+chezmoi cd
+
+# View rendered file without applying
+chezmoi cat ~/.zshrc
+
+# Test template rendering
+chezmoi execute-template < file.tmpl
+
+# Show chezmoi data/variables
+chezmoi data
+
+# Test in container
+mise run test
+
+# Interactive test container
+mise run test:interactive
+
+# Update from git and apply
+chezmoi update
+```
+
+## Additional Resources
+
+- **Chezmoi Documentation**: https://www.chezmoi.io/
+- **Go Template Reference**: https://pkg.go.dev/text/template
+- **Chezmoi Templates**: https://www.chezmoi.io/reference/templates/
+- **External Format**: https://www.chezmoi.io/reference/special-files-and-directories/chezmoiexternal-format/
+- **Mise Documentation**: https://mise.jdx.dev/
+
+---
+
+**Remember**: This repository is designed for safety (test before apply), clarity (document everything), and portability (works across machines). Always test in the container before applying to your real environment.

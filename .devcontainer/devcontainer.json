@@ -26,8 +26,8 @@
         "thang-nm.catppuccin-perfect-icons"
       ]
     }
-  }
-  //"workspaceMount": "none",
+  },
+  "postCreateCommand": "mise install"
   //"workspaceFolder": "/workspace",
   //"mounts": [
   //	"source=zfs_engineering_data,target=/workspace,type=volume"

@@ -6,18 +6,27 @@ chezmoi = "latest"
 [tasks.test]
 description = "Test dotfiles in isolated container"
 run = """
-docker compose run --rm dotfiles-test bash -c '
-  sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
-  chezmoi apply -v
-  echo "✓ Dotfiles applied successfully"
+docker compose run --rm --user root dotfiles-test bash -c '
+  # Setup user and install packages
+  useradd -u 3000 -M -s /bin/bash user
+  chown -R user:user /home/user
+  apt-get update && apt-get install -y curl zsh
 
-  # Test zsh starts
-  zsh -c "echo ✓ Zsh version: $ZSH_VERSION"
+  # Switch to user and run chezmoi
+  su - user -c "
+    mkdir -p ~/.local/bin
+    sh -c \\\"\\$(curl -fsLS get.chezmoi.io)\\\" -- -b ~/.local/bin
+    ~/.local/bin/chezmoi apply -v
+    echo \\\"✓ Dotfiles applied successfully\\\"
 
-  # Test key tools are available
-  zsh -i -c "
-    command -v starship >/dev/null && echo ✓ Starship found || echo ✗ Starship missing
-    echo ✓ Shell config loaded successfully
+    # Test zsh starts
+    zsh -c \\\"echo ✓ Zsh version: \\$ZSH_VERSION\\\"
+
+    # Test key tools are available
+    zsh -i -c \\\"
+      command -v starship >/dev/null && echo ✓ Starship found || echo ✗ Starship missing
+      echo ✓ Shell config loaded successfully
+    \\\"
   "
 '
 """

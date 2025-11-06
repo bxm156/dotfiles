@@ -1,60 +1,45 @@
 # CLAUDE.md - Chezmoi Dotfiles
 
+**IMPORTANT: AI agents must read AGENTS.md for comprehensive workflow and implementation details.**
+
 This repository uses **chezmoi** to manage dotfiles across machines with templating support.
 
-## Essential Commands
+## Critical Rules (One-Line Each)
+
+1. **NEVER edit files in ~/ directly** - always use `chezmoi edit` or edit in source directory
+2. **NEVER run `chezmoi apply` in devcontainer** - ONLY test with `mise run test` in isolated container
+3. **ALWAYS run `chezmoi diff` before any apply** - preview changes before applying
+4. **NEVER commit secrets or sensitive data** - dotfiles sync across multiple machines
+5. **External binaries MUST go in `.chezmoiexternal.toml.tmpl`** - not custom download scripts
+6. **Templates use Go syntax** - `{{ .chezmoi.os }}`, `{{ .chezmoi.arch }}`, `{{ .isWork }}`
+7. **File naming determines behavior** - `dot_` becomes `.`, `.tmpl` gets processed, `run_once_` runs once
+8. **Test in container before applying** - use `mise run test` to validate changes safely
+9. **Scripts must be idempotent** - safe to run multiple times without side effects
+10. **Use mise for task automation** - defined in `.mise.toml` for testing and development
+11. **Document template variables in `.chezmoi.toml.tmpl`** - centralize data definitions
+
+## Quick Reference
 
 ```bash
-chezmoi diff                  # ALWAYS check before applying
-chezmoi apply                 # Apply changes to home directory
-chezmoi edit <file>           # Edit managed file
-chezmoi cd                    # Navigate to source (~/.local/share/chezmoi)
+chezmoi diff                  # Preview changes
+chezmoi apply                 # Apply to home directory
+chezmoi edit ~/.zshrc         # Edit managed file
+mise run test                 # Test in isolated container
 ```
 
-## Key File Naming Rules
+## Key Files
 
-- `dot_vimrc` → `~/.vimrc` (dot_ becomes .)
-- `file.tmpl` → Processed with Go templates ({{ .chezmoi.os }}, {{ .chezmoi.arch }})
-- `run_once_script.sh` → Runs once on apply
-- `run_script.sh` → Runs every apply
+- `.chezmoi.toml.tmpl` - Template variables and configuration
+- `.chezmoiexternal.toml.tmpl` - External dependencies (oh-my-zsh, starship, tools)
+- `dot_zshrc.tmpl` - Zsh configuration with oh-my-zsh + starship
+- `.mise.toml` - Task automation (test, test:interactive)
+- `docker-compose.yml` - Test container configuration
 
-## Project Structure
+## Shell Script Standards
 
-- `.chezmoiexternal.toml.tmpl` - External deps (oh-my-zsh, plugins, jq)
-- `data/mcp.json` - Claude MCP configuration
-- `run_ensure_claude_mcp.sh.tmpl` - Syncs MCP config to ~/.claude.json
-- `dot_zshrc` - Zsh config (oh-my-zsh + starship + vi-mode with `jj`)
+- Shebang: `#!/usr/bin/env bash` with `set -euo pipefail`
+- Variables: Always quote `"$VAR"` not `$VAR`
+- Command checks: `command -v` not `which`
+- Conditionals: `[[ ]]` not `[ ]`
 
-## Critical Rules
-
-1. **NEVER edit dotfiles directly in ~/** - use `chezmoi edit` instead
-2. **ALWAYS run `chezmoi diff`** before `chezmoi apply`
-3. **NEVER commit secrets** - they sync to multiple machines
-4. **External binaries go in `.chezmoiexternal.toml.tmpl`** - not custom scripts
-
-## Shell Script Style
-
-- Start with `#!/usr/bin/env bash` and `set -euo pipefail`
-- Quote variables: `"$VAR"` not `$VAR`
-- Use `command -v` not `which`
-- Use `[[ ]]` for conditionals
-
-## Adding External Dependencies
-
-Edit `.chezmoiexternal.toml.tmpl`:
-```toml
-[".local/bin/tool"]
-    type = "file"
-    url = "https://example.com/tool-{{ .chezmoi.os }}-{{ .chezmoi.arch }}"
-    executable = true
-    refreshPeriod = "672h"
-```
-
-## Workflow
-
-1. `chezmoi edit ~/.file` or edit in source directory
-2. `chezmoi diff` to preview changes
-3. `chezmoi apply` to apply
-4. `cd ~/.local/share/chezmoi && git commit` if good
-
-See AGENTS.md for detailed specifications.
+See **AGENTS.md** for detailed workflows, troubleshooting, and implementation patterns.

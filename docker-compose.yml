@@ -1,19 +1,13 @@
 services:
   dotfiles-test:
-    image: mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
+    platform: linux/amd64
+    image: debian:bookworm-slim
+    user: "3000:3000"
     volumes:
-      - ./:/home/vscode/.local/share/chezmoi:ro
-    working_dir: /home/vscode
-    entrypoint: /bin/bash
-    command:
-      - -c
-      - |
-        # Install chezmoi
-        sh -c "$$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
-
-        # Drop into interactive shell
-        exec /bin/bash
+      - ./:/home/user/.local/share/chezmoi:ro
+    working_dir: /home/user
     stdin_open: true
     tty: true
     environment:
       - TERM=xterm-256color
+      - HOME=/home/user
