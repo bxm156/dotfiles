@@ -20,6 +20,13 @@
       "type": "http",
       "url": "http://192.168.6.99/github"
     },
+    "yelp-github": {
+      "type": "http",
+      "url": "https://chatproxy.yelpcorp.com/github/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer bmarty/claudecode"
+      }
+    },
     "sequentialthinking": {
       "type": "http",
       "url": "http://192.168.6.99/sequentialthinking"
@@ -31,6 +38,13 @@
     "brave-search": {
       "type": "http",
       "url": "http://192.168.6.99/brave-search"
+    },
+    "google": {
+      "type": "http",
+      "url": "https://chatproxy.yelpcorp.com/google/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer bmarty/claudecode"
+      }
     }
   },
   "extraKnownMarketplaces": {
