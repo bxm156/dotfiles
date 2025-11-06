@@ -1,4 +1,5 @@
 {
+{{- if (contains "yelp" .chezmoi.hostname) }}
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "bmarty/claudecode",
     "ANTHROPIC_BEDROCK_BASE_URL": "https://chatproxy.yelpcorp.com/bedrock",
@@ -11,11 +12,13 @@
     "OPENAI_API_KEY": "bmarty/claudcode",
     "LITELLM_BASE_URL": "https://chatproxy.yelpcorp.com"
   },
+{{- end }}
   "mcpServers": {
-      "basic-memory": {
-        "type": "http",
-        "url": "http://192.168.6.99/basic-memory"
+    "basic-memory": {
+      "type": "http",
+      "url": "http://192.168.6.99/basic-memory"
     },
+    "firecrawl": {
       "type": "http",
       "url": "http://192.168.6.99/firecrawl"
     },
