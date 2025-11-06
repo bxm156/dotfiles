@@ -1,0 +1,19 @@
+services:
+  dotfiles-test:
+    image: mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
+    volumes:
+      - ./:/home/vscode/.local/share/chezmoi:ro
+    working_dir: /home/vscode
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        # Install chezmoi
+        sh -c "$$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+        # Drop into interactive shell
+        exec /bin/bash
+    stdin_open: true
+    tty: true
+    environment:
+      - TERM=xterm-256color

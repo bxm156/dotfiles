@@ -6,7 +6,11 @@
   "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
   "features": {
     // Ansible and ansible-lint now managed by mise (see .mise.toml and requirements.txt)
-    "ghcr.io/atty303/devcontainer-features/mise:1": {}
+    "ghcr.io/atty303/devcontainer-features/mise:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    }
   },
   "mounts": [
     "source=${localEnv:HOME}/.ssh/,target=/mnt/starfleet-auth/,type=bind,ro",
