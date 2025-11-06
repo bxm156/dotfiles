@@ -1,4 +1,16 @@
 {
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "bmarty/claudecode",
+    "ANTHROPIC_BEDROCK_BASE_URL": "https://chatproxy.yelpcorp.com/bedrock",
+    "CLAUDE_CODE_SKIP_BEDROCK_AUTH": "1",
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "us.anthropic.claude-opus-4-1-20250805-v1:0",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+    "OPENAI_API_KEY": "bmarty/claudcode",
+    "LITELLM_BASE_URL": "https://chatproxy.yelpcorp.com"
+  },
   "mcpServers": {
     "firecrawl": {
       "type": "http",
@@ -22,7 +34,7 @@
     }
   },
   "extraKnownMarketplaces": {
-    "company-tools": {
+    "superpowers-marketplace": {
       "source": {
         "source": "github",
         "repo": "obra/superpowers-marketplace"
