@@ -1,15 +1,22 @@
+# Managed by chezmoi
+# Do not edit directly - edit source and run: chezmoi apply
+
 [user]
 	email = bryan@bryanmarty.com
 	name = Bryan Marty
-        signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0APKaYNcaQTl6d7uHLdkJDb+fIGBx9ay83MO7Mb3WW
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0APKaYNcaQTl6d7uHLdkJDb+fIGBx9ay83MO7Mb3WW
+
 [gpg]
 	format = ssh
+
 {{- if eq .chezmoi.os "darwin" }}
 [gpg "ssh"]
- 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 {{- end }}
+
 [commit]
 	gpgsign = true
+
 [core]
 	editor = "vim"
 {{- if eq .chezmoi.os "darwin" }}

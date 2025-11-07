@@ -98,6 +98,17 @@ Source File (with .tmpl) → Go Template Processing → Target File
 {{ .chezmoi.username }}     // Current username
 {{ .chezmoi.homeDir }}      // Home directory absolute path
 {{ .chezmoi.sourceDir }}    // Source directory absolute path
+{{ .chezmoi.kernel.osrelease }} // Kernel release (for WSL detection)
+```
+
+### Custom Template Variables (from .chezmoi.toml.tmpl)
+
+```go
+{{ .isWork }}               // true on work machines
+{{ .isHome }}               // true on home machines
+{{ .isDevContainer }}       // true in devcontainer/codespaces
+{{ .isWSL }}                // true when running in WSL
+{{ .isWindows }}            // true on Windows or WSL
 ```
 
 ### Template Examples
@@ -118,6 +129,15 @@ alias ls='ls -G'
 export HOMEBREW_PREFIX="/opt/homebrew"
 {{- else if eq .chezmoi.os "linux" }}
 alias ls='ls --color=auto'
+{{- end }}
+```
+
+**WSL-Specific:**
+```go
+{{- if .isWSL }}
+# WSL-specific configuration (e.g., access Windows filesystem)
+export WINDOWS_HOME="/mnt/c/Users/{{ .chezmoi.username }}"
+alias windir='cd "$WINDOWS_HOME"'
 {{- end }}
 ```
 
@@ -196,6 +216,58 @@ cat ~/.zshrc
 zsh
 starship --version
 exit
+```
+
+## Git Configuration Strategy
+
+This repository uses git's native `[include]` mechanism to merge managed settings with existing configurations.
+
+### Structure
+
+```
+~/.gitconfig              # Your existing config (unmanaged)
+~/.gitconfig.d/
+  ├── default             # Managed by chezmoi (identity, signing, core)
+  ├── work                # Future: work-specific overrides
+  └── personal            # Future: personal project overrides
+```
+
+### Automatic Setup
+
+On first `chezmoi apply`, a `run_once_after` script automatically adds this to your `~/.gitconfig`:
+
+```ini
+[include]
+	path = ~/.gitconfig.d/default
+```
+
+**Script:** `.chezmoiscripts/run_once_after_setup-gitconfig-include.sh`
+- Runs once after files are applied
+- Creates `~/.gitconfig` if it doesn't exist
+- Adds include directive if not already present
+- Preserves any existing content
+
+### How It Works
+
+1. **Git reads** `~/.gitconfig` first (your local aliases, preferences)
+2. **Then includes** `~/.gitconfig.d/default` (managed identity, signing, core settings)
+3. **Last value wins** - included settings override earlier ones
+
+### Benefits
+
+- ✅ **Non-destructive** - preserves existing `.gitconfig`
+- ✅ **Clear separation** - managed vs local settings
+- ✅ **Flexible** - add work/personal includes conditionally
+- ✅ **Git native** - uses built-in include mechanism
+
+### Future Expansion
+
+For work-specific git identity:
+
+```ini
+# In ~/.gitconfig
+[includeIf "gitdir:~/work/"]
+	path = ~/.gitconfig.d/work
 ```
 
 ## Common Tasks

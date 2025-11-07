@@ -34,3 +34,7 @@ docker compose run --rm --user root dotfiles-test bash -c '
 [tasks."test:interactive"]
 description = "Open interactive test container"
 run = "docker compose run --rm dotfiles-test"
+
+[tasks."test:render"]
+description = "Test template rendering and syntax validation"
+run = ".test-data/test-render-simple.sh"

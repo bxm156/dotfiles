@@ -1,12 +1,29 @@
+{{- $isWork := or (eq .chezmoi.hostname "H3HDJW2R12") (eq .chezmoi.hostname "yhap") -}}
+{{- $isHome := eq .chezmoi.hostname "GAMING-RIG" -}}
+{{- $isDevContainer := or (env "REMOTE_CONTAINERS") (env "CODESPACES")
+(env "VSCODE_REMOTE_CONTAINERS_SESSION") | not | not -}}
+
+{{- /* WSL detection - checks kernel release for microsoft string */ -}}
+{{- $isWSL := and (hasKey .chezmoi "kernel") (hasKey .chezmoi.kernel "osrelease") (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+
+{{- /* Windows detection - either native Windows or WSL */ -}}
+{{- $isWindows := or (eq .chezmoi.os "windows") $isWSL -}}
+
 [data]
-  # Centralized hostname checks - modify these patterns as needed
-  isWork = {{ or (eq .chezmoi.hostname "H3HDJW2R12") (eq .chezmoi.hostname "yhap" ) }}
-  isHome = {{ eq .chezmoi.hostname "GAMING-RIG" }}
+  # Centralized hostname checks - modify the template variables above as needed
+  isWork = {{ $isWork }}
+  isHome = {{ $isHome }}
 
   # Devcontainer detection - checks for common devcontainer environment variables
-  isDevContainer = {{ or (env "REMOTE_CONTAINERS") (env "CODESPACES") (env "VSCODE_REMOTE_CONTAINERS_SESSION") | not | not }}
+  isDevContainer = {{ $isDevContainer }}
 
-{{ if .isWork }}
-  # Centralized auth token
+  # WSL detection - true when running inside Windows Subsystem for Linux
+  isWSL = {{ $isWSL }}
+
+  # Windows detection - true for both native Windows and WSL
+  isWindows = {{ $isWindows }}
+
+{{- if $isWork }}
+  # Centralized auth token - only set on work machines
   authToken = "bmarty/claudecode"
-{{ end }}
+{{- end }}
