@@ -13,8 +13,6 @@
     "LITELLM_BASE_URL": "https://chatproxy.yelpcorp.com"
   },
 {{- end }}
-{{- $mcpData := includeTemplate "data/mcp.json.tmpl" . | fromJson }}
-  "mcpServers": {{ $mcpData.mcpServers | toPrettyJson | indent 2 | trim }},
   "extraKnownMarketplaces": {
     "superpowers-marketplace": {
       "source": {

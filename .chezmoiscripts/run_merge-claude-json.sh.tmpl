@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Merge MCP servers from template into ~/.claude.json
+# Existing servers take precedence over template servers
+
+# Path to target file
+claude_json="$HOME/.claude.json"
+
+# Check if jq is available
+if ! command -v jq >/dev/null 2>&1; then
+    echo "Warning: jq not found, skipping MCP server merge" >&2
+    exit 0
+fi
+
+# Render MCP servers from template data
+mcp_template='{{ includeTemplate "data/mcp.json.tmpl" . }}'
+
+# Create file with empty structure if it doesn't exist
+if [[ ! -f "$claude_json" ]]; then
+    echo "Creating $claude_json with MCP servers from template"
+    echo '{"mcpServers":{}}' > "$claude_json"
+fi
+
+# Merge MCP servers: template servers + existing servers (existing wins on conflict)
+# The + operator in jq merges objects with the right side taking precedence
+temp_file="${claude_json}.tmp"
+
+jq -s '
+  .[0] as $existing |
+  .[1] as $template |
+
+  # Merge: template servers first, then overlay existing (existing wins)
+  $existing + {
+    mcpServers: ($template.mcpServers + ($existing.mcpServers // {}))
+  }
+' "$claude_json" <(echo "$mcp_template") > "$temp_file"
+
+# Replace original file
+mv "$temp_file" "$claude_json"
+
+echo "MCP servers merged into $claude_json"
