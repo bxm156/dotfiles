@@ -27,7 +27,8 @@
       ]
     }
   },
-  "postCreateCommand": "mise install"
+  "postCreateCommand": "mise install",
+  "runArgs": ["--network=vm_net", "--ip=192.168.6.81"]
   //"workspaceFolder": "/workspace",
   //"mounts": [
   //	"source=zfs_engineering_data,target=/workspace,type=volume"

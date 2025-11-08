@@ -15,8 +15,7 @@ docker compose run --rm --user root dotfiles-test bash -c '
   # Switch to user and run chezmoi
   su - user -c "
     mkdir -p ~/.local/bin
-    sh -c \\\"\\$(curl -fsLS get.chezmoi.io)\\\" -- -b ~/.local/bin
-    ~/.local/bin/chezmoi apply -v
+    sh -c \\\"\\$(curl -fsLS get.chezmoi.io/lb)\\\" -- init --apply -v --source ~/.local/share/chezmoi
     echo \\\"✓ Dotfiles applied successfully\\\"
 
     # Test zsh starts

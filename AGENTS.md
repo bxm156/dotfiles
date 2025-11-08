@@ -295,6 +295,8 @@ git commit -m "Add gitconfig with core settings"
 
 ### Adding External Dependencies
 
+**📖 AI agents MUST read [EXTERNAL.md](EXTERNAL.md) before adding or modifying any external packages in `.chezmoiexternal.toml.tmpl`.**
+
 Edit `.chezmoiexternal.toml.tmpl`:
 
 ```toml
@@ -638,6 +640,7 @@ chezmoi update
 
 ## Additional Resources
 
+- **[EXTERNAL.md](EXTERNAL.md)**: External packages reference and AI agent instructions for adding packages
 - **Chezmoi Documentation**: https://www.chezmoi.io/
 - **Go Template Reference**: https://pkg.go.dev/text/template
 - **Chezmoi Templates**: https://www.chezmoi.io/reference/templates/

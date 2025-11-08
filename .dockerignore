@@ -1,0 +1,10 @@
+AGENTS.md
+CLAUDE.md
+.local/
+bin
+.chezmoi*
+.claude/
+.devcontainer/
+.vscode/
+.mise.toml
+README.md
