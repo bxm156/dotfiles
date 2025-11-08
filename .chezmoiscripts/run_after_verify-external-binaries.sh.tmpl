@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Verify external binary installations and log results
+# This runs after .chezmoiexternal.toml.tmpl downloads binaries
+
+# Source logging helpers
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/lib/logging.sh"
+
+log_section "External Binary Verification"
+
+# List of binaries from .chezmoiexternal.toml.tmpl
+binaries=(
+    "jq"
+    "fzf"
+    "zoxide"
+    "bat"
+    "gitui"
+    "gum"
+)
+
+failed=0
+
+for binary in "${binaries[@]}"; do
+    binary_path="$HOME/.local/bin/$binary"
+
+    if [[ ! -e "$binary_path" ]]; then
+        log_error "${binary}: not found at ${binary_path}"
+        failed=1
+        continue
+    fi
+
+    if [[ ! -f "$binary_path" ]]; then
+        log_error "${binary}: exists but is not a regular file"
+        failed=1
+        continue
+    fi
+
+    if [[ ! -x "$binary_path" ]]; then
+        log_error "${binary}: is not executable"
+        failed=1
+        continue
+    fi
+
+    log_success "${binary}: installed and verified"
+done
+
+if [[ $failed -eq 1 ]]; then
+    log_error "Some binary installations failed"
+    exit 1
+fi
+
+log_success "All external binaries verified successfully"
