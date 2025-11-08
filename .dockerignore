@@ -1,10 +1,15 @@
 AGENTS.md
 CLAUDE.md
 .local/
-bin
-.chezmoi*
+bin/
 .claude/
 .devcontainer/
 .vscode/
 .mise.toml
 README.md
+.git/
+Dockerfile.test
+docker-compose.yaml
+TESTING.md
+EXTERNAL.md
+test-dotfiles-github.sh

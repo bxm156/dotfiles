@@ -1,3 +1,7 @@
+# IMPORTANT: See EXTERNAL.md for documentation on managing external dependencies
+# This file defines external binaries, plugins, and tools managed by chezmoi.
+# For adding new externals or troubleshooting, refer to EXTERNAL.md first.
+
 # oh-my-zsh doesn't use version tags, using master branch (2025-11-03)
 [".oh-my-zsh"]
     type = "archive"
@@ -34,10 +38,11 @@
 
 # fzf - Fuzzy finder for command-line (Ctrl+R history, Ctrl+T files, Alt+C dirs)
 [".local/bin/fzf"]
-    type = "archive"
+    type = "archive-file"
     url = "https://github.com/junegunn/fzf/releases/download/v0.66.1/fzf-0.66.1-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz"
     executable = true
     refreshPeriod = "672h"
+    path = "fzf"
 
 # Rust triple target for zoxide and bat (shared mapping)
 {{- $rustTriple := "" }}
@@ -57,18 +62,19 @@
 
 # zoxide - Smart cd replacement that learns your habits
 [".local/bin/zoxide"]
-    type = "archive"
+    type = "archive-file"
     url = "https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.8/zoxide-0.9.8-{{ $rustTriple }}.tar.gz"
     executable = true
     refreshPeriod = "672h"
+    path = "zoxide"
 
 # bat - cat with syntax highlighting and git integration
 [".local/bin/bat"]
-    type = "archive"
+    type = "archive-file"
     url = "https://github.com/sharkdp/bat/releases/download/v0.26.0/bat-v0.26.0-{{ $rustTriple }}.tar.gz"
     executable = true
     refreshPeriod = "672h"
-    stripComponents = 1
+    path = "bat-v0.26.0-{{ $rustTriple }}/bat"
 
 # gitui - Fast terminal UI for git
 {{- $gituiTarget := "" }}

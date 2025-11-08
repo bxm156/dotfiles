@@ -2,6 +2,11 @@
 
 This document tracks all external packages managed by chezmoi via `.chezmoiexternal.toml.tmpl`.
 
+## Terminology
+
+- **Devcontainer** (user: vscode) - Development environment at `/workspaces/dotfiles` where you edit source files
+- **Test container** (user: user) - Isolated Debian container for testing dotfiles
+
 ## Installed Packages
 
 | Package | Version | Type | Linux amd64 | Linux arm64 | macOS Intel | macOS ARM | Refresh | Notes |
@@ -34,7 +39,7 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 9. **Use `stripComponents = 1` when archive wraps files in a single top-level directory**
 10. **Set `executable = true` for all binaries**
 11. **Use `refreshPeriod = "672h"` (28 days) for stable tools, `"168h"` (7 days) for frequently updated ones**
-12. **ALWAYS test additions with `mise run test` in isolated container before committing**
+12. **ALWAYS test additions with `mise run test` in test container before committing**
 13. **Document package purpose in a comment above the configuration block**
 
 ## Common External Types Reference
@@ -139,7 +144,7 @@ url = "https://example.com/tool-{{ $rustTriple }}.tar.gz"
 # 1. Edit .chezmoiexternal.toml.tmpl
 chezmoi edit .chezmoiexternal.toml.tmpl
 
-# 2. Test in isolated container
+# 2. Test in test container
 mise run test
 
 # 3. Check for successful binary installation in test output

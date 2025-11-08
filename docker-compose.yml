@@ -1,10 +1,31 @@
 services:
   dotfiles-test:
     platform: linux/amd64
-    image: debian:bookworm-slim
-    user: "3000:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      network: host
+    image: dotfiles-test
     volumes:
       - ./:/home/user/.local/share/chezmoi:ro
+    working_dir: /home/user
+    stdin_open: true
+    tty: true
+    environment:
+      - TERM=xterm-256color
+      - HOME=/home/user
+
+  dotfiles-test-github:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      network: host
+    image: dotfiles-test
+    # No volumes mounted - pulls directly from GitHub
+    volumes:
+      - ./test-dotfiles-github.sh:/home/user/test-dotfiles-github.sh:ro
+    entrypoint: ["/home/user/test-dotfiles-github.sh"]
     working_dir: /home/user
     stdin_open: true
     tty: true

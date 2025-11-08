@@ -2,27 +2,34 @@
 
 Comprehensive guide for AI agents working with this chezmoi-managed dotfiles repository.
 
+## Terminology
+
+- **Devcontainer** (user: vscode) - Development environment at `/workspaces/dotfiles` where you edit source files
+- **Test container** (user: user) - Isolated Debian container built via `Dockerfile.test` and `docker-compose.yml` for testing dotfiles
+
 ## Critical Path Definitions
 
-### Source Directory (This Repository)
-- **Path in Devcontainer**: `/workspaces/dotfiles`
-- **Path on Local Machine**: `~/.local/share/chezmoi`
-- **Purpose**: Contains chezmoi source files with special naming conventions
-- **Key Point**: This is where you edit files and manage the dotfiles configuration
+### Devcontainer (Development Environment)
+- **User**: vscode
+- **Source Directory**: `/workspaces/dotfiles`
+- **Purpose**: Where you edit chezmoi source files with special naming conventions
+- **Key Point**: NEVER run `chezmoi apply` here - only edit and test
 
-### Target Directory (Applied Dotfiles)
-- **Path**: `~` (user's home directory, e.g., `/home/user` or `/home/vscode`)
-- **Purpose**: Where dotfiles are actually used by the system
-- **Key Point**: Never edit files here directly - always edit in source directory
+### Test Container (Isolated Testing Environment)
+- **User**: user (UID 3000)
+- **Built From**: `Dockerfile.test` and `docker-compose.yml`
+- **Source Mount**: `/home/user/.local/share/chezmoi` (read-only, mounted from devcontainer `/workspaces/dotfiles`)
+- **Target Directory**: `/home/user` (where dotfiles get applied during test)
+- **Purpose**: Safe, isolated environment to test dotfiles before applying to real systems
 
-### Test Container Paths
-- **Source Mount**: `/home/user/.local/share/chezmoi` (read-only, mounted from `/workspaces/dotfiles`)
-- **Target**: `/home/user` (where dotfiles get applied during test)
-- **Working Directory**: `/home/user`
+### Local Machine (Your Real System)
+- **Source Directory**: `~/.local/share/chezmoi`
+- **Target Directory**: `~` (where dotfiles are actually used)
+- **Key Point**: Never edit files in `~` directly - always edit in source directory
 
 ## Understanding Chezmoi
 
-**⚠️ CRITICAL WARNING FOR AI AGENTS: NEVER run `chezmoi apply` in the devcontainer or main development environment. ONLY test changes using `mise run test` which runs in an isolated container. The devcontainer is for editing source files only.**
+**⚠️ CRITICAL WARNING FOR AI AGENTS: NEVER run `chezmoi apply` in the devcontainer. ONLY test changes using `mise run test` which runs in the test container. The devcontainer is for editing source files only.**
 
 Chezmoi manages dotfiles across multiple machines using:
 - **Templating**: Machine-specific configurations with Go templates
@@ -71,6 +78,37 @@ Source File (with .tmpl) → Go Template Processing → Target File
 ├── CLAUDE.md                 # Quick reference rules
 └── AGENTS.md                 # This file - detailed guide
 ```
+
+### Key Files Explained
+
+- **`.chezmoi.toml.tmpl`** - Template variables and configuration (processed on first apply)
+- **`.chezmoiexternal.toml.tmpl`** - External dependencies (oh-my-zsh, starship, tools)
+- **`dot_zshrc.tmpl`** - Zsh configuration with oh-my-zsh + starship
+- **`dot_gitconfig.d/default.tmpl`** - Git configuration (merges with existing .gitconfig via include)
+- **`.mise.toml`** - Task automation (test, test:interactive, test:shell)
+- **`docker-compose.yml`** - Test container configuration
+- **`Dockerfile.test`** - Test container image definition
+- **`test-dotfiles.sh`** - Test script executed in test container
+
+## Platform Support
+
+**Supported platforms:**
+- Linux (native) - amd64, arm64
+- macOS (darwin) - Intel (amd64), Apple Silicon (arm64)
+- WSL (Windows Subsystem for Linux) - fully supported, uses Linux binaries
+
+**WSL-specific details:**
+- Automatically detected via kernel signature check in `.chezmoi.toml.tmpl`
+- All Unix tools work: zsh, oh-my-zsh, starship, fzf, zoxide, bat, jq
+- Template variables available:
+  - `.isWSL` - true when running in WSL
+  - `.isWindows` - true on Windows or WSL
+- Use WSL-specific configuration when needed (e.g., Windows filesystem access at `/mnt/c/`)
+
+**Architecture support:**
+- Most tools support amd64 (x86_64) and arm64 (aarch64)
+- Some tools use different naming conventions (e.g., Rust uses target triples)
+- Check GitHub releases for exact artifact names before adding to `.chezmoiexternal.toml.tmpl`
 
 ## Template System
 
@@ -151,7 +189,7 @@ alias windir='cd "$WINDOWS_HOME"'
 
 ### Overview
 
-Testing happens in an isolated Debian container that simulates a fresh user environment.
+Testing happens in the **test container** (user: user), an isolated Debian environment built from `Dockerfile.test` and `docker-compose.yml` that simulates a fresh user environment.
 
 ### Running Tests
 
@@ -165,55 +203,50 @@ mise run test:interactive
 
 ### What `mise run test` Does
 
-1. **Starts container** as UID 3000 (matches devcontainer user)
-2. **Creates user** named `user` with home at `/home/user`
-3. **Installs dependencies**: curl, zsh via apt
-4. **Installs chezmoi** to `/home/user/.local/bin`
-5. **Mounts source** at `/home/user/.local/share/chezmoi` (read-only)
-6. **Applies dotfiles**: Runs `chezmoi apply -v`
-7. **Executes scripts**: Installs starship, sets up oh-my-zsh
-8. **Validates**:
-   - Zsh starts successfully
-   - Starship binary is available
-   - Shell config loads without errors
+1. **Builds test container** from `Dockerfile.test` (Debian bookworm-slim, user UID 3000)
+2. **Starts test container** via `docker-compose.yml`
+3. **Mounts devcontainer source** at `/home/user/.local/share/chezmoi` (read-only from `/workspaces/dotfiles`)
+4. **Runs test-dotfiles.sh** which:
+   - Installs chezmoi to `/home/user/.local/bin`
+   - Applies dotfiles with `chezmoi apply -v`
+   - Installs external dependencies (oh-my-zsh, starship, tools)
+   - Validates installation:
+     - Zsh starts successfully
+     - Binaries are executable files (not directories)
+     - Shell config loads without errors
 
 ### Test Container Configuration
 
-**docker-compose.yml key settings:**
-- `image: debian:bookworm-slim` - Clean, minimal Debian environment
-- `user: "3000:3000"` - Matches devcontainer UID to avoid permission issues
-- `volumes: ./:/home/user/.local/share/chezmoi:ro` - Mounts repo as read-only
-- `platform: linux/amd64` - Ensures consistent architecture
+**Dockerfile.test:**
+- Base: `debian:bookworm-slim` - Clean, minimal Debian environment
+- User: `user` (UID 3000, GID 3000) - Matches devcontainer user to avoid permission issues
+- Entrypoint: `/usr/local/bin/test-dotfiles.sh` - Always runs tests before shell access
 
-**Why these choices:**
-- **Debian** - Standard, well-supported Linux distribution
-- **UID 3000** - Matches devcontainer user, prevents permission problems
-- **Read-only mount** - Prevents accidental modifications to source
-- **Regular user** - Tests realistic non-root usage
+**docker-compose.yml:**
+- Source mount: `./:/home/user/.local/share/chezmoi:ro` - Read-only mount from devcontainer
+- Platform: `linux/amd64` - Ensures consistent architecture
+- TTY: `stdin_open: true, tty: true` - Enables interactive shell after tests
 
 ### Testing Workflow
 
-1. **Edit files** in `/workspaces/dotfiles/`
-2. **Run test**: `mise run test`
+1. **Edit files** in devcontainer at `/workspaces/dotfiles/`
+2. **Run test** in test container: `mise run test`
 3. **Check output** for errors/warnings
-4. **Fix issues** and retest
-5. **Apply locally** (optional): `chezmoi apply`
+4. **Fix issues** in devcontainer and retest
+5. **Apply locally** to your real machine (optional): `chezmoi apply`
 6. **Commit** when satisfied
 
 ### Interactive Testing
 
 ```bash
-# Open shell in test container
+# Test container: Run tests then drop into zsh shell (dotfiles installed)
 mise run test:interactive
 
-# Inside container, manually test:
-mkdir -p ~/.local/bin
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin
-~/.local/bin/chezmoi apply -v
+# Test container: Raw bash shell without dotfiles (debugging only)
+mise run test:shell
 
-# Explore applied configuration
+# Inside test container, explore applied configuration:
 cat ~/.zshrc
-zsh
 starship --version
 exit
 ```
@@ -275,20 +308,20 @@ For work-specific git identity:
 ### Adding a New Dotfile
 
 ```bash
-# 1. Create source file with chezmoi naming
+# 1. Create source file in devcontainer with chezmoi naming
 touch dot_gitconfig           # For static file
 touch dot_zshrc.tmpl          # For template file
 
-# 2. Edit with your configuration
+# 2. Edit with your configuration in devcontainer
 vim dot_gitconfig
 
-# 3. Test in container
+# 3. Test in test container
 mise run test
 
-# 4. Preview what will be applied (optional, requires local chezmoi)
+# 4. Preview what will be applied on your local machine (optional)
 chezmoi diff
 
-# 5. Commit
+# 5. Commit from devcontainer
 git add dot_gitconfig
 git commit -m "Add gitconfig with core settings"
 ```
@@ -374,6 +407,67 @@ set -euo pipefail
 # Linux-specific installation
 {{- end }}
 ```
+
+### Shell Script Standards
+
+All bash scripts in this repository must follow these conventions:
+
+**Required shebang and options:**
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+```
+
+- `set -e` - Exit on error
+- `set -u` - Exit on undefined variable
+- `set -o pipefail` - Exit on pipe failure
+
+**Variable quoting:**
+```bash
+# Good
+echo "$VAR"
+path="$HOME/directory"
+
+# Bad
+echo $VAR
+path=$HOME/directory
+```
+
+**Command availability checks:**
+```bash
+# Good
+if command -v tool >/dev/null 2>&1; then
+    echo "tool is available"
+fi
+
+# Bad
+if which tool; then
+    echo "tool is available"
+fi
+```
+
+**Conditionals:**
+```bash
+# Good - use [[ ]] for bash
+if [[ -f "$file" ]]; then
+    echo "file exists"
+fi
+
+# Avoid - [ ] is POSIX but less powerful
+if [ -f "$file" ]; then
+    echo "file exists"
+fi
+```
+
+**Idempotency:**
+- Always check if work is already done before executing
+- Scripts must be safe to run multiple times
+- Use `run_once_` prefix for one-time installation scripts
+
+**Non-interactive installation:**
+- Use `-y`, `--yes`, or similar flags to avoid prompts
+- Set environment variables to disable interactive behavior
+- Test container has no TTY for automated scripts
 
 ### Modifying Template Variables
 
@@ -480,7 +574,7 @@ chezmoi execute-template < dot_zshrc.tmpl
 2. ✅ **Use `.chezmoiignore`** for files containing sensitive data
 3. ✅ **Review diffs carefully** - run `chezmoi diff` before applying
 4. ✅ **Use placeholder values** in templates for credentials
-5. ✅ **Test in container first** - catch issues before applying to real system
+5. ✅ **Test in test container first** - catch issues before applying to real system
 
 ### Template Design
 
@@ -500,8 +594,8 @@ chezmoi execute-template < dot_zshrc.tmpl
 
 ### Testing
 
-1. ✅ **Test before committing** - `mise run test` catches issues early
-2. ✅ **Test on target platform** - containers can't catch OS-specific issues
+1. ✅ **Test in test container before committing** - `mise run test` catches issues early
+2. ✅ **Test on target platform** - test container is Linux only, test on macOS/WSL separately if needed
 3. ✅ **Document requirements** - note required OS versions, tools
 4. ✅ **Pin versions** - avoid `latest` tags in production configs
 
@@ -517,22 +611,22 @@ chezmoi execute-template < dot_zshrc.tmpl
 ### Making Changes to Existing Dotfiles
 
 ```bash
-# 1. Edit source file in repository
+# 1. Edit source file in devcontainer
 vim /workspaces/dotfiles/dot_zshrc.tmpl
 
-# 2. Test in isolated container
+# 2. Test in test container
 mise run test
 
-# 3. If test passes, optionally preview on local machine
+# 3. If test passes, optionally preview on your local machine (outside devcontainer)
 chezmoi diff
 
-# 4. Apply locally (optional)
+# 4. Apply to your local machine (optional)
 chezmoi apply -v
 
 # 5. Verify in your shell
 source ~/.zshrc
 
-# 6. Commit changes
+# 6. Commit changes from devcontainer
 git add dot_zshrc.tmpl
 git commit -m "feat: add fzf keybindings to zshrc"
 git push
@@ -628,25 +722,37 @@ chezmoi execute-template < file.tmpl
 # Show chezmoi data/variables
 chezmoi data
 
-# Test in container
+# Test in test container (automated)
 mise run test
 
-# Interactive test container
+# Test in test container (interactive zsh shell after tests)
 mise run test:interactive
 
-# Update from git and apply
+# Debug in test container (raw bash, no dotfiles)
+mise run test:shell
+
+# Update from git and apply (on local machine, not in devcontainer)
 chezmoi update
 ```
 
 ## Additional Resources
 
-- **[EXTERNAL.md](EXTERNAL.md)**: External packages reference and AI agent instructions for adding packages
-- **Chezmoi Documentation**: https://www.chezmoi.io/
-- **Go Template Reference**: https://pkg.go.dev/text/template
-- **Chezmoi Templates**: https://www.chezmoi.io/reference/templates/
+**Local Documentation:**
+- **[CLAUDE.md](CLAUDE.md)** - Quick reference and critical rules
+- **[EXTERNAL.md](EXTERNAL.md)** - External packages reference and AI agent instructions
+- **[TESTING.md](TESTING.md)** - Testing workflow and commands
+
+**Chezmoi Documentation:**
+- **Daily Operations**: https://www.chezmoi.io/user-guide/daily-operations/
+- **User Guide**: https://www.chezmoi.io/user-guide/setup/
+- **Templates Reference**: https://www.chezmoi.io/user-guide/templating/
 - **External Format**: https://www.chezmoi.io/reference/special-files-and-directories/chezmoiexternal-format/
+- **Chezmoi Home**: https://www.chezmoi.io/
+
+**Other:**
+- **Go Template Reference**: https://pkg.go.dev/text/template
 - **Mise Documentation**: https://mise.jdx.dev/
 
 ---
 
-**Remember**: This repository is designed for safety (test before apply), clarity (document everything), and portability (works across machines). Always test in the container before applying to your real environment.
+**Remember**: This repository is designed for safety (test before apply), clarity (document everything), and portability (works across machines). Always test in the test container before applying to your real environment.

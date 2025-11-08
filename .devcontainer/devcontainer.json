@@ -15,20 +15,23 @@
   "mounts": [
     "source=${localEnv:HOME}/.ssh/,target=/mnt/starfleet-auth/,type=bind,ro",
     "source=${localEnv:HOME}/.claude/,target=/mnt/claude,type=bind,consistency=cached"
+    // TODO: Consider dod "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
   "customizations": {
     "vscode": {
       "extensions": [
-        "redhat.ansible",
         "ms-python.python",
         "redhat.vscode-yaml",
         "Catppuccin.catppuccin-vsc",
-        "thang-nm.catppuccin-perfect-icons"
+        "thang-nm.catppuccin-perfect-icons",
+        "tamasfe.even-better-toml"
       ]
     }
   },
   "postCreateCommand": "mise install",
   "runArgs": ["--network=vm_net", "--ip=192.168.6.81"]
+  // DoD can access host, wouldn't need to waste ips "runArgs": ["--add-host=host.docker.internal:host-gateway"]
+
   //"workspaceFolder": "/workspace",
   //"mounts": [
   //	"source=zfs_engineering_data,target=/workspace,type=volume"

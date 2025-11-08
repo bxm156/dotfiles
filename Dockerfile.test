@@ -1,0 +1,22 @@
+FROM debian:bookworm-slim
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y curl zsh && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create user and group with ID 3000
+RUN groupadd -g 3000 user && \
+    useradd -u 3000 -g 3000 -m -d /home/user user && \
+    mkdir -p /home/user/.local/share && \
+    chown -R user:user /home/user
+
+# Copy test script
+COPY test-dotfiles.sh /usr/local/bin/test-dotfiles.sh
+RUN chmod 755 /usr/local/bin/test-dotfiles.sh
+
+USER user
+WORKDIR /home/user
+
+ENTRYPOINT ["/usr/local/bin/test-dotfiles.sh"]
+CMD []

@@ -3,4 +3,22 @@ README.md
 CLAUDE.md
 AGENTS.md
 EXTERNAL.md
+TESTING.md
 data/mcp.json
+data/
+test-dotfiles.sh
+test-dotfiles-github.sh
+docker-compose.yml
+docker-compose.yaml
+docs/
+.git/
+Dockerfile.test
+
+# Development and tooling
+.local/
+bin/
+.claude/
+.devcontainer/
+.vscode/
+.mise.toml
+.dockerignore
