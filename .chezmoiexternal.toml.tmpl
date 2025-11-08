@@ -99,3 +99,16 @@
     refreshPeriod = "672h"
     path = "./gitui"
 {{- end }}
+
+# gum - Glamorous shell scripts with spinners, progress indicators, and more
+{{- $gumOS := .chezmoi.os | title }}
+{{- $gumArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $gumArch = "x86_64" }}
+{{- end }}
+[".local/bin/gum"]
+    type = "archive-file"
+    url = "https://github.com/charmbracelet/gum/releases/download/v0.17.0/gum_0.17.0_{{ $gumOS }}_{{ $gumArch }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "gum_0.17.0_{{ $gumOS }}_{{ $gumArch }}/gum"

@@ -499,6 +499,12 @@ fi
 - Set environment variables to disable interactive behavior
 - Test container has no TTY for automated scripts
 
+**PATH considerations:**
+- Scripts inherit PATH at startup and don't pick up newly installed binaries
+- When installing binaries, use full paths for subsequent commands in same script
+- Example: After installing to `~/.local/bin/tool`, use `$HOME/.local/bin/tool` not `tool`
+- Never assume a just-installed binary is in PATH during same script execution
+
 ### Modifying Template Variables
 
 Edit `.chezmoi.toml.tmpl` to add/modify variables:
@@ -636,6 +642,73 @@ chezmoi execute-template < dot_zshrc.tmpl
 3. ✅ **Document changes** - update AGENTS.md for new patterns
 4. ✅ **Version external dependencies** - explicit versions > `latest`
 
+## Installation Methods
+
+### Using install.sh (Recommended)
+
+The repository includes an optional enhanced installation script at `/workspaces/dotfiles/install.sh` that provides a prettier terminal UI using [gum](https://github.com/charmbracelet/gum).
+
+**Features:**
+- **Default mode**: Enhanced UI with spinners, progress indicators, and styled output
+- **Safe mode**: Falls back to standard chezmoi installation (no gum required)
+- **Bootstrap mode**: Install gum to a custom persistent location
+- **Automatic fallback**: If gum download fails, automatically falls back to safe mode
+
+**Usage:**
+
+```bash
+# Pretty install (recommended) - downloads gum temporarily
+bash <(curl -fsLS https://raw.githubusercontent.com/bxm156/dotfiles/main/install.sh)
+
+# Safe mode - standard chezmoi, no gum
+bash <(curl -fsLS https://raw.githubusercontent.com/bxm156/dotfiles/main/install.sh) --safe
+
+# Custom bootstrap path - keeps gum after installation
+bash <(curl -fsLS https://raw.githubusercontent.com/bxm156/dotfiles/main/install.sh) --bootstrap ~/.local/bin
+```
+
+**How it works:**
+
+1. Detects platform (Linux/macOS, amd64/arm64)
+2. Downloads gum v0.17.0 from GitHub releases to temp directory
+3. Uses gum to wrap chezmoi installation with:
+   - Styled header box
+   - Spinner for chezmoi download/install (dot spinner)
+   - Spinner for `chezmoi init` (line spinner)
+   - Spinner for `chezmoi apply` (meter spinner)
+   - Success messages
+4. Cleans up temporary gum binary (unless `--bootstrap` was used)
+
+**Important implementation details:**
+
+- **PATH issue**: The script installs chezmoi to `~/.local/bin/chezmoi`, but this directory is NOT in `$PATH` during script execution
+- **Solution**: Uses full path `$HOME/.local/bin/chezmoi` for subsequent commands instead of bare `chezmoi`
+- **Why this matters**: Scripts inherit their PATH at startup and don't automatically pick up newly installed binaries
+- **General rule**: When installing binaries in a script, always use full paths for subsequent commands in the same script
+
+**Testing install.sh:**
+
+```bash
+# Test default pretty mode
+mise run test:install
+
+# Test safe mode
+mise run test:install:safe
+
+# Test custom bootstrap path
+mise run test:install:bootstrap
+```
+
+**Error handling:**
+
+The script has robust error handling and will fall back to safe mode if:
+- Platform detection fails
+- gum download fails
+- chezmoi installation fails
+- Any spinner/styled output fails
+
+This ensures the installation completes successfully even if the enhanced UI fails.
+
 ## Detailed Workflows
 
 ### Making Changes to Existing Dotfiles
@@ -664,21 +737,41 @@ git push
 
 ### Setting Up Dotfiles on New Machine
 
+**Option 1: Using install.sh (Recommended - Enhanced UI)**
+
+```bash
+# One-line install with gum UI
+bash <(curl -fsLS https://raw.githubusercontent.com/bxm156/dotfiles/main/install.sh)
+```
+
+This will automatically:
+1. Download and install chezmoi
+2. Initialize from GitHub repository (bxm156/dotfiles)
+3. Apply all dotfiles with enhanced visual feedback
+4. Install all external dependencies
+
+**Option 2: Traditional chezmoi installation**
+
 ```bash
 # 1. Install chezmoi
 sh -c "$(curl -fsLS get.chezmoi.io)"
 
 # 2. Initialize from this repository
-chezmoi init https://github.com/username/dotfiles.git
+chezmoi init https://github.com/bxm156/dotfiles.git
 
 # 3. Preview what will be applied
 chezmoi diff
 
-# 4. Apply dotfiles
+# 4. Apply dotfiles (use -v to see download progress and script output)
 chezmoi apply -v
 
 # 5. External dependencies auto-install
 # (oh-my-zsh, starship, jq, etc.)
+# Note: The -v flag is important! Without it, downloads and scripts run silently,
+# which can make it seem like the process is stuck. With -v, you'll see:
+# - External binary download progress (jq, fzf, zoxide, bat, gitui)
+# - oh-my-zsh and plugin extraction progress
+# - Script execution output (starship install, git config setup, etc.)
 
 # 6. Restart shell or source config
 exec zsh

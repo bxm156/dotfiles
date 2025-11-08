@@ -10,6 +10,8 @@ claude_json="$HOME/.claude.json"
 # Use jq installed by chezmoi external (run_after_ ensures it's available)
 jq_bin="$HOME/.local/bin/jq"
 
+echo "Processing MCP server configuration..."
+
 # Render MCP servers from template data
 mcp_template='{{ includeTemplate "data/mcp.json.tmpl" . }}'
 
@@ -21,6 +23,7 @@ fi
 
 # Merge MCP servers: template servers + existing servers (existing wins on conflict)
 # The + operator in jq merges objects with the right side taking precedence
+echo "Merging MCP servers (existing servers take precedence)..."
 temp_file="${claude_json}.tmp"
 
 "$jq_bin" -s '
@@ -36,4 +39,4 @@ temp_file="${claude_json}.tmp"
 # Replace original file
 mv "$temp_file" "$claude_json"
 
-echo "MCP servers merged into $claude_json"
+echo "✓ MCP servers merged into $claude_json"

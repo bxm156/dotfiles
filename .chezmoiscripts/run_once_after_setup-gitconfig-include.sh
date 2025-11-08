@@ -4,6 +4,8 @@ set -euo pipefail
 # Automatically add [include] directive to ~/.gitconfig for chezmoi-managed config
 # This runs once after chezmoi applies files
 
+echo "Setting up git configuration..."
+
 gitconfig="$HOME/.gitconfig"
 include_path="$HOME/.gitconfig.d/default"
 

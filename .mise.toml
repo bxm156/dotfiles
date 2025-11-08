@@ -27,6 +27,36 @@ run = "docker compose run --rm dotfiles-test-github"
 description = "Test template rendering and syntax validation"
 run = "tests/test-render-simple.sh"
 
+[tasks."test:install"]
+description = "Test install.sh script in test container (pretty mode)"
+run = """
+docker compose run --rm \
+  --entrypoint bash \
+  -v $(pwd)/install.sh:/tmp/install.sh:ro \
+  dotfiles-test \
+  /tmp/install.sh
+"""
+
+[tasks."test:install:safe"]
+description = "Test install.sh --safe mode in test container"
+run = """
+docker compose run --rm \
+  --entrypoint bash \
+  -v $(pwd)/install.sh:/tmp/install.sh:ro \
+  dotfiles-test \
+  /tmp/install.sh --safe
+"""
+
+[tasks."test:install:bootstrap"]
+description = "Test install.sh with custom bootstrap path"
+run = """
+docker compose run --rm \
+  --entrypoint bash \
+  -v $(pwd)/install.sh:/tmp/install.sh:ro \
+  dotfiles-test \
+  /tmp/install.sh --bootstrap /home/user/.local/bin
+"""
+
 [tasks.clean]
 description = "Clean up Docker containers and volumes"
 run = "docker compose down --volumes --remove-orphans"
