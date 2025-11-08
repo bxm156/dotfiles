@@ -7,11 +7,8 @@ set -euo pipefail
 # Path to target file
 claude_json="$HOME/.claude.json"
 
-# Check if jq is available
-if ! command -v jq >/dev/null 2>&1; then
-    echo "Warning: jq not found, skipping MCP server merge" >&2
-    exit 0
-fi
+# Use jq installed by chezmoi external (run_after_ ensures it's available)
+jq_bin="$HOME/.local/bin/jq"
 
 # Render MCP servers from template data
 mcp_template='{{ includeTemplate "data/mcp.json.tmpl" . }}'
@@ -26,7 +23,7 @@ fi
 # The + operator in jq merges objects with the right side taking precedence
 temp_file="${claude_json}.tmp"
 
-jq -s '
+"$jq_bin" -s '
   .[0] as $existing |
   .[1] as $template |
 

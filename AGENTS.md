@@ -57,6 +57,36 @@ Source File (with .tmpl) → Go Template Processing → Target File
                     Uses variables from .chezmoi.toml.tmpl
 ```
 
+### Execution Order
+
+**Understanding when things happen during `chezmoi apply` is critical for scripts that depend on external files.**
+
+chezmoi executes operations in this deterministic order:
+
+1. **Read states** - Read source, destination, and compute target state
+2. **Run `run_before_` scripts** - Execute in alphabetical order
+3. **Update all entries** - Files, directories, externals, symlinks (alphabetically by target name)
+4. **Run `run_after_` scripts** - Execute in alphabetical order
+
+**Key rules:**
+
+- **External files are installed during step 3** (the update phase) alphabetically
+- **Scripts without `_before_` or `_after_` run during step 3**, mixed alphabetically with files/externals
+- **Alphabetical ordering matters**: `run_merge.sh` runs BEFORE `.local/bin/jq` is installed
+- **`run_after_` scripts can safely depend on externals** - they run AFTER all externals are installed
+- **`run_before_` scripts CANNOT depend on externals** - externals aren't installed yet
+
+**Example problem:**
+```bash
+# ❌ WRONG: This runs during step 3, might execute before jq is installed
+.chezmoiscripts/run_merge-json.sh   # "merge" < "local" alphabetically
+
+# ✅ CORRECT: This runs in step 4, after ALL externals are installed
+.chezmoiscripts/run_after_merge-json.sh
+```
+
+**Reference:** [Official Chezmoi Application Order](https://www.chezmoi.io/reference/application-order/)
+
 ## Repository Structure
 
 ```
