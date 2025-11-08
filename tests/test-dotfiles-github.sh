@@ -87,6 +87,10 @@ fi
 echo ""
 echo "✓ All tests passed!"
 
+echo ""
+echo "=== Home Directory Contents (checking for pollution) ==="
+ls -la ~
+
 # If running interactively (TTY attached), launch zsh shell
 if [[ -t 0 ]]; then
   echo ""

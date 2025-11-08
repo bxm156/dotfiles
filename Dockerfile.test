@@ -11,12 +11,12 @@ RUN groupadd -g 3000 user && \
     mkdir -p /home/user/.local/share && \
     chown -R user:user /home/user
 
-# Copy test script
-COPY test-dotfiles.sh /usr/local/bin/test-dotfiles.sh
-RUN chmod 755 /usr/local/bin/test-dotfiles.sh
+# Create directory for test scripts (mounted at runtime)
+RUN mkdir -p /opt/tests && \
+    chmod 755 /opt/tests
 
 USER user
 WORKDIR /home/user
 
-ENTRYPOINT ["/usr/local/bin/test-dotfiles.sh"]
-CMD []
+# Entrypoint is set in docker-compose.yml
+CMD ["/bin/bash"]

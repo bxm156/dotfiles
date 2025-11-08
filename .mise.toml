@@ -25,7 +25,7 @@ run = "docker compose run --rm dotfiles-test-github"
 
 [tasks."test:render"]
 description = "Test template rendering and syntax validation"
-run = ".test-data/test-render-simple.sh"
+run = "tests/test-render-simple.sh"
 
 [tasks.clean]
 description = "Clean up Docker containers and volumes"

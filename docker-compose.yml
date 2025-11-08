@@ -8,6 +8,8 @@ services:
     image: dotfiles-test
     volumes:
       - ./:/home/user/.local/share/chezmoi:ro
+      - ./tests:/opt/tests:ro
+    entrypoint: ["/opt/tests/test-dotfiles.sh"]
     working_dir: /home/user
     stdin_open: true
     tty: true
@@ -24,8 +26,8 @@ services:
     image: dotfiles-test
     # No volumes mounted - pulls directly from GitHub
     volumes:
-      - ./test-dotfiles-github.sh:/home/user/test-dotfiles-github.sh:ro
-    entrypoint: ["/home/user/test-dotfiles-github.sh"]
+      - ./tests:/opt/tests:ro
+    entrypoint: ["/opt/tests/test-dotfiles-github.sh"]
     working_dir: /home/user
     stdin_open: true
     tty: true

@@ -6,8 +6,7 @@ EXTERNAL.md
 TESTING.md
 data/mcp.json
 data/
-test-dotfiles.sh
-test-dotfiles-github.sh
+tests/
 docker-compose.yml
 docker-compose.yaml
 docs/

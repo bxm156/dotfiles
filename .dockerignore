@@ -12,4 +12,4 @@ Dockerfile.test
 docker-compose.yaml
 TESTING.md
 EXTERNAL.md
-test-dotfiles-github.sh
+tests/
