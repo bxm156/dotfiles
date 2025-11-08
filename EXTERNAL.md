@@ -27,14 +27,15 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 2. **Use `type = "archive-file"` with `path = "binary"` for single-file archives (e.g., tar.gz containing just one binary)**
 3. **Use `type = "archive"` for directory structures or when extracting multiple files from an archive**
 4. **Use `type = "file"` for direct binary downloads (no archive extraction needed)**
-5. **ALWAYS set platform-specific variables at top of section using Go template conditionals, then reference in URL**
-6. **ALWAYS verify exact artifact names from GitHub releases page before adding URLs**
-7. **ALWAYS check if binary supports both amd64 and arm64 architectures for each OS**
-8. **Use `stripComponents = 1` when archive wraps files in a single top-level directory**
-9. **Set `executable = true` for all binaries**
-10. **Use `refreshPeriod = "672h"` (28 days) for stable tools, `"168h"` (7 days) for frequently updated ones**
-11. **ALWAYS test additions with `mise run test` in isolated container before committing**
-12. **Document package purpose in a comment above the configuration block**
+5. **Use `.chezmoi.os` and `.chezmoi.arch` directly in URLs when upstream naming matches (avoid redundant variable assignments)**
+6. **Share platform mapping variables when multiple tools use identical naming patterns (e.g., Rust triple targets)**
+7. **ALWAYS verify exact artifact names from GitHub releases page before adding URLs**
+8. **ALWAYS check if binary supports both amd64 and arm64 architectures for each OS**
+9. **Use `stripComponents = 1` when archive wraps files in a single top-level directory**
+10. **Set `executable = true` for all binaries**
+11. **Use `refreshPeriod = "672h"` (28 days) for stable tools, `"168h"` (7 days) for frequently updated ones**
+12. **ALWAYS test additions with `mise run test` in isolated container before committing**
+13. **Document package purpose in a comment above the configuration block**
 
 ## Common External Types Reference
 
@@ -68,7 +69,13 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 
 ## Platform Variable Patterns
 
-### Pattern 1: Direct OS/Arch Mapping (jq style)
+### Pattern 1: Direct Variable Use (fzf style)
+```toml
+# When the upstream uses chezmoi's naming directly, no mapping needed
+url = "https://example.com/tool-{{ .chezmoi.os }}_{{ .chezmoi.arch }}.tar.gz"
+```
+
+### Pattern 2: Simple OS/Arch Remapping (jq style)
 ```toml
 {{- $jqOS := .chezmoi.os }}
 {{- if eq .chezmoi.os "darwin" }}
@@ -76,25 +83,29 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 {{- end }}
 ```
 
-### Pattern 2: Rust Triple Targets (zoxide/bat style)
+### Pattern 3: Shared Variable for Multiple Tools (Rust triple style)
 ```toml
-{{- $target := "" }}
+# Define once, use for multiple tools with same naming
+{{- $rustTriple := "" }}
 {{- if eq .chezmoi.os "linux" }}
 {{-   if eq .chezmoi.arch "amd64" }}
-{{-     $target = "x86_64-unknown-linux-musl" }}
+{{-     $rustTriple = "x86_64-unknown-linux-musl" }}
 {{-   else if eq .chezmoi.arch "arm64" }}
-{{-     $target = "aarch64-unknown-linux-musl" }}
+{{-     $rustTriple = "aarch64-unknown-linux-musl" }}
 {{-   end }}
 {{- else if eq .chezmoi.os "darwin" }}
 {{-   if eq .chezmoi.arch "amd64" }}
-{{-     $target = "x86_64-apple-darwin" }}
+{{-     $rustTriple = "x86_64-apple-darwin" }}
 {{-   else if eq .chezmoi.arch "arm64" }}
-{{-     $target = "aarch64-apple-darwin" }}
+{{-     $rustTriple = "aarch64-apple-darwin" }}
 {{-   end }}
 {{- end }}
+
+# Used by both zoxide and bat
+url = "https://example.com/tool-{{ $rustTriple }}.tar.gz"
 ```
 
-### Pattern 3: Custom Platform Names (gitui style)
+### Pattern 4: Custom Platform Names (gitui style)
 ```toml
 {{- $target := "" }}
 {{- if eq .chezmoi.os "linux" }}
