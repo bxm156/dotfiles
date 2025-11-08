@@ -505,6 +505,37 @@ fi
 - Example: After installing to `~/.local/bin/tool`, use `$HOME/.local/bin/tool` not `tool`
 - Never assume a just-installed binary is in PATH during same script execution
 
+### Logging Helpers
+
+All chezmoi scripts should use the logging helper library for consistent, enhanced output:
+
+**Source the library:**
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/lib/logging.sh"
+```
+
+**Available functions:**
+- `log_info "message"` - Informational messages (blue)
+- `log_success "message"` - Success messages (green) with ✓
+- `log_error "message"` - Error messages (red) with ✗ (goes to stderr)
+- `log_warning "message"` - Warning messages (yellow) with ⚠️
+- `log_progress "message"` - In-progress operations (cyan) with ⏳
+- `log_section "Section Name"` - Section headers with borders
+- `log_binary "name" "installing|installed"` - Binary installation tracking
+- `log_script "script-name.sh"` - Script execution tracking
+
+**Automatic gum enhancement:**
+- If gum is available: colored, styled output
+- If gum is unavailable: plain text with emojis (graceful degradation)
+
+**Message format:**
+All functions emit structured format: `[LEVEL] emoji message`
+Example: `[SUCCESS] ✓ Binary installed successfully`
+
 ### Modifying Template Variables
 
 Edit `.chezmoi.toml.tmpl` to add/modify variables:

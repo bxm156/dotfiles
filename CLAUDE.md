@@ -36,6 +36,13 @@ mise run test                 # Test in test container
 mise run test:interactive     # Test + interactive shell
 ```
 
+**Enhanced chezmoi apply wrapper:**
+```bash
+chezmoi-apply                 # Wrapper with gum spinner + live output
+cm-apply                      # Alias for chezmoi-apply (if in zsh)
+chezmoi apply                 # Standard chezmoi (no enhancement)
+```
+
 **On local machine (if not in devcontainer):**
 See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 
@@ -54,3 +61,4 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 - **[AGENTS.md](AGENTS.md)** - Detailed workflows, troubleshooting, implementation patterns
 - **[EXTERNAL.md](EXTERNAL.md)** - External packages reference and instructions for adding packages
 - **[TESTING.md](TESTING.md)** - Testing workflow and commands
+- **Logging Helpers** - `.chezmoiscripts/lib/logging.sh` - DRY logging functions with gum enhancement
