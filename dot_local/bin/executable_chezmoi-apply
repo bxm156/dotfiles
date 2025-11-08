@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Enhanced chezmoi apply wrapper with gum spinner
+# Usage: chezmoi-apply [chezmoi apply arguments]
+
+# Pass through all arguments to chezmoi apply (default to -v for verbose)
+CHEZMOI_ARGS="${*:--v}"
+
+if command -v gum &>/dev/null; then
+    # With gum: Show spinner + live output
+    gum spin \
+        --spinner meter \
+        --title "Applying dotfiles configuration..." \
+        --show-output \
+        -- chezmoi apply $CHEZMOI_ARGS
+else
+    # Without gum: Just run chezmoi
+    chezmoi apply $CHEZMOI_ARGS
+fi
