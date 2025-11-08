@@ -111,6 +111,11 @@ alias cme='chezmoi edit'
 alias cma='chezmoi apply'
 alias cm='chezmoi'
 
+# Chezmoi wrapper with enhanced UI (gum-based spinner and logging)
+if [[ -x "$HOME/.local/bin/chezmoi-apply" ]]; then
+    alias cm-apply='chezmoi-apply'
+fi
+
 # Load modern CLI tools (fzf, zoxide, eza, bat)
 if [[ -d "$HOME/.config/zsh/tools" ]]; then
     for tool_config in "$HOME/.config/zsh/tools"/*.zsh; do
