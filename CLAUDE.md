@@ -56,6 +56,19 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 
 **Git configuration:** Uses `[include]` mechanism, setup is automatic via `run_once_after` script
 
+**Productivity tools:** glow (markdown viewer), mods (AI CLI), taskwarrior + taskwarrior-tui (task management)
+
+**Quick commands:**
+```bash
+glow file.md              # View markdown beautifully
+mods "question"           # Ask AI anything
+ai "question"             # Alias for mods
+task add "todo"           # Add task
+tt                        # Open taskwarrior TUI
+note "capture this"       # Quick note to inbox
+research "topic"          # AI research → markdown
+```
+
 ## See Also
 
 - **[AGENTS.md](AGENTS.md)** - Detailed workflows, troubleshooting, implementation patterns

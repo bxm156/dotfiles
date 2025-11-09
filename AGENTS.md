@@ -895,6 +895,7 @@ chezmoi update
 - **[CLAUDE.md](CLAUDE.md)** - Quick reference and critical rules
 - **[EXTERNAL.md](EXTERNAL.md)** - External packages reference and AI agent instructions
 - **[TESTING.md](TESTING.md)** - Testing workflow and commands
+- **[PRODUCTIVITY.md](docs/PRODUCTIVITY.md)** - Productivity tools guide (glow, mods, taskwarrior)
 
 **Chezmoi Documentation:**
 - **Daily Operations**: https://www.chezmoi.io/user-guide/daily-operations/
