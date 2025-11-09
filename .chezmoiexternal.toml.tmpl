@@ -115,6 +115,19 @@
     refreshPeriod = "672h"
     path = "glow"
 
+# mods - AI on the command line (CLI interface to LLMs)
+{{- $modsOS := .chezmoi.os | title }}
+{{- $modsArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $modsArch = "x86_64" }}
+{{- end }}
+[".local/bin/mods"]
+    type = "archive-file"
+    url = "https://github.com/charmbracelet/mods/releases/download/v1.8.1/mods_1.8.1_{{ $modsOS }}_{{ $modsArch }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "mods_1.8.1_{{ $modsOS }}_{{ $modsArch }}/mods"
+
 # gum - Glamorous shell scripts with spinners, progress indicators, and more
 {{- $gumOS := .chezmoi.os | title }}
 {{- $gumArch := .chezmoi.arch }}
