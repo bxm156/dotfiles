@@ -140,3 +140,23 @@
     executable = true
     refreshPeriod = "672h"
     path = "gum_0.17.0_{{ $gumOS }}_{{ $gumArch }}/gum"
+
+# taskwarrior-tui - Terminal UI for taskwarrior
+{{- $tasktuiArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $tasktuiArch = "x86_64" }}
+{{- else if eq .chezmoi.arch "arm64" }}
+{{-   $tasktuiArch = "aarch64" }}
+{{- end }}
+{{- $tasktuiOS := .chezmoi.os }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   $tasktuiOS = "apple-darwin" }}
+{{- else if eq .chezmoi.os "linux" }}
+{{-   $tasktuiOS = "unknown-linux-gnu" }}
+{{- end }}
+[".local/bin/taskwarrior-tui"]
+    type = "archive-file"
+    url = "https://github.com/kdheepak/taskwarrior-tui/releases/download/v0.26.3/taskwarrior-tui-{{ $tasktuiArch }}-{{ $tasktuiOS }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "taskwarrior-tui"
