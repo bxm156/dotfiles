@@ -100,6 +100,21 @@
     path = "./gitui"
 {{- end }}
 
+# glow - Beautiful markdown reader for the terminal
+{{- $glowOS := .chezmoi.os }}
+{{- $glowArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $glowArch = "x86_64" }}
+{{- else if eq .chezmoi.arch "arm64" }}
+{{-   $glowArch = "arm64" }}
+{{- end }}
+[".local/bin/glow"]
+    type = "archive-file"
+    url = "https://github.com/charmbracelet/glow/releases/download/v2.0.0/glow_2.0.0_{{ $glowOS }}_{{ $glowArch }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "glow"
+
 # gum - Glamorous shell scripts with spinners, progress indicators, and more
 {{- $gumOS := .chezmoi.os | title }}
 {{- $gumArch := .chezmoi.arch }}
