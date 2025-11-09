@@ -5,7 +5,7 @@ bin/
 .claude/
 .devcontainer/
 .vscode/
-.mise.toml
+mise.toml
 README.md
 .git/
 Dockerfile.test

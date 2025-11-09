@@ -18,6 +18,6 @@ Dockerfile.test
 bin/
 .devcontainer/
 .vscode/
-.mise.toml
+mise.toml
 .dockerignore
 install.sh
