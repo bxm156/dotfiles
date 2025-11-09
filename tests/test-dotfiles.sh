@@ -55,7 +55,7 @@ log_section "Binary Installation Verification"
 # but we keep it here for test completeness
 
 test_failed=0
-for binary in jq fzf zoxide bat gitui gum starship; do
+for binary in jq fzf zoxide bat gitui gum starship glow mods; do
   binary_path="$HOME/.local/bin/$binary"
 
   if [[ ! -e "$binary_path" ]]; then
@@ -87,6 +87,76 @@ done
 
 if [[ $test_failed -eq 1 ]]; then
   log_error "Binary validation failed"
+  exit 1
+fi
+
+log_section "Productivity Tools Verification"
+
+# Test glow
+if [[ -x "$HOME/.local/bin/glow" ]]; then
+    if glow --version &>/dev/null; then
+        log_success "glow: installed and working"
+    else
+        log_error "glow: installed but not working"
+        test_failed=1
+    fi
+else
+    log_error "glow: not installed"
+    test_failed=1
+fi
+
+# Test mods
+if [[ -x "$HOME/.local/bin/mods" ]]; then
+    if mods --version &>/dev/null; then
+        log_success "mods: installed and working"
+    else
+        log_error "mods: installed but not working"
+        test_failed=1
+    fi
+else
+    log_error "mods: not installed"
+    test_failed=1
+fi
+
+# Test taskwarrior
+if [[ -x "$HOME/.local/bin/task" ]]; then
+    if task --version &>/dev/null; then
+        log_success "taskwarrior: installed and working"
+    else
+        log_error "taskwarrior: installed but not working"
+        test_failed=1
+    fi
+else
+    log_warning "taskwarrior: not installed (optional, requires compilation)"
+fi
+
+# Test taskwarrior-tui (only on x86_64)
+ARCH=$(uname -m)
+if [[ "$ARCH" == "x86_64" ]]; then
+    if [[ -x "$HOME/.local/bin/taskwarrior-tui" ]]; then
+        if taskwarrior-tui --version &>/dev/null; then
+            log_success "taskwarrior-tui: installed and working"
+        else
+            log_error "taskwarrior-tui: installed but not working"
+            test_failed=1
+        fi
+    else
+        log_error "taskwarrior-tui: not installed"
+        test_failed=1
+    fi
+else
+    log_info "taskwarrior-tui: skipped (ARM64 not supported)"
+fi
+
+# Test notes directory
+if [[ -d "$HOME/notes" ]]; then
+    log_success "Notes directory created"
+else
+    log_warning "Notes directory missing (will be created in Task 7)"
+fi
+
+if [[ $test_failed -eq 1 ]]; then
+  log_error "Productivity tools validation failed"
   exit 1
 fi
 
