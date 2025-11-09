@@ -21,8 +21,3 @@ bin/
 .vscode/
 .mise.toml
 .dockerignore
-
-# Script helpers (sourced, not executed directly)
-.chezmoiscripts/lib/
-.chezmoiscripts/lib/*
-.chezmoiscripts/lib/**/*
