@@ -16,8 +16,8 @@ Dockerfile.test
 # Development and tooling
 .local/
 bin/
-.claude/
 .devcontainer/
 .vscode/
 .mise.toml
 .dockerignore
+install.sh

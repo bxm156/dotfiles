@@ -39,13 +39,20 @@ echo
 log_test "Template Syntax Validation"
 cd "$REPO_ROOT"
 
-for template in .chezmoi.toml.tmpl .chezmoiexternal.toml.tmpl .chezmoiignore.tmpl; do
+for template in .chezmoi.toml.tmpl .chezmoiexternal.toml.tmpl; do
     if chezmoi execute-template < "$template" > /dev/null 2>&1; then
         log_pass "$template renders successfully"
     else
         log_fail "$template has syntax errors"
     fi
 done
+
+# .chezmoiignore is not templated, just verify it exists
+if [[ -f .chezmoiignore ]]; then
+    log_pass ".chezmoiignore exists (not templated)"
+else
+    log_fail ".chezmoiignore missing"
+fi
 echo
 
 # Test 2: Check .chezmoi.toml.tmpl output

@@ -9,10 +9,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 echo "=== Testing Logging Helper Library ==="
 
 # Test 1: Library can be sourced
-if source "$REPO_ROOT/.chezmoiscripts/lib/logging.sh" 2>/dev/null; then
-    echo "✓ logging.sh can be sourced"
+if source "$REPO_ROOT/.chezmoiscripts/lib/.logging.sh" 2>/dev/null; then
+    echo "✓ .logging.sh can be sourced"
 else
-    echo "✗ logging.sh cannot be sourced"
+    echo "✗ .logging.sh cannot be sourced"
     exit 1
 fi
 
