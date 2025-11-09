@@ -101,7 +101,7 @@
 {{- end }}
 
 # glow - Beautiful markdown reader for the terminal
-{{- $glowOS := .chezmoi.os }}
+{{- $glowOS := .chezmoi.os | title }}
 {{- $glowArch := .chezmoi.arch }}
 {{- if eq .chezmoi.arch "amd64" }}
 {{-   $glowArch = "x86_64" }}
@@ -113,7 +113,7 @@
     url = "https://github.com/charmbracelet/glow/releases/download/v2.1.1/glow_2.1.1_{{ $glowOS }}_{{ $glowArch }}.tar.gz"
     executable = true
     refreshPeriod = "672h"
-    path = "glow"
+    path = "glow_2.1.1_{{ $glowOS }}_{{ $glowArch }}/glow"
 
 # mods - AI on the command line (CLI interface to LLMs)
 {{- $modsOS := .chezmoi.os | title }}
