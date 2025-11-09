@@ -94,7 +94,7 @@ log_section "Productivity Tools Verification"
 
 # Test glow
 if [[ -x "$HOME/.local/bin/glow" ]]; then
-    if glow --version &>/dev/null; then
+    if "$HOME/.local/bin/glow" --version &>/dev/null; then
         log_success "glow: installed and working"
     else
         log_error "glow: installed but not working"
@@ -107,7 +107,7 @@ fi
 
 # Test mods
 if [[ -x "$HOME/.local/bin/mods" ]]; then
-    if mods --version &>/dev/null; then
+    if "$HOME/.local/bin/mods" --version &>/dev/null; then
         log_success "mods: installed and working"
     else
         log_error "mods: installed but not working"
@@ -120,7 +120,7 @@ fi
 
 # Test taskwarrior
 if [[ -x "$HOME/.local/bin/task" ]]; then
-    if task --version &>/dev/null; then
+    if "$HOME/.local/bin/task" --version &>/dev/null; then
         log_success "taskwarrior: installed and working"
     else
         log_error "taskwarrior: installed but not working"
@@ -134,7 +134,7 @@ fi
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
     if [[ -x "$HOME/.local/bin/taskwarrior-tui" ]]; then
-        if taskwarrior-tui --version &>/dev/null; then
+        if "$HOME/.local/bin/taskwarrior-tui" --version &>/dev/null; then
             log_success "taskwarrior-tui: installed and working"
         else
             log_error "taskwarrior-tui: installed but not working"
@@ -152,7 +152,8 @@ fi
 if [[ -d "$HOME/notes" ]]; then
     log_success "Notes directory created"
 else
-    log_warning "Notes directory missing (will be created in Task 7)"
+    log_error "Notes directory missing"
+    test_failed=1
 fi
 
 if [[ $test_failed -eq 1 ]]; then
