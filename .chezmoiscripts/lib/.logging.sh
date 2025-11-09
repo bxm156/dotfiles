@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
 # Logging helpers with automatic gum enhancement
+# This file is sourced, not executed directly
 
 # Detect gum availability (cached for performance)
 if [[ -z "${_LOGGING_HAS_GUM+x}" ]]; then

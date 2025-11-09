@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # Source logging helpers (from repo root in devcontainer, from installed location in test container)
-if [[ -f ~/.local/share/chezmoi/.chezmoiscripts/lib/logging.sh ]]; then
-    source ~/.local/share/chezmoi/.chezmoiscripts/lib/logging.sh
-elif [[ -f .chezmoiscripts/lib/logging.sh ]]; then
-    source .chezmoiscripts/lib/logging.sh
+if [[ -f ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh ]]; then
+    source ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh
+elif [[ -f .chezmoiscripts/lib/.logging.sh ]]; then
+    source .chezmoiscripts/lib/.logging.sh
 fi
 
 log_section "Installing Chezmoi"

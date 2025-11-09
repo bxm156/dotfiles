@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Source logging helpers
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/lib/logging.sh"
+source "${SCRIPT_DIR}/lib/.logging.sh"
 
 log_section "External Binary Verification"
 
