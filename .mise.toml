@@ -27,6 +27,10 @@ run = "docker compose run --rm dotfiles-test-github"
 description = "Test template rendering and syntax validation"
 run = "tests/test-render-simple.sh"
 
+[tasks."test:logging"]
+description = "Test logging helper library"
+run = "bash tests/test-logging-helpers.sh"
+
 [tasks."test:install"]
 description = "Test install.sh script in test container (pretty mode)"
 run = """
