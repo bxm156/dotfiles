@@ -123,6 +123,102 @@ if [[ -d "$HOME/.config/zsh/tools" ]]; then
     done
 fi
 
+# ═══════════════════════════════════════════════════════════════
+# Productivity Tool Integrations
+# ═══════════════════════════════════════════════════════════════
+
+# Glow - Beautiful markdown reader
+if command -v glow &>/dev/null; then
+    alias gmd='glow'
+    alias glow-pager='glow --pager'
+
+    # View markdown files in current directory
+    alias notes='glow --pager *.md 2>/dev/null || echo "No markdown files found"'
+fi
+
+# Mods - AI on the command line
+if command -v mods &>/dev/null; then
+    # Quick AI helpers
+    alias ai='mods'
+    alias explain='mods "explain this:"'
+    alias summarize='mods "summarize this:"'
+
+    # Function to ask AI about command output
+    ask() {
+        if [[ -p /dev/stdin ]]; then
+            # Input from pipe
+            mods "$@"
+        else
+            # Direct question
+            mods "$@"
+        fi
+    }
+fi
+
+# Taskwarrior shortcuts
+if command -v task &>/dev/null; then
+    alias t='task'
+    alias ta='task add'
+    alias tl='task list'
+    alias td='task done'
+    alias tt='taskwarrior-tui'
+
+    # Quick reports
+    alias today='task +DUETODAY'
+    alias tomorrow='task due:tomorrow'
+    alias week='task due:week'
+    alias overdue='task overdue'
+    alias late='task overdue'
+
+    # Show task summary on new terminal (optional - comment out if too noisy)
+    # task next limit:5
+fi
+
+# ═══════════════════════════════════════════════════════════════
+# Productivity Helper Functions
+# ═══════════════════════════════════════════════════════════════
+
+# Quick research function using mods
+research() {
+    local topic="$1"
+    shift
+    local output_file="$HOME/notes/research/$(date +%Y-%m-%d)-${topic// /-}.md"
+
+    echo "# Research: $topic" > "$output_file"
+    echo "" >> "$output_file"
+    echo "Date: $(date)" >> "$output_file"
+    echo "" >> "$output_file"
+
+    mods "Research $topic and provide a comprehensive summary with key points. $*" >> "$output_file"
+
+    echo "Research saved to: $output_file"
+    glow "$output_file"
+}
+
+# Quick note capture
+note() {
+    local inbox="$HOME/notes/inbox.md"
+    mkdir -p "$(dirname "$inbox")"
+
+    echo "" >> "$inbox"
+    echo "## $(date '+%Y-%m-%d %H:%M')" >> "$inbox"
+    echo "" >> "$inbox"
+    echo "$@" >> "$inbox"
+    echo "" >> "$inbox"
+
+    echo "Note added to inbox"
+}
+
+# View notes with glow
+viewnotes() {
+    local notes_dir="${1:-$HOME/notes}"
+    if [[ -d "$notes_dir" ]]; then
+        cd "$notes_dir" && glow --pager
+    else
+        echo "Notes directory not found: $notes_dir"
+    fi
+}
+
 #Star ship
 eval "$(starship init zsh)"
 
