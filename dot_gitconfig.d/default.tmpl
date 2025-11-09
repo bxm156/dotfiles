@@ -18,7 +18,15 @@
 	gpgsign = true
 
 [core]
+{{- if lookPath "code" }}
+	editor = "code --wait"
+{{- else if lookPath "vim" }}
 	editor = "vim"
+{{- else if lookPath "vim.tiny" }}
+	editor = "vim.tiny"
+{{- else }}
+	editor = "vi"
+{{- end }}
 {{- if eq .chezmoi.os "darwin" }}
 	autocrlf = input
 {{- else if eq .chezmoi.os "linux" }}
