@@ -164,7 +164,7 @@ if command -v task &>/dev/null; then
     alias tt='taskwarrior-tui'
 
     # Quick reports
-    alias today='task +DUETODAY'
+    alias today='task due:today'
     alias tomorrow='task due:tomorrow'
     alias week='task due:week'
     alias overdue='task overdue'
@@ -180,9 +180,27 @@ fi
 
 # Quick research function using mods
 research() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: research <topic> [additional context]" >&2
+        return 1
+    fi
+
+    if ! command -v mods &>/dev/null; then
+        echo "Error: research() requires mods to be installed" >&2
+        return 1
+    fi
+
+    if ! command -v glow &>/dev/null; then
+        echo "Error: research() requires glow to be installed" >&2
+        return 1
+    fi
+
     local topic="$1"
     shift
     local output_file="$HOME/notes/research/$(date +%Y-%m-%d)-${topic// /-}.md"
+
+    # Ensure directory exists
+    mkdir -p "$(dirname "$output_file")"
 
     echo "# Research: $topic" > "$output_file"
     echo "" >> "$output_file"
@@ -211,9 +229,14 @@ note() {
 
 # View notes with glow
 viewnotes() {
+    if ! command -v glow &>/dev/null; then
+        echo "Error: viewnotes() requires glow to be installed" >&2
+        return 1
+    fi
+
     local notes_dir="${1:-$HOME/notes}"
     if [[ -d "$notes_dir" ]]; then
-        cd "$notes_dir" && glow --pager
+        (cd "$notes_dir" && glow --pager)
     else
         echo "Notes directory not found: $notes_dir"
     fi
