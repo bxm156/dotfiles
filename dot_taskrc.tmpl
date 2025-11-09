@@ -1,0 +1,43 @@
+# Taskwarrior configuration
+# See https://taskwarrior.org/docs/configuration/
+
+# Data location
+data.location=~/.task
+
+# Color theme (dark-256 is good for most terminals)
+include /usr/share/taskwarrior/dark-256.theme
+
+# Default command (when you type just 'task')
+default.command=next
+
+# Urgency configuration (what makes tasks important)
+urgency.user.tag.next.coefficient=15.0
+urgency.due.coefficient=12.0
+urgency.blocking.coefficient=8.0
+urgency.active.coefficient=4.0
+
+# Report definitions
+report.next.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.next.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.next.filter=status:pending -WAITING limit:page
+
+# Custom reports
+report.today.description=Tasks due today
+report.today.columns=id,priority,project,tags,description,due
+report.today.labels=ID,Pri,Project,Tags,Description,Due
+report.today.filter=status:pending due:today
+report.today.sort=due+,priority-,project+
+
+# UDA for taskwarrior-tui integration
+uda.taskwarrior-tui.selection.indicator=•
+uda.taskwarrior-tui.selection.bold=yes
+uda.taskwarrior-tui.selection.italic=no
+uda.taskwarrior-tui.selection.dim=no
+uda.taskwarrior-tui.selection.blink=no
+
+# Sync configuration (disabled by default, enable when ready)
+# taskd.certificate=~/.task/freecinc.cert.pem
+# taskd.key=~/.task/freecinc.key.pem
+# taskd.ca=~/.task/freecinc.ca.pem
+# taskd.server=freecinc.com:53589
+# taskd.credentials=FreeCinc/username/uuid
