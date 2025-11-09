@@ -39,15 +39,21 @@ Chezmoi manages dotfiles across multiple machines using:
 
 ### File Naming Conventions
 
+**IMPORTANT: The `dot_` prefix is how chezmoi creates hidden files (those starting with `.`)**
+
 | Source Filename | Target Result | Notes |
 |----------------|---------------|-------|
-| `dot_zshrc` | `~/.zshrc` | `dot_` prefix becomes `.` |
-| `dot_config/starship.toml` | `~/.config/starship.toml` | Directory structure preserved |
+| `dot_zshrc` | `~/.zshrc` | `dot_` → `.` (creates hidden file) |
+| `dot_config/starship.toml` | `~/.config/starship.toml` | `dot_` → `.` (creates hidden directory) |
+| `notes/README.md` | `~/notes/README.md` | No `dot_` = visible directory |
+| `dot_notes/README.md` | `~/.notes/README.md` | `dot_` → `.` (creates HIDDEN directory) |
 | `file.tmpl` | `~/file` | Template processed, `.tmpl` removed |
 | `dot_zshrc.tmpl` | `~/.zshrc` | Both transformations applied |
 | `run_once_install.sh` | Executed once | Runs on first apply only |
 | `run_script.sh` | Executed always | Runs every apply |
 | `executable_script` | Made executable | Preserves executable bit |
+
+**Key Rule:** Use `dot_` prefix ONLY when you want the file/directory to be hidden (start with `.`). For visible files/directories like `~/notes/`, use the name directly without `dot_` prefix.
 
 ### Template Processing Flow
 
