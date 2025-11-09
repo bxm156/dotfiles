@@ -4,9 +4,15 @@ set -euo pipefail
 # Automatically add [include] directive to ~/.gitconfig for chezmoi-managed config
 # This runs once after chezmoi applies files
 
-# Source logging helpers
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/lib/.logging.sh"
+# Source logging helpers (from chezmoi source directory or current directory)
+if [[ -f ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh ]]; then
+    source ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh
+elif [[ -f "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh"
+else
+    echo "Error: Could not find logging helpers" >&2
+    exit 1
+fi
 
 log_script "setup-gitconfig-include.sh"
 
