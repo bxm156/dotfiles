@@ -172,7 +172,7 @@ format = '[[ $symbol( $version) ]($style)]($style)'
 
 [php]
 symbol = ""
-style = "bg:green fg:crust"Whjat
+style = "bg:green fg:crust"
 format = '[[ $symbol( $version) ]($style)]($style)'
 
 [java]
