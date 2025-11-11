@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# KNOWN LIMITATION: Due to Claude Code bug #6246, Unicode characters may be
+# corrupted in hook input. This hook exits early for non-markdown files to
+# avoid making the corruption worse.
+# https://github.com/anthropics/claude-code/issues/6246
+
 # CRITICAL: Extract ONLY file_path first, let jq consume stdin without bash variables
 # This prevents Unicode corruption in bash variable handling
 file_path=$(jq -r '.tool_input.file_path // empty')
