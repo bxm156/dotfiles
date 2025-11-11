@@ -25,6 +25,7 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 12. **Always keep tests updated** - especially when adding new external packages / tools
 13. **NEVER assume installed binaries are in PATH during same script** - scripts inherit PATH at start, use full paths after installation
 14. **When installing binaries in scripts, use full paths for subsequent commands** - e.g., `$HOME/.local/bin/tool` not `tool`
+15. **Use template variables from `.chezmoi.toml.tmpl` for OS conditionals** - prefer `{{ if .isWSL }}` over bash detection, enables conditional file inclusion
 
 ## Quick Reference
 
@@ -50,7 +51,14 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 
 **Supported platforms:** Linux, macOS, WSL (uses Linux binaries)
 
-**Template variables:** `.chezmoi.os`, `.chezmoi.arch`, `.isWork`, `.isHome`, `.isDevContainer`, `.isWSL`, `.isWindows`
+**Template variables (from `.chezmoi.toml.tmpl`):**
+- `.chezmoi.os`, `.chezmoi.arch` - Platform detection
+- `.isWork`, `.isHome` - Machine-specific flags
+- `.isDevContainer` - True in devcontainers/Codespaces
+- `.isWSL` - True in Windows Subsystem for Linux
+- `.isWindows` - True for native Windows or WSL
+- Use these for OS conditionals: `{{- if .isWSL }}...{{- end }}`
+- Prefer template logic over bash detection (enables conditional file inclusion)
 
 **Shell script standards:** `#!/usr/bin/env bash` with `set -euo pipefail`, quote variables, use `command -v` not `which`
 

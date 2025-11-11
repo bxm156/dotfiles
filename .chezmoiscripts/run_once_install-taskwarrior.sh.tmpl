@@ -17,6 +17,12 @@ fi
 
 log_script "install-taskwarrior.sh"
 
+{{- /* Skip taskwarrior installation on WSL and Windows (not yet supported) */ -}}
+{{- if .isWindows }}
+log_info "Skipping taskwarrior installation on Windows/WSL (not yet supported)"
+exit 0
+{{- end }}
+
 TASK_BIN="$HOME/.local/bin/task"
 
 # Check if already installed
