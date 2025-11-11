@@ -1,27 +1,22 @@
-# Global rumdl configuration for dotfiles
-# This file is installed to ~/.config/rumdl/rumdl.toml
+# Global rumdl configuration for Obsidian Yelp vault
+# Note: rumdl automatically reads .markdownlint.json from project directories
+# This global config adds vault-wide settings
 # See: https://github.com/rvben/rumdl#configuration
 
 [global]
 # Global settings
-line-length = 100
 respect-gitignore = true
 
 # Exclude common directories
-exclude = ["node_modules", "build", "dist", ".git"]
+exclude = ["node_modules", "build", "dist", ".git", ".obsidian", ".space", ".trash"]
 
-# Rule-specific configuration
-[MD013]
-# Line length
-line-length = 100
-code-blocks = false # Don't check code block line lengths
-tables = false      # Don't check table line lengths
-reflow = true       # Enable automatic line wrapping (required for --fix)
+# Rules are automatically loaded from .markdownlint.json in project directories
+# No need to duplicate them here - rumdl will find and use .markdownlint.json
 
 [MD007]
-# Unordered list indentation
-indent = 2
+# MD007: Unordered list indentation
+indent = 2  # Project uses 2-space indent
 
 [MD048]
-# Code fence style
-code-fence-style = "backtick"
+# MD048: Code fence style
+style = "backtick"  # Use backticks (```) for code fences
