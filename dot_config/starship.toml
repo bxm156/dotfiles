@@ -1,42 +1,282 @@
-# Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Inserts a blank line between shell prompts
-add_newline = true
+# Developer-focused Catppuccin Powerline prompt
+# Two-line layout with rich context and clean cursor
+#
+# Powerline Extra Symbols Reference (https://github.com/ryanoasis/powerline-extra-symbols)
+# All styles included in Nerd Fonts - test which ones your font supports
+#
+# Original (standard powerline):
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0B0  separator_thin: \uE0B1
+#
+# Angly 1:
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0B8  separator_thin: \uE0B9
+#
+# Angly 2:
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0BC  separator_thin: \uE0BD
+#
+# Curvy (rounded):
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0B4  separator_thin: \uE0B5
+#
+# Flames (flamey):
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0C0  separator_thin: \uE0C1
+#
+# Lego (blocky):
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0CE  separator_thin: \uE0CF
+#
+# Pixelated (currently used):
+#   lock: \uE0A2  network: \uE0A2  separator: \uE0C6  separator_thin: \uE0C7
+#
+# To change styles: replace the separator characters in the format string below
 
-palette = "catppuccin_mocha"
+format = """
+[](red)\
+$os\
+$username\
+$hostname\
+[](bg:peach fg:red)\
+$directory\
+[](bg:yellow fg:peach)\
+$git_branch\
+$git_status\
+[](fg:yellow bg:green)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:green bg:sapphire)\
+$docker_context\
+$conda\
+[](fg:sapphire bg:lavender)\
+$time\
+[ ](fg:lavender)\
+$cmd_duration\
+$battery\
+$line_break\
+$character"""
 
+palette = 'catppuccin_mocha'
+
+# Enable transient prompts (previous prompts collapse to just the character)
+[character]
+success_symbol = "[[](green)](green)"
+error_symbol = "[[󰯉](red)](red)"
+vimcmd_symbol = "[[ ❮](subtext1)](subtext1)"
+vimcmd_replace_one_symbol = "[[ ❮](lavender)](lavender)"
+vimcmd_replace_symbol = "[[ ❮](lavender)](lavender)"
+vimcmd_visual_symbol = "[[ ❮](yellow)](yellow)"
+
+[line_break]
+disabled = false
+
+# OS detection
+[os]
+disabled = false
+style = "bg:red fg:crust"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+
+# User information
+[username]
+show_always = true
+style_user = "bg:red fg:crust"
+style_root = "bg:red fg:crust"
+format = '[ $user ]($style)'
+
+# Hostname (critical for SSH and containers)
+[hostname]
+ssh_only = false
+style = "bg:red fg:crust"
+format = '[@$hostname ]($style)'
+
+# Directory
+[directory]
+style = "bg:peach fg:crust"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+# Git branch (no icon, just branch name)
+[git_branch]
+symbol = ""
+style = "bg:yellow fg:crust"
+format = '[[ $branch ]($style)]($style)'
+
+# Git status (simplified: just clean or dirty indicator)
+[git_status]
+style = "bg:yellow fg:crust"
+format = '[[($all_status$ahead_behind )]($style)]($style)'
+conflicted = "✗"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+up_to_date = "✓"
+untracked = "✗"
+stashed = ""
+modified = "✗"
+staged = "✗"
+renamed = "✗"
+deleted = "✗"
+
+# Language versions (only show when in project directory)
+[nodejs]
+symbol = ""
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[c]
+symbol = " "
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[php]
+symbol = ""
+style = "bg:green fg:crust"Whjat
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[java]
+symbol = " "
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version) ]($style)]($style)'
+
+[python]
+symbol = ""
+style = "bg:green fg:crust"
+format = '[[ $symbol( $version)(($virtualenv)) ]($style)]($style)'
+
+# Docker context (only show when not default)
+[docker_context]
+symbol = ""
+style = "bg:sapphire fg:crust"
+format = '[[ $symbol( $context) ]($style)]($style)'
+only_with_files = false
+
+# Conda environment
+[conda]
+symbol = " "
+style = "bg:sapphire fg:crust"
+format = '[[$symbol$environment ]($style)]($style)'
+ignore_base = false
+
+# Time
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:lavender fg:crust"
+format = '[[  $time ]($style)]($style)'
+
+# Command duration
+[cmd_duration]
+min_time = 750
+format = "[ took $duration](bold yellow)"
+show_milliseconds = false
+disabled = false
+show_notifications = true
+min_time_to_notify = 45000
+
+# Battery (auto-detected - only shows when battery present)
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡"
+discharging_symbol = "💀"
+unknown_symbol = ""
+empty_symbol = "💀"
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
+discharging_symbol = "💀"
+
+[[battery.display]]
+threshold = 100
+style = "bold green"
+charging_symbol = "⚡"
+
+# Disable container detection (we're often IN containers)
 [container]
 disabled = true
 
-[character]
-# Note the use of Catppuccin color 'peach'
-success_symbol = "[[](green) ❯](peach)"
-error_symbol = "[󰯉[](red) ❯](peach)"
-vimcmd_symbol = "[ ❮](subtext1)" # For use with zsh-vi-mode
+# Catppuccin Mocha color palette
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
 
-[username]
-show_always = true
-
-[localip]
-ssh_only = false
-disabled = false
-
-[git_branch]
-style = "bold mauve"
-symbol = '🌱 '
-truncation_length = 4
-truncation_symbol = ''
-
-[directory]
-truncation_length = 4
-style = "bold lavender"
-
-[battery]
-full_symbol = '🔋 '
-charging_symbol = '⚡️ '
-discharging_symbol = '💀 '
-
+# Other Catppuccin palettes (available by changing palette = above)
 [palettes.catppuccin_frappe]
 rosewater = "#f2d5cf"
 flamingo = "#eebebe"
@@ -93,7 +333,6 @@ base = "#eff1f5"
 mantle = "#e6e9ef"
 crust = "#dce0e8"
 
-
 [palettes.catppuccin_macchiato]
 rosewater = "#f4dbd6"
 flamingo = "#f0c6c6"
@@ -121,32 +360,3 @@ surface0 = "#363a4f"
 base = "#24273a"
 mantle = "#1e2030"
 crust = "#181926"
-
-
-[palettes.catppuccin_mocha]
-rosewater = "#f5e0dc"
-flamingo = "#f2cdcd"
-pink = "#f5c2e7"
-mauve = "#cba6f7"
-red = "#f38ba8"
-maroon = "#eba0ac"
-peach = "#fab387"
-yellow = "#f9e2af"
-green = "#a6e3a1"
-teal = "#94e2d5"
-sky = "#89dceb"
-sapphire = "#74c7ec"
-blue = "#89b4fa"
-lavender = "#b4befe"
-text = "#cdd6f4"
-subtext1 = "#bac2de"
-subtext0 = "#a6adc8"
-overlay2 = "#9399b2"
-overlay1 = "#7f849c"
-overlay0 = "#6c7086"
-surface2 = "#585b70"
-surface1 = "#45475a"
-surface0 = "#313244"
-base = "#1e1e2e"
-mantle = "#181825"
-crust = "#11111b"
