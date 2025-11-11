@@ -77,6 +77,19 @@ note "capture this"       # Quick note to inbox
 research "topic"          # AI research → markdown
 ```
 
+**Todoist integration (via MCP):**
+```bash
+/todo                     # Top 10 urgent (p1) tasks today + overdue
+/todo 5                   # Top 5 urgent tasks
+/todo 20                  # Top 20 urgent tasks
+/todo urgent              # High priority (p1 + p2) tasks
+/todo work                # Urgent tasks in Work project
+/todo tomorrow            # Urgent tasks due tomorrow
+/todo this week           # Urgent tasks due this week
+/todo overdue             # Only overdue urgent tasks
+/todo "review PR"         # Search tasks matching text
+```
+
 ## See Also
 
 - **[AGENTS.md](AGENTS.md)** - Detailed workflows, troubleshooting, implementation patterns
