@@ -1,0 +1,27 @@
+# Global rumdl configuration for dotfiles
+# This file is installed to ~/.config/rumdl/rumdl.toml
+# See: https://github.com/rvben/rumdl#configuration
+
+[global]
+# Global settings
+line-length = 100
+respect-gitignore = true
+
+# Exclude common directories
+exclude = ["node_modules", "build", "dist", ".git"]
+
+# Rule-specific configuration
+[MD013]
+# Line length
+line-length = 100
+code-blocks = false # Don't check code block line lengths
+tables = false      # Don't check table line lengths
+reflow = true       # Enable automatic line wrapping (required for --fix)
+
+[MD007]
+# Unordered list indentation
+indent = 2
+
+[MD048]
+# Code fence style
+code-fence-style = "backtick"

@@ -162,3 +162,30 @@
     refreshPeriod = "672h"
     path = "taskwarrior-tui"
 {{- end }}
+
+# rumdl - Markdown linter written in Rust (markdownlint-compatible, 5x faster)
+# Supports stdin/stdout for editor integration and auto-fixing
+{{- if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") }}
+{{- $rumdlTarget := "" }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   if eq .chezmoi.arch "amd64" }}
+{{-     $rumdlTarget = "x86_64-unknown-linux-gnu" }}
+{{-   else if eq .chezmoi.arch "arm64" }}
+{{-     $rumdlTarget = "aarch64-unknown-linux-gnu" }}
+{{-   end }}
+{{- else if eq .chezmoi.os "darwin" }}
+{{-   if eq .chezmoi.arch "amd64" }}
+{{-     $rumdlTarget = "x86_64-apple-darwin" }}
+{{-   else if eq .chezmoi.arch "arm64" }}
+{{-     $rumdlTarget = "aarch64-apple-darwin" }}
+{{-   end }}
+{{- end }}
+{{- if ne $rumdlTarget "" }}
+[".local/bin/rumdl"]
+    type = "archive-file"
+    url = "https://github.com/rvben/rumdl/releases/download/v0.0.174/rumdl-v0.0.174-{{ $rumdlTarget }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "rumdl"
+{{- end }}
+{{- end }}

@@ -24,13 +24,28 @@
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true
   },
-   "permissions": {
+  "permissions": {
     "allow": [
       "mcp__context7",
       "mcp__sequentialthinking",
       "mcp__firecrawl",
-      "mcp__brave-search"
+      "mcp__brave-search",
       "Skill(superpowers:*)",
-      "WebFetch(*)",
+      "WebFetch(*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME\"/.claude/hooks/markdownlint-fix.sh",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -19,6 +19,7 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 | zoxide | v0.9.8 | archive | ✓ | ✓ | ✓ | ✓ | 672h | Smart cd replacement |
 | bat | v0.26.0 | archive | ✓ | ✓ | ✓ | ✓ | 672h | cat with syntax highlighting, stripComponents=1 |
 | gitui | v0.27.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Fast terminal UI for git |
+| rumdl | v0.0.174 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Markdown linter/formatter, markdownlint-compatible, 5x faster, stdin/stdout support |
 
 **Refresh Periods:**
 - `168h` = 7 days (weekly)
