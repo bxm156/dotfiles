@@ -21,3 +21,5 @@ bin/
 mise.toml
 .dockerignore
 install.sh
+
+.oh-my-zsh/cache/
