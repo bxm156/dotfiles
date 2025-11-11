@@ -188,10 +188,36 @@ install_with_gum() {
         --title "Initializing dotfiles from GitHub..." \
         -- "$chezmoi_bin" init "$CHEZMOI_GITHUB_USER"
 
+    # Check for conflicts with dry-run
+    "$gum_bin" spin \
+        --spinner meter \
+        --title "Checking for conflicts..." \
+        -- "$chezmoi_bin" apply --dry-run --verbose > /dev/null 2>&1
+
+    local apply_flags=""
+
+    # Check if there are existing files that would be modified
+    local dry_run_output
+    dry_run_output=$("$chezmoi_bin" apply --dry-run 2>&1 || true)
+
+    if echo "$dry_run_output" | grep -q "would\|exist\|conflict" 2>/dev/null; then
+        echo ""
+        local apply_mode
+        apply_mode=$("$gum_bin" choose \
+            --header "Existing config files detected. How should they be handled?" \
+            --cursor.foreground 212 \
+            "Skip (keep existing files)" \
+            "Overwrite (replace with dotfiles)")
+
+        if [[ "$apply_mode" == "Overwrite (replace with dotfiles)" ]]; then
+            apply_flags="--force"
+        fi
+    fi
+
     "$gum_bin" spin \
         --spinner meter \
         --title "Applying dotfiles configuration..." \
-        -- "$chezmoi_bin" apply
+        -- "$chezmoi_bin" apply $apply_flags
 
     echo ""
     "$gum_bin" style \
