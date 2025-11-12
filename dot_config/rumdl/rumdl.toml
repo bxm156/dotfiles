@@ -10,6 +10,9 @@ respect-gitignore = true
 # Exclude common directories
 exclude = ["node_modules", "build", "dist", ".git", ".obsidian", ".space", ".trash"]
 
+# Disable rules globally (templates and documentation need these flexibilities)
+disable = ["MD024"]  # MD024: Allow duplicate headings
+
 # Rules are automatically loaded from .markdownlint.json in project directories
 # No need to duplicate them here - rumdl will find and use .markdownlint.json
 
