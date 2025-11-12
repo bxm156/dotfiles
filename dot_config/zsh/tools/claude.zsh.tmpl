@@ -1,0 +1,65 @@
+{{- if .isWork }}
+# ═══════════════════════════════════════════════════════════════
+# Claude Code Wrapper with Secret Injection
+# ═══════════════════════════════════════════════════════════════
+#
+# Wraps the `claude` command to inject secrets from .env files using
+# 1Password CLI (op) when available, with graceful fallback to direct
+# sourcing when op is not installed.
+#
+# Supported .env file locations (in merge order):
+#   1. ~/.config/claude/claude.env  (global/base secrets)
+#   2. ./.env                        (project-specific secrets, overrides global)
+#
+# Behavior:
+#   - If no .env files exist: runs `claude` directly (no modification)
+#   - If `op` command exists: uses `op run --env-file=... -- claude`
+#   - If `op` not available: sources .env files in a subshell before running `claude`
+#
+# Environment variable scope:
+#   - Variables are ONLY available to the claude process (isolated in subshell)
+#   - They do NOT persist in your shell after claude exits
+#
+# Examples:
+#   claude                    # Uses global ~/.config/claude/claude.env if exists
+#   cd ~/project && claude    # Merges global + project ./.env (project wins)
+#
+# ═══════════════════════════════════════════════════════════════
+
+claude() {
+    local env_files=()
+
+    # Collect existing env files in merge order
+    # Global secrets first, then project-specific (later overrides earlier)
+    [[ -f "$HOME/.config/claude/claude.env" ]] && env_files+=("$HOME/.config/claude/claude.env")
+    [[ -f "./.env" ]] && env_files+=("./.env")
+
+    # If no env files exist, run claude directly without modification
+    if [[ ${#env_files[@]} -eq 0 ]]; then
+        command claude "$@"
+        return $?
+    fi
+
+    # Environment files exist - inject secrets before running claude
+    if command -v op >/dev/null 2>&1; then
+        # 1Password CLI is available - use it to inject secrets
+        # This handles op:// secret references in .env files
+        local op_args=()
+        for envfile in "${env_files[@]}"; do
+            op_args+=(--env-file="$envfile")
+        done
+        op run "${op_args[@]}" --no-masking -- claude "$@"
+    else
+        # 1Password CLI not available - fallback to direct sourcing
+        # Run in subshell to prevent polluting current shell environment
+        (
+            set -a  # Auto-export all variable assignments
+            for envfile in "${env_files[@]}"; do
+                source "$envfile"
+            done
+            set +a  # Disable auto-export
+            command claude "$@"
+        )
+    fi
+}
+{{- end }}
