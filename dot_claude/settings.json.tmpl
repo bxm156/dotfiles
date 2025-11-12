@@ -1,5 +1,6 @@
 {
 {{- if .isWork }}
+  "model": "us.anthropic.claude-sonnet-4-5-20250929-v1:0[1M]",
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "{{ .authToken }}",
     "ANTHROPIC_BEDROCK_BASE_URL": "https://chatproxy.yelpcorp.com/bedrock",
