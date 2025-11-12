@@ -55,6 +55,41 @@
       "headers": {
         "x-litellm-api-key": "Bearer {{ .authToken }}"
       }
-    }{{- end }}
+    },
+	 "slack": {
+	      "command": "docker",
+	      "args": [
+		"run",
+		"-i",
+		"--rm",
+		"-e",
+		"SLACK_MCP_XOXC_TOKEN",
+		"-e",
+		"SLACK_MCP_XOXD_TOKEN",
+		"-e",
+		"SLACK_MCP_USER_AGENT",
+		"-e",
+		"SLACK_MCP_CUSTOM_TLS",
+		"-e",
+		"SLACK_MCP_USERS_CACHE",
+		"-e",
+		"SLACK_MCP_CHANNELS_CACHE",
+		"--mount",
+		"type=volume,source=mcp_slack_cache,target=/app/.cache/",
+		"ghcr.io/korotovsky/slack-mcp-server",
+		"mcp-server",
+		"--transport",
+		"stdio"
+	      ],
+	      "env": {
+		"SLACK_MCP_XOXC_TOKEN": "${MCP_SLACK_XOXC_TOKEN}",
+		"SLACK_MCP_XOXD_TOKEN": "${MCP_SLACK_XOXD_TOKEN}",
+		"SLACK_MCP_USER_AGENT": "${MCP_SLACK_USER_AGENT}",
+		"SLACK_MCP_CUSTOM_TLS": "${MCP_SLACK_CUSTOM_TLS}",
+		"SLACK_MCP_USERS_CACHE": "/app/.cache/.users_cache.json",
+		"SLACK_MCP_CHANNELS_CACHE": "/app/.cache/.channels_cache.json"
+	      }
+	    }
+  {{- end }}
   }
 }
