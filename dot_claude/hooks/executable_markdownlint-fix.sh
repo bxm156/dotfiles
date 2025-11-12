@@ -151,7 +151,8 @@ if [[ "$tool_name" == "Write" ]]; then
   [[ -n "$content" ]] || exit 0
 
   # Output JSON with formatted content
-D    "hookSpecificOutput": {
+  jq -n --arg file_path "$file_path" --arg content "$content" '{
+    "hookSpecificOutput": {
       "hookEventName": "PreToolUse",
       "permissionDecision": "allow",
       "permissionDecisionReason": "Auto-formatted markdown with rumdl",
