@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Install git hooks for the dotfiles repository
-REPO_ROOT="$(chezmoi source-path)"
+REPO_ROOT="{{ .chezmoi.sourceDir }}"
 
 if [ -d "$REPO_ROOT/.git/hooks" ]; then
   # Install pre-commit hook
