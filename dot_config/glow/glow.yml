@@ -1,0 +1,24 @@
+# Glow configuration
+# See: https://github.com/charmbracelet/glow
+
+# Style name or JSON path (default "auto")
+# Options: auto, dark, light, notty, or path to custom JSON style
+style: "auto"
+
+# Mouse wheel support (TUI-mode only)
+mouse: true
+
+# Use pager to display markdown
+pager: true
+
+# At which column should we word wrap?
+width: 100
+
+# Show all files, including hidden and ignored
+all: false
+
+# Show line numbers (TUI-mode only)
+showLineNumbers: false
+
+# Preserve newlines in the output
+preserveNewLines: false

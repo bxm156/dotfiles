@@ -38,3 +38,21 @@
 
 [log]
 	showSignature = true
+
+[alias]
+	# Common shortcuts
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+
+	# Undo operations
+	unstage = reset HEAD --
+	undo = reset HEAD~1 --soft
+
+	# Info and history
+	last = log -1 HEAD
+	graph = log --graph --oneline --all
+
+	# Quick amend
+	amend = commit --amend --no-edit
