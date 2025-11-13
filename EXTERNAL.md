@@ -14,6 +14,7 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 | oh-my-zsh | master | archive | ✓ | ✓ | ✓ | ✓ | 168h | stripComponents=1 |
 | zsh-vi-mode | v0.12.0 | archive | ✓ | ✓ | ✓ | ✓ | 168h | oh-my-zsh plugin, stripComponents=1 |
 | zsh-autosuggestions | v0.7.1 | archive | ✓ | ✓ | ✓ | ✓ | 168h | oh-my-zsh plugin, stripComponents=1 |
+| zsh-syntax-highlighting | v0.8.0 | archive | ✓ | ✓ | ✓ | ✓ | 168h | oh-my-zsh plugin, colors commands as you type, stripComponents=1 |
 | jq | v1.8.1 | file | ✓ | ✓ | ✓ | ✓ | 672h | JSON processor, also supports 386 arch |
 | fzf | v0.66.1 | archive | ✓ | ✓ | ✓ | ✓ | 672h | Fuzzy finder (Ctrl+R, Ctrl+T, Alt+C) |
 | zoxide | v0.9.8 | archive | ✓ | ✓ | ✓ | ✓ | 672h | Smart cd replacement |

@@ -49,6 +49,12 @@ else
   log_error "zsh-autosuggestions plugin missing"
 fi
 
+if [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]; then
+  log_success "zsh-syntax-highlighting plugin installed"
+else
+  log_error "zsh-syntax-highlighting plugin missing"
+fi
+
 log_section "Binary Installation Verification"
 
 # Note: This section is now handled by run_after_verify-external-binaries.sh

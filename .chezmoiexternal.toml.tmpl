@@ -21,6 +21,12 @@
     exact = true
     stripComponents = 1
     refreshPeriod = "168h"
+[".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+    type = "archive"
+    url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/refs/tags/0.8.0.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"
 
 {{- $jqOS := .chezmoi.os }}
 {{- if eq .chezmoi.os "darwin" }}

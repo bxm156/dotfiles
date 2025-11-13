@@ -37,6 +37,12 @@ else
   echo "✗ zsh-autosuggestions plugin missing"
 fi
 
+if [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]; then
+  echo "✓ zsh-syntax-highlighting plugin installed"
+else
+  echo "✗ zsh-syntax-highlighting plugin missing"
+fi
+
 echo ""
 echo "=== Binary Installation Verification ==="
 # Verify binaries are files (not directories) and are executable
