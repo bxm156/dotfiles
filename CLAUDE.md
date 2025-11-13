@@ -23,9 +23,11 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 10. **Use mise for task automation** - defined in `.mise.toml` for testing and development
 11. **Document template variables in `.chezmoi.toml.tmpl`** - centralize data definitions
 12. **Always keep tests updated** - especially when adding new external packages / tools
-13. **NEVER assume installed binaries are in PATH during same script** - scripts inherit PATH at start, use full paths after installation
-14. **When installing binaries in scripts, use full paths for subsequent commands** - e.g., `$HOME/.local/bin/tool` not `tool`
-15. **Use template variables from `.chezmoi.toml.tmpl` for OS conditionals** - prefer `{{ if .isWSL }}` over bash detection, enables conditional file inclusion
+1. **NEVER assume installed binaries are in PATH during same script** - scripts inherit PATH at start, use full paths after installation
+2. **When installing binaries in scripts, use full paths for subsequent commands** - e.g., `$HOME/.local/bin/tool` not `tool`
+3. **Use template variables from `.chezmoi.toml.tmpl` for OS conditionals** - prefer `{{ if .isWSL }}` over bash detection, enables conditional file inclusion
+4. **`.chezmoiscripts/` is for chezmoi scripts only** - `run_once_`, `run_after_`, etc. Not for arbitrary files
+5. **Store git hooks in `hooks/` directory** - install to `.git/hooks/` via run_once scripts
 
 ## Quick Reference
 

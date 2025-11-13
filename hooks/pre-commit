@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Check if any .json or .json.tmpl files are staged
+staged_json_files=$(git diff --cached --name-only | grep -E '\.(json|json\.tmpl)$' || true)
+
+if [ -n "$staged_json_files" ]; then
+  for file in $staged_json_files; do
+    if ! chezmoi execute-template < "$file" | jq empty 2>&1; then
+      echo ""
+      if command -v gum >/dev/null 2>&1; then
+        gum style --border rounded --border-foreground 196 --foreground 196 --bold --padding "0 1" "❌ JSON Validation Failed"
+        gum style --foreground 241 --italic "→ $file"
+      else
+        echo "❌ JSON validation failed: $file"
+      fi
+      echo ""
+      exit 1
+    fi
+  done
+fi
+
+exit 0
