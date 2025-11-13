@@ -16,6 +16,7 @@ CHEZMOI_GITHUB_USER="bxm156"
 # - Functions don't work with `gum spin` (runs in subshell)
 # - Functions don't work with `exec` (replaces current process)
 # - Variable expansion breaks shell quoting for command substitution
+# IMPORTANT: Always set BINDIR to absolute path - installer defaults to relative ".local/bin"
 
 # Parse arguments
 SAFE_MODE=false
@@ -47,7 +48,7 @@ done
 # Safe mode: run standard chezmoi installation
 if [[ "$SAFE_MODE" == true ]]; then
     echo -e "${BLUE}Running in safe mode (standard chezmoi installation)...${NC}"
-    exec sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply "$CHEZMOI_GITHUB_USER"
+    exec env BINDIR="$HOME/.local/bin" sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply "$CHEZMOI_GITHUB_USER"
 fi
 
 # Detect platform (matches .chezmoiexternal.toml.tmpl naming)
@@ -183,7 +184,7 @@ install_with_gum() {
         --spinner dot \
         --title "Downloading and installing chezmoi..." \
         --show-error \
-        -- sh -c "$(curl -fsLS get.chezmoi.io/lb)"; then
+        -- env BINDIR="$HOME/.local/bin" sh -c "$(curl -fsLS get.chezmoi.io/lb)"; then
         echo -e "${RED}Failed to install chezmoi${NC}" >&2
         return 1
     fi
@@ -262,7 +263,7 @@ fallback_to_safe_mode() {
     echo -e "${YELLOW}⚠ ${reason}${NC}"
     echo -e "${YELLOW}Falling back to safe mode...${NC}"
     echo ""
-    exec sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply "$CHEZMOI_GITHUB_USER"
+    exec env BINDIR="$HOME/.local/bin" sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply "$CHEZMOI_GITHUB_USER"
 }
 
 # Main installation flow
