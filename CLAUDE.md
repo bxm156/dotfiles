@@ -31,7 +31,7 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 18. **No OS-specific file suffixes exist in chezmoi** - use template conditionals `{{ if eq .chezmoi.os "darwin" }}` for OS-specific content, not fictional suffixes like `_darwin`
 1. **Bash functions don't work with `gum spin`** - `gum spin` runs commands in subshells where functions aren't available; inline commands or use scripts
 2. **Always check exit codes after `gum spin` commands** - wrap in `if !` conditionals to detect failures and trigger fallback behavior
-3. **Chezmoi installer needs absolute BINDIR path** - set `BINDIR="$HOME/.local/bin"` env var; default `.local/bin` is relative to current directory
+3. **Chezmoi installer needs absolute BINDIR path** - use `-b "$HOME/.local/bin"` flag; default `.local/bin` is relative to current directory
 
 ## Quick Reference
 
