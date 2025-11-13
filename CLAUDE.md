@@ -29,10 +29,13 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 16. **`.chezmoiscripts/` is for chezmoi scripts only** - `run_once_`, `run_after_`, etc. Not for arbitrary files
 17. **Store git hooks in `hooks/` directory** - install to `.git/hooks/` via run_once scripts
 18. **No OS-specific file suffixes exist in chezmoi** - use template conditionals `{{ if eq .chezmoi.os "darwin" }}` for OS-specific content, not fictional suffixes like `_darwin`
+19. **Bash functions don't work with `gum spin`** - `gum spin` runs commands in subshells where functions aren't available; inline commands or use scripts
+20. **Always check exit codes after `gum spin` commands** - wrap in `if !` conditionals to detect failures and trigger fallback behavior
 
 ## Quick Reference
 
 **In devcontainer (editing and testing):**
+
 ```bash
 vim dot_zshrc.tmpl            # Edit source files directly
 git add . && git commit       # Commit changes
@@ -41,6 +44,7 @@ mise run test:interactive     # Test + interactive shell
 ```
 
 **Enhanced chezmoi apply wrapper:**
+
 ```bash
 chezmoi-apply                 # Wrapper with gum spinner + live output
 cm-apply                      # Alias for chezmoi-apply (if in zsh)
@@ -55,6 +59,7 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 **Supported platforms:** Linux, macOS, WSL (uses Linux binaries)
 
 **Template variables (from `.chezmoi.toml.tmpl`):**
+
 - `.chezmoi.os`, `.chezmoi.arch` - Platform detection
 - `.isWork`, `.isHome` - Machine-specific flags
 - `.isDevContainer` - True in devcontainers/Codespaces
@@ -70,6 +75,7 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 **Productivity tools:** glow (markdown viewer), mods (AI CLI), taskwarrior + taskwarrior-tui (task management)
 
 **Quick commands:**
+
 ```bash
 glow file.md              # View markdown beautifully
 mods "question"           # Ask AI anything
@@ -81,6 +87,7 @@ research "topic"          # AI research → markdown
 ```
 
 **Todoist integration (via MCP):**
+
 ```bash
 /todo                     # Top 10 urgent (p1) tasks today + overdue
 /todo 5                   # Top 5 urgent tasks

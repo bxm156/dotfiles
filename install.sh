@@ -12,6 +12,11 @@ NC='\033[0m' # No Color
 GUM_VERSION="0.17.0"
 CHEZMOI_GITHUB_USER="bxm156"
 
+# Note: The chezmoi installer command is duplicated in 3 places because:
+# - Functions don't work with `gum spin` (runs in subshell)
+# - Functions don't work with `exec` (replaces current process)
+# - Variable expansion breaks shell quoting for command substitution
+
 # Parse arguments
 SAFE_MODE=false
 BOOTSTRAP_PATH=""
@@ -174,25 +179,41 @@ install_with_gum() {
         "with enhanced UI"
 
     # Download and install chezmoi
-    "$gum_bin" spin \
+    if ! "$gum_bin" spin \
         --spinner dot \
         --title "Downloading and installing chezmoi..." \
-        -- sh -c "$(curl -fsLS get.chezmoi.io/lb)"
+        --show-error \
+        -- sh -c "$(curl -fsLS get.chezmoi.io/lb)"; then
+        echo -e "${RED}Failed to install chezmoi${NC}" >&2
+        return 1
+    fi
 
     # chezmoi is installed to ~/.local/bin/chezmoi - use full path
     local chezmoi_bin="$HOME/.local/bin/chezmoi"
 
+    # Verify chezmoi was installed successfully
+    if [[ ! -f "$chezmoi_bin" ]]; then
+        echo -e "${RED}Chezmoi binary not found at $chezmoi_bin${NC}" >&2
+        return 1
+    fi
+
     # Initialize and apply dotfiles
-    "$gum_bin" spin \
+    if ! "$gum_bin" spin \
         --spinner line \
         --title "Initializing dotfiles from GitHub..." \
-        -- "$chezmoi_bin" init "$CHEZMOI_GITHUB_USER"
+        -- "$chezmoi_bin" init "$CHEZMOI_GITHUB_USER"; then
+        echo -e "${RED}Failed to initialize dotfiles${NC}" >&2
+        return 1
+    fi
 
     # Check for conflicts with dry-run
-    "$gum_bin" spin \
+    if ! "$gum_bin" spin \
         --spinner meter \
         --title "Checking for conflicts..." \
-        -- "$chezmoi_bin" apply --dry-run --verbose > /dev/null 2>&1
+        -- "$chezmoi_bin" apply --dry-run --verbose > /dev/null 2>&1; then
+        echo -e "${RED}Failed to check for conflicts${NC}" >&2
+        return 1
+    fi
 
     local apply_flags=""
 
@@ -214,10 +235,13 @@ install_with_gum() {
         fi
     fi
 
-    "$gum_bin" spin \
+    if ! "$gum_bin" spin \
         --spinner meter \
         --title "Applying dotfiles configuration..." \
-        -- "$chezmoi_bin" apply $apply_flags
+        -- "$chezmoi_bin" apply $apply_flags; then
+        echo -e "${RED}Failed to apply dotfiles${NC}" >&2
+        return 1
+    fi
 
     echo ""
     "$gum_bin" style \

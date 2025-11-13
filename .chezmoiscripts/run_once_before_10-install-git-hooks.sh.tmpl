@@ -4,6 +4,11 @@ set -euo pipefail
 # Install git hooks for the dotfiles repository
 REPO_ROOT="{{ .chezmoi.sourceDir }}"
 
+# Skip in test containers where source dir is read-only
+if [ ! -w "$REPO_ROOT" ]; then
+  exit 0
+fi
+
 if [ -d "$REPO_ROOT/.git/hooks" ]; then
   # Install pre-commit hook
   if [ -f "$REPO_ROOT/hooks/pre-commit" ]; then
