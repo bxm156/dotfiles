@@ -5,6 +5,7 @@ AGENTS.md
 EXTERNAL.md
 TESTING.md
 data/mcp.json
+assets/
 data/
 tests/
 docker-compose.yml
