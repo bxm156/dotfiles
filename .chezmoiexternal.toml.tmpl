@@ -208,31 +208,3 @@
     path = "rumdl"
 {{- end }}
 {{- end }}
-
-# figlet - Create ASCII art text banners in the terminal
-{{- if eq .chezmoi.os "darwin" }}
-# macOS: Universal binary for both x86_64 and arm64
-[".local/bin/figlet"]
-    type = "archive"
-    url = "https://github.com/gaborcsardi/figlet/releases/download/2.2.5-r3/figlet-macos-2.2.5-r3.tar.gz"
-    executable = true
-    refreshPeriod = "672h"
-    stripComponents = 3
-    include = ["**/figlet"]
-{{- else if eq .chezmoi.os "linux" }}
-{{- $figletArch := "" }}
-{{- if eq .chezmoi.arch "amd64" }}
-{{-   $figletArch = "x86_64" }}
-{{- else if eq .chezmoi.arch "arm64" }}
-{{-   $figletArch = "aarch64" }}
-{{- end }}
-{{- if ne $figletArch "" }}
-# Linux: Platform-specific static binary (.apk files are tar.gz format)
-[".local/bin/figlet"]
-    type = "archive-file"
-    url = "https://github.com/gaborcsardi/figlet/releases/download/2.2.5-r3/figlet-2.2.5-r3-{{ $figletArch }}.apk"
-    executable = true
-    refreshPeriod = "672h"
-    path = "usr/local/bin/figlet"
-{{- end }}
-{{- end }}
