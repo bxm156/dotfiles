@@ -27,13 +27,13 @@
     "brave-search": {
       "type": "http",
       "url": "http://192.168.6.99/brave-search"
-    }{{- if .isWork }},
+    }
+    {{- if .isWork }},
     "yelp-github": {
       "type": "http",
       "url": "https://chatproxy.yelpcorp.com/github/mcp",
       "headers": {
         "x-litellm-api-key": "Bearer {{ .authToken }}"
-
       }
     },
     "sourcegraph": {
@@ -55,6 +55,34 @@
       "headers": {
         "x-litellm-api-key": "Bearer {{ .authToken }}"
       }
+    },
+    "ai_tools_jira": {
+      "type": "http",
+      "url": "https://chatproxy.yelpcorp.com/ai_tools_jira/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer {{ .authToken }}"
+      }
+    },
+    "ai_tools_slack": {
+      "type": "http",
+      "url": "https://chatproxy.yelpcorp.com/ai_tools_slack/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer {{ .authToken }}"
+      }
+    },
+    "meeting_insights": {
+      "type": "http",
+      "url": "https://chatproxy.yelpcorp.com/meeting_insights/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer {{ .authToken }}"
+      }
+    },
+    "ai_tools_splunk": {
+      "type": "http",
+        "url": "https://chatproxy.yelpcorp.com/ai_tools_splunk/mcp",
+        "headers": {
+          "x-litellm-api-key": "Bearer {{ .authToken }}"
+        }
     },
 	 "slack": {
 	      "command": "docker",

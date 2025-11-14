@@ -1,3 +1,6 @@
 [tools]
 node = "24"
-"claude" = "latest"
+claude = "latest"
+{{- if .isWork }}
+ffmpeg = "latest"
+{{- end }}
