@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Notify about external binary installation before update phase
+# This runs AFTER git hooks (10) but as the last run_before_ script (90)
+# Provides user feedback before the silent external downloads begin
+
+# Source logging helpers
+if [[ -f ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh ]]; then
+    source ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh
+elif [[ -f "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh"
+else
+    # Fallback to plain echo if logging helpers aren't available yet
+    echo "→ Installing external binaries and tools..."
+    exit 0
+fi
+
+log_section "External Binary Installation"
+log_info "Downloading and installing external binaries from .chezmoiexternal.toml.tmpl..."
+log_info "This includes: jq, fzf, zoxide, bat, gitui, gum, glow, mods{{ if eq .chezmoi.arch "amd64" }}, taskwarrior-tui{{ end }}, and oh-my-zsh plugins"

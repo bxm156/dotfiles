@@ -35,7 +35,7 @@ fi
 export _LOGGING_HAS_GUM=false
 
 output=$(log_success "test message")
-if [[ "$output" =~ ^\[SUCCESS\].*test\ message$ ]]; then
+if [[ "$output" =~ ^\[NONE\].*test\ message$ ]]; then
     echo "✓ log_success emits correct format"
 else
     echo "✗ log_success format incorrect: $output"

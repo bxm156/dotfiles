@@ -4,26 +4,36 @@ set -euo pipefail
 # Merge MCP servers from template into ~/.claude.json
 # Existing servers take precedence over template servers
 
+# Source logging helpers
+if [[ -f ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh ]]; then
+    source ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh
+elif [[ -f "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh"
+else
+    echo "Error: Could not find logging helpers" >&2
+    exit 1
+fi
+
 # Path to target file
 claude_json="$HOME/.claude.json"
 
 # Use jq installed by chezmoi external (run_after_ ensures it's available)
 jq_bin="$HOME/.local/bin/jq"
 
-echo "Processing MCP server configuration..."
+log_section "MCP Server Configuration"
 
 # Render MCP servers from template data
 mcp_template='{{ includeTemplate "data/mcp.json.tmpl" . }}'
 
 # Create file with empty structure if it doesn't exist
 if [[ ! -f "$claude_json" ]]; then
-    echo "Creating $claude_json with MCP servers from template"
+    log_info "Creating $claude_json with MCP servers from template"
     echo '{"mcpServers":{}}' > "$claude_json"
 fi
 
 # Merge MCP servers: template servers + existing servers (existing wins on conflict)
 # The + operator in jq merges objects with the right side taking precedence
-echo "Merging MCP servers (existing servers take precedence)..."
+log_info "Merging MCP servers (existing servers take precedence)..."
 temp_file="${claude_json}.tmp"
 
 "$jq_bin" -s '
@@ -39,4 +49,4 @@ temp_file="${claude_json}.tmp"
 # Replace original file
 mv "$temp_file" "$claude_json"
 
-echo "✓ MCP servers merged into $claude_json"
+log_success "MCP servers merged into $claude_json"

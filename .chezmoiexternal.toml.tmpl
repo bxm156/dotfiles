@@ -147,6 +147,19 @@
     refreshPeriod = "672h"
     path = "gum_0.17.0_{{ $gumOS }}_{{ $gumArch }}/gum"
 
+# freeze - Generate images of code and terminal output
+{{- $freezeOS := .chezmoi.os | title }}
+{{- $freezeArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $freezeArch = "x86_64" }}
+{{- end }}
+[".local/bin/freeze"]
+    type = "archive-file"
+    url = "https://github.com/charmbracelet/freeze/releases/download/v0.2.2/freeze_0.2.2_{{ $freezeOS }}_{{ $freezeArch }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "freeze_0.2.2_{{ $freezeOS }}_{{ $freezeArch }}/freeze"
+
 # taskwarrior-tui - Terminal UI for taskwarrior
 # Note: Only x86_64 binaries available (no ARM64 support as of v0.26.3)
 # Using v0.26.3 instead of v0.26.4 because v0.26.4 only provides musl binaries on Linux

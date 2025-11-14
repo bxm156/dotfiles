@@ -34,7 +34,7 @@ Stop copy-pasting configs between machines. Stop wondering "wait, how did I set 
 
 ```bash
 # Enhanced install (recommended - beautiful UI):
-Can
+bash <(curl -fsLS https://raw.githubusercontent.com/bxm156/dotfiles/main/install.sh)
 
 # Direct install (quick & simple):
 sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply bxm156
