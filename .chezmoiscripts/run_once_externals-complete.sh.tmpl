@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Announce completion of external binary downloads
+# This runs during the update phase, alphabetically after externals
+# Externals (.local/bin/..., .oh-my-zsh/...) start with '.' (ASCII 46)
+# This script name 'externals-complete' starts with 'e' (ASCII 101)
+# Therefore this runs after all externals are downloaded
+
+# Source logging helpers
+if [[ -f ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh ]]; then
+    source ~/.local/share/chezmoi/.chezmoiscripts/lib/.logging.sh
+elif [[ -f "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/lib/.logging.sh"
+else
+    # Fallback to plain echo if logging helpers aren't available yet
+    echo "✓ External binaries installation complete"
+    exit 0
+fi
+
+log_success "External binaries installation complete"
+log_info "Binaries installed to ~/.local/bin/"
