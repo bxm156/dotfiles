@@ -3,6 +3,11 @@ node = "24"
 claude = "latest"
 chezmoi = "latest"
 
+[env]
+# Use native architecture for Docker test containers
+# Detects ARM64 on Apple Silicon, AMD64 on Intel/AMD
+DOCKER_PLATFORM = "linux/{{exec(command='chezmoi data | jq -r .chezmoi.arch')}}"
+
 [tasks.test]
 description = "Test dotfiles in isolated container"
 run = "docker compose run --rm dotfiles-test"

@@ -26,8 +26,12 @@ binaries=(
     "gum"
     "glow"
     "mods"
-    "taskwarrior-tui"
 )
+
+# taskwarrior-tui only available on x86_64
+{{- if eq .chezmoi.arch "amd64" }}
+binaries+=("taskwarrior-tui")
+{{- end }}
 
 failed=0
 

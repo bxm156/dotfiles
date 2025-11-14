@@ -12,11 +12,6 @@
       "dockerDashComposeVersion": "v2"
     }
   },
-  "mounts": [
-    "source=${localEnv:HOME}/.ssh/,target=/mnt/starfleet-auth/,type=bind,ro",
-    "source=${localEnv:HOME}/.claude/,target=/mnt/claude,type=bind,consistency=cached"
-    // TODO: Consider dod "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -29,7 +24,8 @@
     }
   },
   "postCreateCommand": "mise install",
-  "runArgs": ["--network=vm_net", "--ip=192.168.6.81"]
+  "runArgs": ["--hostname=yhap"]
+  // "runArgs": ["--network=vm_net", "--ip=192.168.6.81"]
   // DoD can access host, wouldn't need to waste ips "runArgs": ["--add-host=host.docker.internal:host-gateway"]
 
   //"workspaceFolder": "/workspace",
