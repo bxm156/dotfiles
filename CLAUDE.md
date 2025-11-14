@@ -1,6 +1,8 @@
 # CLAUDE.md - Quick Reference for AI Agents
 
-**IMPORTANT: Read AGENTS.md for comprehensive workflows and implementation details.**
+**IMPORTANT: Read AGENTS.md for comprehensive workflows and implementation details FIRST.**
+**IMPORTANT: Read TESTING.md for comprehensive workflows on writing and running tests**
+
 
 This repository uses **chezmoi** to manage dotfiles across machines with templating support.
 
