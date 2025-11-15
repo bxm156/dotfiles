@@ -52,9 +52,10 @@ mise run test:github:interactive  # GitHub test + interactive shell
 - **Fast** - runs in ~3 seconds
 
 ### 3. Binary Tests (`tests/binaries.bats`)
+
 - Verifies binaries are installed as executable files
 - Tests basic functionality (`--version` checks)
-- Covers: jq, fzf, zoxide, bat, gitui, gum, starship, glow, mods, figlet
+- Covers: jq, fzf, zoxide, bat, gitui, gum, starship, glow, mods
 - **Requires dotfiles to be applied**
 
 ### 4. Integration Tests (`tests/integration.bats`)

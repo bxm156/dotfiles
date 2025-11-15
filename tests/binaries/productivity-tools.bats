@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 # Productivity and content tools tests
-# Tests: glow, mods, figlet
+# Tests: glow, mods
 
 setup() {
     # Load bats helpers
@@ -61,17 +61,5 @@ skip_if_not_installed() {
 @test "mods is functional" {
     skip_if_not_installed mods
     run "$HOME/.local/bin/mods" --version
-    assert_success
-}
-
-# figlet - ASCII art text
-@test "figlet is installed as executable file" {
-    run check_binary "figlet"
-    assert_success
-}
-
-@test "figlet is functional" {
-    skip_if_not_installed figlet
-    run "$HOME/.local/bin/figlet" --version
     assert_success
 }

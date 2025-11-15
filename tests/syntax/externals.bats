@@ -66,4 +66,4 @@ setup() {
     assert_output --partial ".local/bin/freeze"
 }
 
-# Note: starship and figlet are installed via run_once scripts, not external configuration
+# Note: starship is installed via run_once scripts, not external configuration

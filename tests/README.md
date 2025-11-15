@@ -19,7 +19,7 @@ This directory contains automated tests for the dotfiles repository using [bats-
 - **`binaries.bats`** - Binary verification tests
   - Checks binaries are installed as executable files (not directories)
   - Verifies binaries are functional (`--version` checks)
-  - Covers: jq, fzf, zoxide, bat, gitui, gum, starship, glow, mods, figlet
+  - Covers: jq, fzf, zoxide, bat, gitui, gum, starship, glow, mods
 
 - **`integration.bats`** - Full integration tests
   - Tests oh-my-zsh installation and plugins

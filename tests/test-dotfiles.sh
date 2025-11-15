@@ -61,7 +61,7 @@ log_section "Binary Installation Verification"
 # but we keep it here for test completeness
 
 test_failed=0
-for binary in jq fzf zoxide bat gitui gum starship glow mods figlet; do
+for binary in jq fzf zoxide bat gitui gum starship glow mods; do
   binary_path="$HOME/.local/bin/$binary"
 
   if [[ ! -e "$binary_path" ]]; then

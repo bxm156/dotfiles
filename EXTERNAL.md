@@ -21,7 +21,6 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 | bat | v0.26.0 | archive | ✓ | ✓ | ✓ | ✓ | 672h | cat with syntax highlighting, stripComponents=1 |
 | gitui | v0.27.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Fast terminal UI for git |
 | rumdl | v0.0.174 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Markdown linter/formatter, markdownlint-compatible, 5x faster, stdin/stdout support |
-| figlet | 2.2.5-r3 | archive | ✓ | ✓ | ✓ | ✓ | 672h | ASCII art text banners, static binary, stripComponents=3, include filter |
 
 **Refresh Periods:**
 - `168h` = 7 days (weekly)
