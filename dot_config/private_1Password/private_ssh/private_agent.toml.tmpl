@@ -30,3 +30,8 @@
 #  https://developer.1password.com/docs/ssh/agent/config
 [[ssh-keys]]
 vault = "Private"
+{{- if ne .isWork true  }}
+
+[[ssh-keys]]
+vault = "Home Lab"
+{{- end }}
