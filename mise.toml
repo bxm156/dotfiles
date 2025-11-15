@@ -66,6 +66,36 @@ docker compose run --rm \
   /tmp/install.sh --bootstrap /home/user/.local/bin
 """
 
+[tasks."test:bats"]
+description = "Run all bats tests (requires dotfiles to be installed)"
+run = "tests/libs/bats-core/bin/bats tests/*.bats"
+
+[tasks."test:bats:syntax"]
+description = "Run bats syntax tests"
+run = "tests/libs/bats-core/bin/bats tests/syntax.bats"
+
+[tasks."test:bats:unit"]
+description = "Run bats unit tests"
+run = "tests/libs/bats-core/bin/bats tests/unit.bats"
+
+[tasks."test:bats:binaries"]
+description = "Run bats binary verification tests"
+run = "tests/libs/bats-core/bin/bats tests/binaries.bats"
+
+[tasks."test:bats:integration"]
+description = "Run bats integration tests"
+run = "tests/libs/bats-core/bin/bats tests/integration.bats"
+
+[tasks."test:bats:install"]
+description = "Run bats install.sh tests"
+run = "tests/libs/bats-core/bin/bats tests/install.bats"
+
+[tasks."test:ci"]
+description = "Run all CI tests (syntax + unit + install script validation)"
+run = """
+tests/libs/bats-core/bin/bats tests/syntax.bats tests/unit.bats tests/install.bats
+"""
+
 [tasks.clean]
 description = "Clean up Docker containers and volumes"
 run = "docker compose down --volumes --remove-orphans"
