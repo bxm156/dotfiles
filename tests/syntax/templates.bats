@@ -1,14 +1,14 @@
 #!/usr/bin/env bats
 
-# Test template syntax validation
+# Template syntax and rendering tests
 
 setup() {
     # Load bats helpers
-    load 'libs/bats-support/load'
-    load 'libs/bats-assert/load'
+    load '../libs/bats-support/load'
+    load '../libs/bats-assert/load'
 
     # Get repository root
-    REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+    REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
     cd "$REPO_ROOT"
 }
 
@@ -59,30 +59,6 @@ setup() {
     run chezmoi execute-template < .chezmoi.toml.tmpl
     assert_success
     assert_output --partial "isWindows ="
-}
-
-@test ".chezmoiexternal.toml.tmpl configures jq binary" {
-    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
-    assert_success
-    assert_output --partial ".local/bin/jq"
-}
-
-@test ".chezmoiexternal.toml.tmpl configures fzf binary" {
-    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
-    assert_success
-    assert_output --partial ".local/bin/fzf"
-}
-
-@test ".chezmoiexternal.toml.tmpl configures zoxide binary" {
-    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
-    assert_success
-    assert_output --partial ".local/bin/zoxide"
-}
-
-@test ".chezmoiexternal.toml.tmpl configures bat binary" {
-    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
-    assert_success
-    assert_output --partial ".local/bin/bat"
 }
 
 @test "all .tmpl files in repository render without errors" {

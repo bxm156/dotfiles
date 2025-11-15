@@ -35,13 +35,13 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run syntax tests
-        run: tests/libs/bats-core/bin/bats tests/syntax.bats
+        run: tests/libs/bats-core/bin/bats tests/syntax/*.bats
 
       - name: Run unit tests
         run: tests/libs/bats-core/bin/bats tests/unit.bats
 
       - name: Run install.sh validation tests
-        run: tests/libs/bats-core/bin/bats tests/install.bats
+        run: tests/libs/bats-core/bin/bats tests/install/*.bats
 
   # Full integration tests with Docker (Linux amd64)
   integration-linux-amd64:
@@ -75,8 +75,8 @@ jobs:
               mkdir -p ~/.local/bin
               sh -c \"\$(curl -fsLS get.chezmoi.io/lb)\" -- init --apply --source ~/.local/share/chezmoi
               # Run bats integration and binary tests
-              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/integration.bats
-              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/binaries.bats
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/integration/*.bats
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/binaries/*.bats
             "
         env:
           DOCKER_PLATFORM: linux/amd64
@@ -120,8 +120,8 @@ jobs:
               mkdir -p ~/.local/bin
               sh -c \"\$(curl -fsLS get.chezmoi.io/lb)\" -- init --apply --source ~/.local/share/chezmoi
               # Run bats integration and binary tests
-              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/integration.bats
-              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/binaries.bats
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/integration/*.bats
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/binaries/*.bats
             "
         env:
           DOCKER_PLATFORM: linux/arm64
@@ -144,7 +144,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run syntax tests
-        run: tests/libs/bats-core/bin/bats tests/syntax.bats
+        run: tests/libs/bats-core/bin/bats tests/syntax/*.bats
 
       - name: Run unit tests
         run: tests/libs/bats-core/bin/bats tests/unit.bats
@@ -155,10 +155,10 @@ jobs:
           $HOME/.local/bin/chezmoi init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
-        run: tests/libs/bats-core/bin/bats tests/integration.bats
+        run: tests/libs/bats-core/bin/bats tests/integration/*.bats
 
       - name: Run binary tests
-        run: tests/libs/bats-core/bin/bats tests/binaries.bats
+        run: tests/libs/bats-core/bin/bats tests/binaries/*.bats
 
   # macOS tests (arm64)
   macos-arm64:
@@ -178,7 +178,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Run syntax tests
-        run: tests/libs/bats-core/bin/bats tests/syntax.bats
+        run: tests/libs/bats-core/bin/bats tests/syntax/*.bats
 
       - name: Run unit tests
         run: tests/libs/bats-core/bin/bats tests/unit.bats
@@ -189,10 +189,10 @@ jobs:
           $HOME/.local/bin/chezmoi init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
-        run: tests/libs/bats-core/bin/bats tests/integration.bats
+        run: tests/libs/bats-core/bin/bats tests/integration/*.bats
 
       - name: Run binary tests
-        run: tests/libs/bats-core/bin/bats tests/binaries.bats
+        run: tests/libs/bats-core/bin/bats tests/binaries/*.bats
 
   # Test install.sh variations
   test-installer:
