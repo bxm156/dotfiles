@@ -11,11 +11,17 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  # GitHub username for dotfiles repository
+  # If you fork this repo, change this to your username
+  DOTFILES_USER: bxm156
+
 jobs:
   # Syntax and unit tests that don't require full installation
   quick-tests:
     name: Quick Tests (Syntax & Unit)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -41,6 +47,7 @@ jobs:
   integration-linux-amd64:
     name: Integration Tests (Linux amd64)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -56,26 +63,21 @@ jobs:
         env:
           DOCKER_PLATFORM: linux/amd64
 
-      - name: Run integration tests in Docker
-        run: docker compose run --rm dotfiles-test
-        env:
-          DOCKER_PLATFORM: linux/amd64
-
-      - name: Run bats integration tests
+      - name: Apply dotfiles and run bats integration tests
+        timeout-minutes: 20
         run: |
           docker compose run --rm \
-            --entrypoint tests/libs/bats-core/bin/bats \
+            --entrypoint /bin/bash \
             dotfiles-test \
-            /home/user/.local/share/chezmoi/tests/integration.bats
-        env:
-          DOCKER_PLATFORM: linux/amd64
-
-      - name: Run bats binary tests
-        run: |
-          docker compose run --rm \
-            --entrypoint tests/libs/bats-core/bin/bats \
-            dotfiles-test \
-            /home/user/.local/share/chezmoi/tests/binaries.bats
+            -c "
+              set -euo pipefail
+              # Install chezmoi and apply dotfiles
+              mkdir -p ~/.local/bin
+              sh -c \"\$(curl -fsLS get.chezmoi.io/lb)\" -- init --apply --source ~/.local/share/chezmoi
+              # Run bats integration and binary tests
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/integration.bats
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/binaries.bats
+            "
         env:
           DOCKER_PLATFORM: linux/amd64
 
@@ -83,6 +85,9 @@ jobs:
   integration-linux-arm64:
     name: Integration Tests (Linux arm64)
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # ARM64 emulation is slow, only run on main branch
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
     steps:
       - name: Checkout repository
@@ -103,26 +108,21 @@ jobs:
         env:
           DOCKER_PLATFORM: linux/arm64
 
-      - name: Run integration tests in Docker
-        run: docker compose run --rm dotfiles-test
-        env:
-          DOCKER_PLATFORM: linux/arm64
-
-      - name: Run bats integration tests
+      - name: Apply dotfiles and run bats integration tests
+        timeout-minutes: 30
         run: |
           docker compose run --rm \
-            --entrypoint tests/libs/bats-core/bin/bats \
+            --entrypoint /bin/bash \
             dotfiles-test \
-            /home/user/.local/share/chezmoi/tests/integration.bats
-        env:
-          DOCKER_PLATFORM: linux/arm64
-
-      - name: Run bats binary tests
-        run: |
-          docker compose run --rm \
-            --entrypoint tests/libs/bats-core/bin/bats \
-            dotfiles-test \
-            /home/user/.local/share/chezmoi/tests/binaries.bats
+            -c "
+              set -euo pipefail
+              # Install chezmoi and apply dotfiles
+              mkdir -p ~/.local/bin
+              sh -c \"\$(curl -fsLS get.chezmoi.io/lb)\" -- init --apply --source ~/.local/share/chezmoi
+              # Run bats integration and binary tests
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/integration.bats
+              tests/libs/bats-core/bin/bats /home/user/.local/share/chezmoi/tests/binaries.bats
+            "
         env:
           DOCKER_PLATFORM: linux/arm64
 
@@ -130,6 +130,7 @@ jobs:
   macos-amd64:
     name: macOS Tests (Intel)
     runs-on: macos-13  # Intel runner
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -148,12 +149,10 @@ jobs:
       - name: Run unit tests
         run: tests/libs/bats-core/bin/bats tests/unit.bats
 
-      - name: Initialize dotfiles (dry-run)
+      - name: Apply dotfiles
+        timeout-minutes: 15
         run: |
-          $HOME/.local/bin/chezmoi init --dry-run --verbose ${{ github.repository_owner }}
-
-      - name: Test install.sh (safe mode)
-        run: bash install.sh --safe
+          $HOME/.local/bin/chezmoi init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
         run: tests/libs/bats-core/bin/bats tests/integration.bats
@@ -165,6 +164,7 @@ jobs:
   macos-arm64:
     name: macOS Tests (Apple Silicon)
     runs-on: macos-latest  # M1 runner
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -183,12 +183,10 @@ jobs:
       - name: Run unit tests
         run: tests/libs/bats-core/bin/bats tests/unit.bats
 
-      - name: Initialize dotfiles (dry-run)
+      - name: Apply dotfiles
+        timeout-minutes: 15
         run: |
-          $HOME/.local/bin/chezmoi init --dry-run --verbose ${{ github.repository_owner }}
-
-      - name: Test install.sh (safe mode)
-        run: bash install.sh --safe
+          $HOME/.local/bin/chezmoi init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
         run: tests/libs/bats-core/bin/bats tests/integration.bats
@@ -200,6 +198,7 @@ jobs:
   test-installer:
     name: Test install.sh (${{ matrix.mode }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       matrix:
         mode:
@@ -223,6 +222,7 @@ jobs:
 
       - name: Test install.sh (default mode)
         if: matrix.mode == 'default'
+        timeout-minutes: 15
         run: |
           docker compose run --rm \
             --entrypoint bash \
@@ -234,6 +234,7 @@ jobs:
 
       - name: Test install.sh (safe mode)
         if: matrix.mode == 'safe'
+        timeout-minutes: 15
         run: |
           docker compose run --rm \
             --entrypoint bash \
@@ -245,6 +246,7 @@ jobs:
 
       - name: Test install.sh (bootstrap mode)
         if: matrix.mode == 'bootstrap'
+        timeout-minutes: 15
         run: |
           docker compose run --rm \
             --entrypoint bash \

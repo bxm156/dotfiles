@@ -32,14 +32,16 @@ This directory contains automated tests for the dotfiles repository using [bats-
   - Validates command-line flags (--safe, --bootstrap)
   - Checks error handling and platform detection
 
-### Legacy Test Scripts
+### Legacy Test Scripts (Deprecated)
 
-These scripts are kept for backwards compatibility and Docker-based testing:
+These scripts are maintained for backwards compatibility but are being replaced by bats tests:
 
-- **`test-dotfiles.sh`** - Full integration test (local source)
-- **`test-dotfiles-github.sh`** - GitHub integration test
-- **`test-render-simple.sh`** - Simple template rendering test
-- **`test-logging-helpers.sh`** - Logging library test
+- **`test-dotfiles.sh`** - Full integration test (local source) - **Use bats integration/binary tests instead**
+- **`test-dotfiles-github.sh`** - GitHub integration test - **Use GitHub Actions workflow instead**
+- **`test-render-simple.sh`** - Simple template rendering test - **Use bats syntax tests instead**
+- **`test-logging-helpers.sh`** - Logging library test - **Use bats unit tests instead**
+
+The bats-based tests provide better structure, clearer output, and easier maintenance.
 
 ## Running Tests
 
@@ -95,21 +97,32 @@ Tests run automatically via GitHub Actions on:
 
 ### Test Matrix
 
-**Quick Tests** (runs first, fast feedback):
+**Quick Tests** (runs first, fast feedback ~5 min):
 - Syntax validation
 - Unit tests
 - install.sh validation
+- Platform: ubuntu-latest
 
-**Integration Tests** (full environment):
-- Linux amd64 (Docker)
-- Linux arm64 (Docker with QEMU)
-- macOS Intel (native runner)
-- macOS Apple Silicon (native runner)
+**Integration Tests** (full environment ~15-30 min):
+- Linux amd64 (Docker) - Uses bats integration/binary tests instead of legacy scripts
+- Linux arm64 (Docker with QEMU) - Only runs on main/master branch (slow)
+- macOS Intel (native runner) - Applies real dotfiles
+- macOS Apple Silicon (native runner) - Applies real dotfiles
 
-**Installer Tests**:
+**Installer Tests** (~10-15 min per mode):
 - install.sh (default mode with gum UI)
 - install.sh --safe (fallback mode)
 - install.sh --bootstrap (custom path)
+
+### Configuration
+
+The workflow uses a centralized `DOTFILES_USER` environment variable set to `bxm156`.
+
+**For forks:** Edit `.github/workflows/test.yml` and change:
+```yaml
+env:
+  DOTFILES_USER: bxm156  # Change this to your GitHub username
+```
 
 ### Workflow File
 
