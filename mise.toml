@@ -8,6 +8,10 @@ chezmoi = "latest"
 # Detects ARM64 on Apple Silicon, AMD64 on Intel/AMD
 DOCKER_PLATFORM = "linux/{{exec(command='chezmoi data | jq -r .chezmoi.arch')}}"
 
+[tasks.dotfiles]
+description = "Install dotfiles"
+run = "bash <(curl -fsLS https://raw.githubusercontent.com/bxm156/dotfiles/main/install.sh)"
+
 [tasks.test]
 description = "Test dotfiles in isolated container"
 run = "docker compose run --rm dotfiles-test"

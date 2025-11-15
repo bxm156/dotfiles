@@ -256,6 +256,72 @@ install_with_gum() {
         "Your dotfiles are ready to use."
 }
 
+# Prompt to change default shell to zsh
+prompt_zsh_shell() {
+    local gum_bin="$1"
+    local gum_dir="$2"
+    local cleanup_gum="$3"
+
+    # Check if zsh is installed
+    if ! command -v zsh >/dev/null 2>&1; then
+        return 0  # Skip if zsh not installed
+    fi
+
+    # Check if zsh is already the default shell
+    if [[ "$SHELL" == *"zsh"* ]]; then
+        return 0  # Already using zsh
+    fi
+
+    echo ""
+    local change_shell
+    if change_shell=$("$gum_bin" confirm \
+        --default=false \
+        --prompt.foreground 212 \
+        "Would you like to make zsh your default shell?" 2>&1); then
+
+        local zsh_path
+        zsh_path=$(command -v zsh)
+
+        echo ""
+        if ! "$gum_bin" spin \
+            --spinner dot \
+            --title "Changing default shell to zsh..." \
+            -- chsh -s "$zsh_path"; then
+            echo ""
+            "$gum_bin" style \
+                --foreground 214 \
+                "⚠ Failed to change default shell."
+            "$gum_bin" style \
+                --foreground 240 \
+                "You may need to run: chsh -s $zsh_path"
+            return 1
+        fi
+
+        echo ""
+        "$gum_bin" style \
+            --foreground 212 \
+            --bold \
+            "✓ Default shell changed to zsh!"
+
+        echo ""
+        "$gum_bin" style \
+            --foreground 240 \
+            "Starting zsh now..."
+
+        # Cleanup before exec
+        if [[ "$cleanup_gum" == "true" ]]; then
+            rm -rf "$gum_dir"
+        fi
+
+        echo ""
+        echo -e "${GREEN}All done! 🎉${NC}"
+        echo ""
+
+        # Exec into zsh
+        exec "$zsh_path"
+    fi
+}
+
 # Fallback to safe mode
 fallback_to_safe_mode() {
     local reason="$1"
@@ -303,7 +369,11 @@ main() {
         fallback_to_safe_mode "Installation failed"
     fi
 
-    # Cleanup temporary gum
+    # Prompt to change default shell to zsh
+    # Note: This may exec into zsh, in which case the code below won't run
+    prompt_zsh_shell "$gum_bin" "$gum_dir" "$cleanup_gum"
+
+    # Cleanup temporary gum (only runs if user declined zsh or zsh not available)
     if [[ "$cleanup_gum" == true ]]; then
         rm -rf "$gum_dir"
     fi
