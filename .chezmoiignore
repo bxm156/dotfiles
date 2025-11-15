@@ -25,3 +25,7 @@ install.sh
 
 .oh-my-zsh/cache/
 .vim/.netrwhist
+MISE-USAGE.metadata
+TUI_STYLE_GUIDE.md
+hooks/
+data/
