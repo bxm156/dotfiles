@@ -52,7 +52,7 @@ log_info() {
 }
 
 log_success() {
-    _log_emit "none" "✓" "$1"
+    _log_emit "info" "✓" "$1"
 }
 
 log_error() {
