@@ -4,8 +4,7 @@
 # Ensures installation doesn't cause data loss or conflicts
 
 setup() {
-    load '../libs/bats-support/load'
-    load '../libs/bats-assert/load'
+    load '../test_helper'
 }
 
 @test "no scripts modify files outside home directory" {

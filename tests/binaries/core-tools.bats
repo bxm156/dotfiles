@@ -5,8 +5,7 @@
 
 setup() {
     # Load bats helpers
-    load '../libs/bats-support/load'
-    load '../libs/bats-assert/load'
+    load '../test_helper'
 
     # Binary installation directory
     BIN_DIR="$HOME/.local/bin"

@@ -4,8 +4,7 @@
 # Ensures the test suite itself is properly configured
 
 setup() {
-    load '../libs/bats-support/load'
-    load '../libs/bats-assert/load'
+    load '../test_helper'
 
     REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
     cd "$REPO_ROOT"

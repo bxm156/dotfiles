@@ -3,9 +3,8 @@
 # Unit tests for custom libraries
 
 setup() {
-    # Load bats helpers
-    load 'libs/bats-support/load'
-    load 'libs/bats-assert/load'
+    # Load bats test helpers
+    load 'test_helper'
 
     # Get repository root
     REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"

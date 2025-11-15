@@ -4,8 +4,7 @@
 # Ensures all required dependencies are available or properly handled
 
 setup() {
-    load '../libs/bats-support/load'
-    load '../libs/bats-assert/load'
+    load '../test_helper'
 
     REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
     cd "$REPO_ROOT"

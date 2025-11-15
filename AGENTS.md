@@ -93,6 +93,87 @@ chezmoi executes operations in this deterministic order:
 
 **Reference:** [Official Chezmoi Application Order](https://www.chezmoi.io/reference/application-order/)
 
+## Tool Version Management with Mise
+
+**⚠️ CRITICAL: Read [MISE-USAGE.md](MISE-USAGE.md) for comprehensive mise documentation before installing packages or tools.**
+
+This repository uses **mise** for managing development tool versions, replacing git submodules and manual tool installation.
+
+### Quick Reference
+
+**Installing tools:**
+
+```bash
+# Install all tools defined in mise.toml
+mise install
+
+# Install specific tool (mise auto-detects backend)
+mise use node@20
+mise use python@3.11
+mise use bats@latest
+
+# Use explicit backend when necessary
+mise use npm:prettier
+mise use cargo:ripgrep
+```
+
+**Getting tool paths (NEVER hardcode paths):**
+
+```bash
+# Get installation directory
+TOOL_DIR=$(mise where tool-name)
+
+# Find files within installation
+find "$(mise where npm:bats-support)" -name "load.bash"
+```
+
+**Activation patterns:**
+
+```bash
+# Interactive shells (full activation)
+eval "$(mise activate bash)"
+
+# Non-interactive/CI (shims only)
+eval "$(mise activate bash --shims)"
+```
+
+### Key Principles for Agents
+
+1. **Never hardcode paths** - Always use `mise where <tool>` to get installation directories
+2. **Never hardcode backends** - Let mise auto-detect unless absolutely necessary
+3. **Use shims for CI/Docker** - Non-interactive contexts need `--shims` activation
+4. **Use full activation for development** - Interactive shells benefit from full `mise activate`
+5. **Check configuration** - Run `mise doctor` to diagnose issues
+
+### Common Mistakes to Avoid
+
+❌ **DON'T hardcode paths:**
+
+```bash
+load '/home/user/.local/share/mise/installs/npm-bats-support/0.3.0/lib/node_modules/bats-support/load'
+```
+
+✅ **DO use dynamic paths:**
+
+```bash
+SUPPORT_LOAD="$(find "$(mise where npm:bats-support)" -name "load.bash" -path "*/bats-support/load.bash")"
+load "${SUPPORT_LOAD%.bash}"
+```
+
+❌ **DON'T use hardcoded shims directory:**
+
+```bash
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+```
+
+✅ **DO use mise activate:**
+
+```bash
+eval "$(mise activate bash --shims)"
+```
+
+**For complete mise documentation, see [MISE-USAGE.md](MISE-USAGE.md).**
+
 ## Repository Structure
 
 ```

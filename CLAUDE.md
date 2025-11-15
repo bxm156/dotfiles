@@ -35,6 +35,11 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 2. **Always check exit codes after `gum spin` commands** - wrap in `if !` conditionals to detect failures and trigger fallback behavior
 1. **Chezmoi installer needs absolute BINDIR path** - use `-b "$HOME/.local/bin"` flag; default `.local/bin` is relative to current directory
 2. **Claude's --append-system-prompt requires inline content and concatenation** - flag accepts text content only (not file paths), and multiple flags override each other (last wins), so merge all prompts into a single flag
+3. **Read MISE-USAGE.md before installing tools or packages** - comprehensive guide for AI agents on using mise correctly
+4. **NEVER hardcode mise installation paths** - always use `mise where tool-name` to get dynamic paths
+5. **NEVER hardcode mise backends** - let mise auto-detect from registry (use `mise use bats@latest`, not `mise use aqua:bats-core/bats-core`)
+6. **Use `mise activate bash --shims` for non-interactive contexts** - CI, Docker, scripts; use `mise activate bash` for interactive shells
+7. **Both mise activation modes can coexist** - `mise activate` removes shims from PATH, safe to have both in .bash_profile and .bashrc
 
 ## Quick Reference
 
@@ -107,6 +112,7 @@ research "topic"          # AI research → markdown
 ## See Also
 
 - **[AGENTS.md](AGENTS.md)** - Detailed workflows, troubleshooting, implementation patterns
+- **[MISE-USAGE.md](MISE-USAGE.md)** - Tool version management with mise (read before installing packages)
 - **[EXTERNAL.md](EXTERNAL.md)** - External packages reference and instructions for adding packages
 - **[TESTING.md](TESTING.md)** - Testing workflow and commands
 - **Logging Helpers** - `.chezmoiscripts/lib/logging.sh` - DRY logging functions with gum enhancement

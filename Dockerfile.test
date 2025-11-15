@@ -18,5 +18,10 @@ RUN mkdir -p /opt/tests && \
 USER user
 WORKDIR /home/user
 
+# Install mise
+RUN curl https://mise.run | sh && \
+    echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc && \
+    echo 'eval "$(~/.local/bin/mise activate bash --shims)"' >> ~/.bash_profile
+
 # Entrypoint is set in docker-compose.yml
 CMD ["/bin/bash"]

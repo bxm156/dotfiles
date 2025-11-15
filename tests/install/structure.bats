@@ -4,8 +4,7 @@
 
 setup() {
     # Load bats helpers
-    load '../libs/bats-support/load'
-    load '../libs/bats-assert/load'
+    load '../test_helper'
 
     REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
     INSTALL_SCRIPT="$REPO_ROOT/install.sh"
