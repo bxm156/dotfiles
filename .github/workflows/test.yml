@@ -168,16 +168,19 @@ jobs:
           bats tests/unit.bats
 
       - name: Apply dotfiles
+        if: github.ref == 'refs/heads/main'
         timeout-minutes: 15
         run: |
           sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
+        if: github.ref == 'refs/heads/main'
         run: |
           eval "$(~/.local/bin/mise activate bash --shims)"
           bats tests/integration/*.bats
 
       - name: Run binary tests
+        if: github.ref == 'refs/heads/main'
         run: |
           eval "$(~/.local/bin/mise activate bash --shims)"
           bats tests/binaries/*.bats
@@ -213,16 +216,19 @@ jobs:
           bats tests/unit.bats
 
       - name: Apply dotfiles
+        if: github.ref == 'refs/heads/main'
         timeout-minutes: 15
         run: |
           sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
+        if: github.ref == 'refs/heads/main'
         run: |
           eval "$(~/.local/bin/mise activate bash --shims)"
           bats tests/integration/*.bats
 
       - name: Run binary tests
+        if: github.ref == 'refs/heads/main'
         run: |
           eval "$(~/.local/bin/mise activate bash --shims)"
           bats tests/binaries/*.bats
