@@ -29,19 +29,26 @@ jobs:
         run: |
           curl https://mise.run | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo 'eval "$(mise activate bash --shims)"' >> ~/.bash_profile
 
       - name: Install mise tools
-        run: mise install
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          mise install
 
       - name: Run syntax tests
-        run: bats tests/syntax/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/syntax/*.bats
 
       - name: Run unit tests
-        run: bats tests/unit.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/unit.bats
 
       - name: Run install.sh validation tests
-        run: bats tests/install/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/install/*.bats
 
   # Full integration tests with Docker (Linux amd64)
   integration-linux-amd64:
@@ -71,7 +78,7 @@ jobs:
               set -euo pipefail
               # Install chezmoi and apply dotfiles (mise is pre-installed in container)
               mkdir -p ~/.local/bin
-              sh -c \"\$(curl -fsLS get.chezmoi.io/lb)\" -- init --apply --source ~/.local/share/chezmoi
+              sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\" init --apply --source ~/.local/share/chezmoi
               # Install mise tools
               mise install
               # Run bats integration and binary tests
@@ -116,7 +123,7 @@ jobs:
               set -euo pipefail
               # Install chezmoi and apply dotfiles (mise is pre-installed in container)
               mkdir -p ~/.local/bin
-              sh -c \"\$(curl -fsLS get.chezmoi.io/lb)\" -- init --apply --source ~/.local/share/chezmoi
+              sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\" init --apply --source ~/.local/share/chezmoi
               # Install mise tools
               mise install
               # Run bats integration and binary tests
@@ -140,27 +147,36 @@ jobs:
         run: |
           curl https://mise.run | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo 'eval "$(mise activate bash --shims)"' >> ~/.bash_profile
 
       - name: Install mise tools
-        run: mise install
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          mise install
 
       - name: Run syntax tests
-        run: bats tests/syntax/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/syntax/*.bats
 
       - name: Run unit tests
-        run: bats tests/unit.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/unit.bats
 
       - name: Apply dotfiles
         timeout-minutes: 15
         run: |
-          sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply ${{ env.DOTFILES_USER }}
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
-        run: bats tests/integration/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/integration/*.bats
 
       - name: Run binary tests
-        run: bats tests/binaries/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/binaries/*.bats
 
   # macOS tests (arm64)
   macos-arm64:
@@ -176,27 +192,36 @@ jobs:
         run: |
           curl https://mise.run | sh
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo 'eval "$(mise activate bash --shims)"' >> ~/.bash_profile
 
       - name: Install mise tools
-        run: mise install
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          mise install
 
       - name: Run syntax tests
-        run: bats tests/syntax/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/syntax/*.bats
 
       - name: Run unit tests
-        run: bats tests/unit.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/unit.bats
 
       - name: Apply dotfiles
         timeout-minutes: 15
         run: |
-          sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply ${{ env.DOTFILES_USER }}
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
-        run: bats tests/integration/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/integration/*.bats
 
       - name: Run binary tests
-        run: bats tests/binaries/*.bats
+        run: |
+          eval "$(~/.local/bin/mise activate bash --shims)"
+          bats tests/binaries/*.bats
 
   # Test install.sh variations
   test-installer:
