@@ -139,11 +139,12 @@ jobs:
               # Install chezmoi and apply dotfiles
               mkdir -p ~/.local/bin
               sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\" init --apply --source ~/.local/share/chezmoi
-              # Install mise tools
+              # Install mise tools from chezmoi source directory (where mise.toml lives)
+              cd ~/.local/share/chezmoi
               mise install
               # Run bats integration and binary tests
-              bats /home/user/.local/share/chezmoi/tests/integration/*.bats
-              bats /home/user/.local/share/chezmoi/tests/binaries/*.bats
+              bats tests/integration/*.bats
+              bats tests/binaries/*.bats
             "
         env:
           DOCKER_PLATFORM: ${{ matrix.os }}/${{ matrix.arch }}
