@@ -50,8 +50,6 @@ jobs:
     name: Integration Tests (Linux ${{ matrix.arch }})
     runs-on: ubuntu-latest
     timeout-minutes: ${{ matrix.arch == 'arm64' && 45 || 30 }}
-    # ARM64 emulation is slow, skip on non-main branches
-    if: matrix.arch == 'amd64' || github.ref == 'refs/heads/main'
     strategy:
       matrix:
         arch: [amd64, arm64]
