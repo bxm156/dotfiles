@@ -76,7 +76,9 @@ jobs:
             dotfiles-test \
             -c "
               set -euo pipefail
-              # Install chezmoi and apply dotfiles (mise is pre-installed in container)
+              # Activate mise (pre-installed in container, but not in PATH for non-interactive shells)
+              eval \"\$(~/.local/bin/mise activate bash --shims)\"
+              # Install chezmoi and apply dotfiles
               mkdir -p ~/.local/bin
               sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\" init --apply --source ~/.local/share/chezmoi
               # Install mise tools
@@ -121,7 +123,9 @@ jobs:
             dotfiles-test \
             -c "
               set -euo pipefail
-              # Install chezmoi and apply dotfiles (mise is pre-installed in container)
+              # Activate mise (pre-installed in container, but not in PATH for non-interactive shells)
+              eval \"\$(~/.local/bin/mise activate bash --shims)\"
+              # Install chezmoi and apply dotfiles
               mkdir -p ~/.local/bin
               sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\" init --apply --source ~/.local/share/chezmoi
               # Install mise tools
