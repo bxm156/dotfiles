@@ -45,59 +45,23 @@ jobs:
       - name: Run install.sh validation tests
         run: bats tests/install/*.bats
 
-  # Full integration tests with Docker (Linux amd64)
-  integration-linux-amd64:
-    name: Integration Tests (Linux amd64)
+  # Integration tests with Docker (Linux)
+  integration-linux:
+    name: Integration Tests (Linux ${{ matrix.arch }})
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build test container
-        run: docker compose build dotfiles-test
-        env:
-          DOCKER_PLATFORM: linux/amd64
-
-      - name: Apply dotfiles and run bats integration tests
-        timeout-minutes: 20
-        run: |
-          docker compose run --rm \
-            --entrypoint /bin/bash \
-            dotfiles-test \
-            -c "
-              set -euo pipefail
-              # Activate mise (pre-installed in container, but not in PATH for non-interactive shells)
-              eval \"\$(~/.local/bin/mise activate bash --shims)\"
-              # Install chezmoi and apply dotfiles
-              mkdir -p ~/.local/bin
-              sh -c \"\$(curl -fsLS get.chezmoi.io)\" -- -b \"\$HOME/.local/bin\" init --apply --source ~/.local/share/chezmoi
-              # Install mise tools
-              mise install
-              # Run bats integration and binary tests
-              bats /home/user/.local/share/chezmoi/tests/integration/*.bats
-              bats /home/user/.local/share/chezmoi/tests/binaries/*.bats
-            "
-        env:
-          DOCKER_PLATFORM: linux/amd64
-
-  # Full integration tests with Docker (Linux arm64)
-  integration-linux-arm64:
-    name: Integration Tests (Linux arm64)
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    # ARM64 emulation is slow, only run on main branch
-    if: github.ref == 'refs/heads/main'
+    timeout-minutes: ${{ matrix.arch == 'arm64' && 45 || 30 }}
+    # ARM64 emulation is slow, skip on non-main branches
+    if: matrix.arch == 'amd64' || github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up QEMU
+        if: matrix.arch == 'arm64'
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
@@ -108,10 +72,10 @@ jobs:
       - name: Build test container
         run: docker compose build dotfiles-test
         env:
-          DOCKER_PLATFORM: linux/arm64
+          DOCKER_PLATFORM: linux/${{ matrix.arch }}
 
       - name: Apply dotfiles and run bats integration tests
-        timeout-minutes: 30
+        timeout-minutes: ${{ matrix.arch == 'arm64' && 30 || 20 }}
         run: |
           docker compose run --rm \
             --entrypoint /bin/bash \
@@ -130,51 +94,22 @@ jobs:
               bats /home/user/.local/share/chezmoi/tests/binaries/*.bats
             "
         env:
-          DOCKER_PLATFORM: linux/arm64
+          DOCKER_PLATFORM: linux/${{ matrix.arch }}
 
-  # macOS tests (amd64)
-  macos-amd64:
-    name: macOS Tests (Intel)
-    runs-on: macos-13 # Intel runner
+  # Integration tests (macOS)
+  integration-macos:
+    name: Integration Tests (macOS ${{ matrix.name }})
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
-    env:
-      BASH_ENV: /Users/runner/.bash_env
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install mise and setup PATH
-        run: |
-          curl https://mise.run | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo 'eval "$(~/.local/bin/mise activate bash --shims)"' > $BASH_ENV
-
-      - name: Install mise tools
-        run: mise install
-
-      - name: Run syntax tests
-        run: bats tests/syntax/*.bats
-
-      - name: Run unit tests
-        run: bats tests/unit.bats
-
-      - name: Apply dotfiles
-        timeout-minutes: 15
-        run: |
-          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply ${{ env.DOTFILES_USER }}
-
-      - name: Run integration tests
-        run: bats tests/integration/*.bats
-
-      - name: Run binary tests
-        run: bats tests/binaries/*.bats
-
-  # macOS tests (arm64)
-  macos-arm64:
-    name: macOS Tests (Apple Silicon)
-    runs-on: macos-latest # M1 runner
-    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          - name: Intel
+            runner: macos-13
+            arch: amd64
+          - name: Apple Silicon
+            runner: macos-latest
+            arch: arm64
     env:
       BASH_ENV: /Users/runner/.bash_env
 
