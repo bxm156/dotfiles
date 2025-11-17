@@ -45,34 +45,88 @@ jobs:
       - name: Run install.sh validation tests
         run: bats tests/install/*.bats
 
-  # Integration tests with Docker (Linux)
-  integration-linux:
-    name: Integration Tests (Linux ${{ matrix.arch }})
-    runs-on: ubuntu-latest
-    timeout-minutes: ${{ matrix.arch == 'arm64' && 45 || 30 }}
+  # Integration tests (all platforms)
+  integration-tests:
+    name: Integration Tests (${{ matrix.os }} ${{ matrix.arch_name }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: ${{ matrix.timeout }}
     strategy:
       matrix:
-        arch: [amd64, arm64]
+        include:
+          # Linux platforms (Docker-based)
+          - os: linux
+            arch: amd64
+            arch_name: amd64
+            runner: ubuntu-latest
+            timeout: 30
+            use_docker: true
+          - os: linux
+            arch: arm64
+            arch_name: arm64
+            runner: ubuntu-latest
+            timeout: 45
+            use_docker: true
+            needs_qemu: true
+          # macOS platforms (native)
+          - os: macos
+            arch: amd64
+            arch_name: Intel
+            runner: macos-13
+            timeout: 30
+            use_docker: false
+          - os: macos
+            arch: arm64
+            arch_name: Apple Silicon
+            runner: macos-latest
+            timeout: 30
+            use_docker: false
+    env:
+      BASH_ENV: ${{ matrix.os == 'linux' && '/home/runner/.bash_env' || '/Users/runner/.bash_env' }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Docker-specific setup (Linux only)
       - name: Set up QEMU
-        if: matrix.arch == 'arm64'
+        if: matrix.needs_qemu
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: arm64
+          platforms: ${{ matrix.arch }}
 
       - name: Set up Docker Buildx
+        if: matrix.use_docker
         uses: docker/setup-buildx-action@v3
 
       - name: Build test container
+        if: matrix.use_docker
         run: docker compose build dotfiles-test
         env:
-          DOCKER_PLATFORM: linux/${{ matrix.arch }}
+          DOCKER_PLATFORM: ${{ matrix.os }}/${{ matrix.arch }}
 
-      - name: Apply dotfiles and run bats integration tests
+      # Native setup (macOS only)
+      - name: Install mise and setup PATH
+        if: ${{ !matrix.use_docker }}
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo 'eval "$(~/.local/bin/mise activate bash --shims)"' > $BASH_ENV
+
+      - name: Install mise tools
+        if: ${{ !matrix.use_docker }}
+        run: mise install
+
+      - name: Run syntax tests
+        if: ${{ !matrix.use_docker }}
+        run: bats tests/syntax/*.bats
+
+      - name: Run unit tests
+        if: ${{ !matrix.use_docker }}
+        run: bats tests/unit.bats
+
+      # Run tests (Docker-based for Linux)
+      - name: Apply dotfiles and run bats integration tests (Docker)
+        if: matrix.use_docker
         timeout-minutes: ${{ matrix.arch == 'arm64' && 30 || 20 }}
         run: |
           docker compose run --rm \
@@ -92,53 +146,21 @@ jobs:
               bats /home/user/.local/share/chezmoi/tests/binaries/*.bats
             "
         env:
-          DOCKER_PLATFORM: linux/${{ matrix.arch }}
+          DOCKER_PLATFORM: ${{ matrix.os }}/${{ matrix.arch }}
 
-  # Integration tests (macOS)
-  integration-macos:
-    name: Integration Tests (macOS ${{ matrix.name }})
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        include:
-          - name: Intel
-            runner: macos-13
-            arch: amd64
-          - name: Apple Silicon
-            runner: macos-latest
-            arch: arm64
-    env:
-      BASH_ENV: /Users/runner/.bash_env
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install mise and setup PATH
-        run: |
-          curl https://mise.run | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo 'eval "$(~/.local/bin/mise activate bash --shims)"' > $BASH_ENV
-
-      - name: Install mise tools
-        run: mise install
-
-      - name: Run syntax tests
-        run: bats tests/syntax/*.bats
-
-      - name: Run unit tests
-        run: bats tests/unit.bats
-
+      # Run tests (native for macOS)
       - name: Apply dotfiles
+        if: ${{ !matrix.use_docker }}
         timeout-minutes: 15
         run: |
           sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" init --apply ${{ env.DOTFILES_USER }}
 
       - name: Run integration tests
+        if: ${{ !matrix.use_docker }}
         run: bats tests/integration/*.bats
 
       - name: Run binary tests
+        if: ${{ !matrix.use_docker }}
         run: bats tests/binaries/*.bats
 
   # Test install.sh variations
