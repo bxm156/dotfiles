@@ -1,53 +1,137 @@
+
 # ═══════════════════════════════════════════════════════════════
-# Claude Code Wrapper with Secret Injection
+# Claude Code Wrapper with Secret Injection & Custom Instructions
 # ═══════════════════════════════════════════════════════════════
 #
-# Wraps the `claude` command to inject secrets from .env files using
-# 1Password CLI (op) when available, with graceful fallback to direct
-# sourcing when op is not installed.
+# Wraps the `claude` command to:
+# 1. Inject secrets from .env files using 1Password CLI (op) or direct sourcing
+# 2. Inject custom system instructions from markdown files in ~/.config/claude/custom.d/
 #
 # Supported .env file locations (in merge order):
 #   1. ~/.config/claude/claude.env  (global/base secrets)
 #   2. ./.env                        (project-specific secrets, overrides global)
 #
+# Custom instructions:
+#   - Reads all *.md files from ~/.config/claude/custom.d/ in alphabetical order
+#   - Concatenates them and passes via --append-system-prompt flag
+#   - Files prefixed with numbers (00-, 01-, etc.) control load order
+#
 # Behavior:
-#   - If no .env files exist: runs `claude` directly (no modification)
-#   - If `op` command exists: uses `op run --env-file=... -- claude`
-#   - If `op` not available: sources .env files in a subshell before running `claude`
+#   - If no .env files exist: runs `claude` directly (but may add custom instructions)
+#   - If `op` command exists AND succeeds: uses `op run --env-file=... -- claude`
+#   - If `op` not available OR fails: sources .env files in a subshell before running `claude`
+#   - Commands in bypass whitelist skip both secret injection AND custom instructions
 #
 # Environment variable scope:
 #   - Variables are ONLY available to the claude process (isolated in subshell)
 #   - They do NOT persist in your shell after claude exits
 #
+# Bypass whitelist:
+#   Built-in: --help, -h, help, --version, -v, version
+#   Custom: Add commands to ~/.config/claude/bypass-commands (one per line, # for comments)
+#
+# Fallback behavior:
+#   If `op run` fails, wrapper automatically falls back to direct .env sourcing
+#   with a warning message. This ensures claude is never blocked by op failures.
+#
+# Emergency bypass:
+#   Use `command claude` to skip the wrapper entirely
+#
 # Examples:
-#   claude                    # Uses global ~/.config/claude/claude.env if exists
-#   cd ~/project && claude    # Merges global + project ./.env (project wins)
+#   claude --help             # Bypasses secret injection & custom.d (whitelist)
+#   claude                    # Injects secrets + custom.d instructions
+#   cd ~/project && claude    # Merges global + project .env, adds custom.d
+#   command claude            # Emergency bypass (skips wrapper entirely)
+#
+# Custom.d file naming:
+#   00-global.md              # Loads first
+#   01-workflow.md            # Loads second
+#   02-autoplan.md            # Loads third
+#   (Files sorted alphabetically, use numeric prefixes to control order)
 #
 # ═══════════════════════════════════════════════════════════════
 
 claude() {
     local env_files=()
+    local bypass_commands=("--help" "-h" "help" "--version" "-v" "version")
+    local custom_prompt=""
+
+    # Check if command is in bypass whitelist
+    for cmd in "${bypass_commands[@]}"; do
+        if [[ "${1:-}" == "$cmd" ]]; then
+            command claude "$@"
+            return $?
+        fi
+    done
+
+    # Load additional bypass commands from config if exists
+    if [[ -f "$HOME/.config/claude/bypass-commands" ]]; then
+        while IFS= read -r cmd; do
+            [[ -z "$cmd" || "$cmd" =~ ^# ]] && continue  # Skip empty lines and comments
+            if [[ "${1:-}" == "$cmd" ]]; then
+                command claude "$@"
+                return $?
+            fi
+        done < "$HOME/.config/claude/bypass-commands"
+    fi
+
+    # Collect custom.d markdown files in alphabetical order
+    if [[ -d "$HOME/.config/claude/custom.d" ]]; then
+        local custom_files=()
+        while IFS= read -r -d '' file; do
+            custom_files+=("$file")
+        done < <(find "$HOME/.config/claude/custom.d" -maxdepth 1 -type f -name "*.md" -print0 | sort -z)
+
+        # Concatenate all custom instruction files
+        if [[ ${#custom_files[@]} -gt 0 ]]; then
+            for file in "${custom_files[@]}"; do
+                custom_prompt+="$(cat "$file")"
+                custom_prompt+=$'\n\n'  # Double newline for markdown section separation
+            done
+        fi
+    fi
 
     # Collect existing env files in merge order
     # Global secrets first, then project-specific (later overrides earlier)
     [[ -f "$HOME/.config/claude/claude.env" ]] && env_files+=("$HOME/.config/claude/claude.env")
     [[ -f "./.env" ]] && env_files+=("./.env")
 
-    # If no env files exist, run claude directly without modification
+    # Build claude command with custom instructions if present
+    local claude_cmd=(command claude)
+    if [[ -n "$custom_prompt" ]]; then
+        claude_cmd+=(--append-system-prompt "$custom_prompt")
+    fi
+    claude_cmd+=("$@")
+
+    # If no env files exist, run claude directly (with custom instructions if present)
     if [[ ${#env_files[@]} -eq 0 ]]; then
-        command claude "$@"
+        "${claude_cmd[@]}"
         return $?
     fi
 
     # Environment files exist - inject secrets before running claude
     if command -v op >/dev/null 2>&1; then
-        # 1Password CLI is available - use it to inject secrets
+        # 1Password CLI is available - try to use it to inject secrets
         # This handles op:// secret references in .env files
         local op_args=()
         for envfile in "${env_files[@]}"; do
             op_args+=(--env-file="$envfile")
         done
-        op run "${op_args[@]}" --no-masking -- claude "$@"
+
+        # Try op run, but fallback to direct sourcing if it fails
+        if ! op run "${op_args[@]}" --no-masking -- "${claude_cmd[@]}" 2>/dev/null; then
+            echo "⚠️  1Password CLI failed (not signed in?). Falling back to direct .env sourcing..." >&2
+            echo "   (op:// secret references will NOT be resolved)" >&2
+            # Fallback to direct sourcing
+            (
+                set -a  # Auto-export all variable assignments
+                for envfile in "${env_files[@]}"; do
+                    source "$envfile"
+                done
+                set +a  # Disable auto-export
+                "${claude_cmd[@]}"
+            )
+        fi
     else
         # 1Password CLI not available - fallback to direct sourcing
         # Run in subshell to prevent polluting current shell environment
@@ -57,7 +141,7 @@ claude() {
                 source "$envfile"
             done
             set +a  # Disable auto-export
-            command claude "$@"
+            "${claude_cmd[@]}"
         )
     fi
 }
