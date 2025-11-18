@@ -4,6 +4,7 @@ Include ~/.ssh/1Password/config
 CanonicalizeHostname yes
 CanonicalDomains vms.bryanmarty.me
 
+{{- if .isWork }}
 Host yelp
   HostName dev165-uswest1adevc.dev.yelpcorp.com
   User bmarty
@@ -11,13 +12,20 @@ Host yelp
   IdentitiesOnly yes
   IdentityFile ~/.ssh/1Password/SHA256_4+g+jD4sPccDAkNQEQ42dvRk8F_2xxUFQwruaQtnlZw.pub
 
+{{- end }}
 Host engineering-bay.vms.bryanmarty.me
   HostName 192.168.6.101
   ForwardAgent yes
+  IdentitiesOnly yes
   User bryanmarty
+  IdentityFile ~/.ssh/1Password/SHA256_MMUb8DV2LQ0QBRvqfkkjdcd6ozfY_RUzx8_Ys6WPhJY.pub
+
+Match canonical host engineering-bay.vms.bryanmarty.me user admiral
+  IdentityFile ~/.ssh/1Password/SHA256_XQDy1w5BjlZFMj0ND5jtcosFgTXShUMr2KY8kJzr+EM.pub
 
 Host gitea.vms.bryanmarty.me
   HostName 192.168.6.105
+  IdentityFile ~/.ssh/1Password/SHA256_MMUb8DV2LQ0QBRvqfkkjdcd6ozfY_RUzx8_Ys6WPhJY.pub
 
 Host *
   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

@@ -39,7 +39,10 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 4. **NEVER hardcode mise installation paths** - always use `mise where tool-name` to get dynamic paths
 5. **NEVER hardcode mise backends** - let mise auto-detect from registry (use `mise use bats@latest`, not `mise use aqua:bats-core/bats-core`)
 6. **Use `mise activate bash --shims` for non-interactive contexts** - CI, Docker, scripts; use `mise activate bash` for interactive shells
-7. **Both mise activation modes can coexist** - `mise activate` removes shims from PATH, safe to have both in .bash_profile and .bashrc
+1. **Both mise activation modes can coexist** - `mise activate` removes shims from PATH, safe to have both in .bash_profile and .bashrc
+1. **Never use `path` as a variable name in zsh** - it's a special tied array that mirrors `PATH`; declaring `local path` clears your entire PATH
+2. **Declare `local` variables outside loops in zsh** - `local`/`typeset` prints existing variable values; inside loops this causes trace-like output on subsequent iterations
+3. **When debugging issues, assume bugs are in your code first** - investigate and test your own code before suggesting the user's environment or setup is the problem
 
 ## Quick Reference
 
