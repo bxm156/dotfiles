@@ -47,7 +47,7 @@ echo ""
 echo "=== Binary Installation Verification ==="
 # Verify binaries are files (not directories) and are executable
 test_failed=0
-for binary in jq fzf zoxide bat gitui starship freeze; do
+for binary in jq fzf zoxide bat gitui gum starship glow mods freeze vhs; do
   binary_path="$HOME/.local/bin/$binary"
 
   if [[ ! -e "$binary_path" ]]; then

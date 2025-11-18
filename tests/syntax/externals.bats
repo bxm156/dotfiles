@@ -65,4 +65,10 @@ setup() {
     assert_output --partial ".local/bin/freeze"
 }
 
+@test ".chezmoiexternal.toml.tmpl configures vhs binary" {
+    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
+    assert_success
+    assert_output --partial ".local/bin/vhs"
+}
+
 # Note: starship is installed via run_once scripts, not external configuration

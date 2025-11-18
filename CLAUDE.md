@@ -1,8 +1,7 @@
 # CLAUDE.md - Quick Reference for AI Agents
 
-**IMPORTANT: Read AGENTS.md for comprehensive workflows and implementation details FIRST.**
+**IMPORTANT: Read AGENTS.md for comprehensive workflows and implementation details, including those in subdirectories (e.g., tests/AGENTS.md).**
 **IMPORTANT: Read TESTING.md for comprehensive workflows on writing and running tests**
-
 
 This repository uses **chezmoi** to manage dotfiles across machines with templating support.
 
@@ -121,6 +120,7 @@ research "topic"          # AI research → markdown
 ## See Also
 
 - **[AGENTS.md](AGENTS.md)** - Detailed workflows, troubleshooting, implementation patterns
+- **[tests/AGENTS.md](tests/AGENTS.md)** - CRITICAL: Test environment guide (devcontainer vs test container)
 - **[MISE-USAGE.md](MISE-USAGE.md)** - Tool version management with mise (read before installing packages)
 - **[EXTERNAL.md](EXTERNAL.md)** - External packages reference and instructions for adding packages
 - **[TESTING.md](TESTING.md)** - Testing workflow and commands

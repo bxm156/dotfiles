@@ -21,6 +21,11 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 | bat | v0.26.0 | archive | ✓ | ✓ | ✓ | ✓ | 672h | cat with syntax highlighting, stripComponents=1 |
 | gitui | v0.27.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Fast terminal UI for git |
 | rumdl | v0.0.174 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Markdown linter/formatter, markdownlint-compatible, 5x faster, stdin/stdout support |
+| glow | v2.1.1 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Beautiful markdown reader for terminal, stripComponents=1 |
+| mods | v1.8.1 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | AI on the command line (CLI interface to LLMs), stripComponents=1 |
+| gum | v0.17.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Glamorous shell scripts with spinners/progress indicators, stripComponents=1 |
+| freeze | v0.2.2 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Generate images of code and terminal output, stripComponents=1 |
+| vhs | v0.10.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Terminal session recorder and GIF generator, write terminal GIFs as code, stripComponents=1 |
 
 **Refresh Periods:**
 - `168h` = 7 days (weekly)

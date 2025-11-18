@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 # Productivity and content tools tests
-# Tests: glow, mods
+# Tests: glow, mods, vhs
 
 setup() {
     # Load bats helpers
@@ -60,5 +60,17 @@ skip_if_not_installed() {
 @test "mods is functional" {
     skip_if_not_installed mods
     run "$HOME/.local/bin/mods" --version
+    assert_success
+}
+
+# vhs - Terminal recorder
+@test "vhs is installed as executable file" {
+    run check_binary "vhs"
+    assert_success
+}
+
+@test "vhs is functional" {
+    skip_if_not_installed vhs
+    run "$HOME/.local/bin/vhs" --version
     assert_success
 }

@@ -61,7 +61,7 @@ log_section "Binary Installation Verification"
 # but we keep it here for test completeness
 
 test_failed=0
-for binary in jq fzf zoxide bat gitui gum starship glow mods; do
+for binary in jq fzf zoxide bat gitui gum starship glow mods freeze vhs; do
   binary_path="$HOME/.local/bin/$binary"
 
   if [[ ! -e "$binary_path" ]]; then
@@ -121,6 +121,32 @@ if [[ -x "$HOME/.local/bin/mods" ]]; then
     fi
 else
     log_error "mods: not installed"
+    test_failed=1
+fi
+
+# Test freeze
+if [[ -x "$HOME/.local/bin/freeze" ]]; then
+    if "$HOME/.local/bin/freeze" --version &>/dev/null; then
+        log_success "freeze: installed and working"
+    else
+        log_error "freeze: installed but not working"
+        test_failed=1
+    fi
+else
+    log_error "freeze: not installed"
+    test_failed=1
+fi
+
+# Test vhs
+if [[ -x "$HOME/.local/bin/vhs" ]]; then
+    if "$HOME/.local/bin/vhs" --version &>/dev/null; then
+        log_success "vhs: installed and working"
+    else
+        log_error "vhs: installed but not working"
+        test_failed=1
+    fi
+else
+    log_error "vhs: not installed"
     test_failed=1
 fi
 
