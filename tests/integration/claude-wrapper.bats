@@ -438,9 +438,24 @@ EOF
     mkdir -p "$HOME/.config/claude/custom.d"
     # No files in directory
 
+    # Mock that detects if --append-system-prompt was passed
+    cat > "$MOCK_CLAUDE" << 'EOF'
+#!/usr/bin/env bash
+echo "MOCK_CLAUDE_CALLED"
+for arg in "$@"; do
+    if [[ "$arg" == "--append-system-prompt" ]]; then
+        echo "CUSTOM_PROMPT_ADDED"
+    fi
+done
+echo "ARGS: $*"
+EOF
+    chmod +x "$MOCK_CLAUDE"
+
     run claude test
     assert_success
     assert_output --partial "MOCK_CLAUDE_CALLED"
+    assert_output --partial "ARGS: test"
+    refute_output --partial "CUSTOM_PROMPT_ADDED"
 }
 
 @test "custom.d files are concatenated with double newline spacing" {

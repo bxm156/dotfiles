@@ -84,6 +84,12 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 
 **Git configuration:** Uses `[include]` mechanism, setup is automatic via `run_once_after` script
 
+**Claude Code custom instructions:** Located in `dot_config/claude/custom.d/`, deployed to `~/.config/claude/custom.d/`
+
+- Files loaded in alphabetical order (00-, 01-, 02- prefixes control order)
+- Automatically injected via wrapper when running `claude` command
+- See dot_config/zsh/tools/claude.zsh.tmpl for wrapper implementation
+
 **Productivity tools:** glow (markdown viewer), mods (AI CLI), taskwarrior + taskwarrior-tui (task management)
 
 **Quick commands:**
