@@ -4,8 +4,13 @@ set -euo pipefail
 # Install system dependencies required by mise-managed tools
 # This script runs once before external binaries are installed
 
+# brew epicenter-whispering
+
+# brew intall ffmpeg dependencies on macOS
+# or compile from source
+
 # FFMPEG Build Opts
-#export ASDF_FFMPEG_ENABLE="libaom fontconfig freetype frei0r lame libass libvorbis libvpx opus rtmpdump sdl2 snappy theora x264 x265 xz"
+#export ASDF_FFMPEG_ENABLE="libaom fontconfig libfreetype frei0r libmp3lame libass libvorbis libvpx libopus sdl2 libsnappy libtheora libx264 libx265 gpl"
 #export CFLAGS="$CFLAGS -I$(brew --prefix)/include"
 #export LDFLAGS="$LDFLAGS -L$(brew --prefix)/lib"
 
@@ -16,7 +21,7 @@ set -euo pipefail
 #   System dependencies:
 #     - Mac:
 #         - brew install fdk-aac git lame libass libtool libvorbis libvpx \
-#		    opus sdl2 shtool texi2html theora wget x264 x265 xvid nasm zimg
+#		    opus sdl2 shtool texi2html theora wget x264 x265 xvid nasm zimg frei0r aom pkgconf
 #		  - export CFLAGS="$CFLAGS -I$(brew --prefix)/include"
 #			export LDFLAGS="$LDFLAGS -L$(brew --prefix)/lib"
 #		  - export ASDF_FFMPEG_ENABLE="libaom fontconfig freetype frei0r lame libass libvorbis libvpx opus rtmpdump sdl2 snappy theora x264 x265 xz"
