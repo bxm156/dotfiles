@@ -25,7 +25,7 @@ This document tracks all external packages managed by chezmoi via `.chezmoiexter
 | mods | v1.8.1 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | AI on the command line (CLI interface to LLMs), stripComponents=1 |
 | gum | v0.17.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Glamorous shell scripts with spinners/progress indicators, stripComponents=1 |
 | freeze | v0.2.2 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Generate images of code and terminal output, stripComponents=1 |
-| vhs | v0.10.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Terminal session recorder and GIF generator, write terminal GIFs as code, stripComponents=1 |
+| vhs | v0.10.0 | archive-file | ✓ | ✓ | ✓ | ✓ | 672h | Terminal session recorder and GIF generator, write terminal GIFs as code, stripComponents=1. Requires: ffmpeg (all platforms) and ttyd (Linux/Windows only, managed by mise) |
 
 **Refresh Periods:**
 - `168h` = 7 days (weekly)
