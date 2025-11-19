@@ -1,7 +1,6 @@
 [tools]
 node = "24"
 claude = "latest"
-chezmoi = "latest"
 bats = "latest"
 "npm:bats-support" = "latest"
 "npm:bats-assert" = "latest"
