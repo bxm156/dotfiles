@@ -71,4 +71,10 @@ setup() {
     assert_output --partial ".local/bin/vhs"
 }
 
+@test ".chezmoiexternal.toml.tmpl configures asciinema binary" {
+    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
+    assert_success
+    assert_output --partial ".local/bin/asciinema"
+}
+
 # Note: starship is installed via run_once scripts, not external configuration

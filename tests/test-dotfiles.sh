@@ -61,7 +61,7 @@ log_section "Binary Installation Verification"
 # but we keep it here for test completeness
 
 test_failed=0
-for binary in jq fzf zoxide bat gitui gum starship glow mods freeze vhs; do
+for binary in jq fzf zoxide bat gitui gum starship glow mods freeze vhs asciinema; do
   binary_path="$HOME/.local/bin/$binary"
 
   if [[ ! -e "$binary_path" ]]; then
@@ -147,6 +147,19 @@ if [[ -x "$HOME/.local/bin/vhs" ]]; then
     fi
 else
     log_error "vhs: not installed"
+    test_failed=1
+fi
+
+# Test asciinema
+if [[ -x "$HOME/.local/bin/asciinema" ]]; then
+    if "$HOME/.local/bin/asciinema" --version &>/dev/null; then
+        log_success "asciinema: installed and working"
+    else
+        log_error "asciinema: installed but not working"
+        test_failed=1
+    fi
+else
+    log_error "asciinema: not installed"
     test_failed=1
 fi
 

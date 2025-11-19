@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 # Productivity and content tools tests
-# Tests: glow, mods, vhs
+# Tests: glow, mods, vhs, asciinema
 
 setup() {
     # Load bats helpers
@@ -72,5 +72,17 @@ skip_if_not_installed() {
 @test "vhs is functional" {
     skip_if_not_installed vhs
     run "$HOME/.local/bin/vhs" --version
+    assert_success
+}
+
+# asciinema - Terminal session recorder
+@test "asciinema is installed as executable file" {
+    run check_binary "asciinema"
+    assert_success
+}
+
+@test "asciinema is functional" {
+    skip_if_not_installed asciinema
+    run "$HOME/.local/bin/asciinema" --version
     assert_success
 }
