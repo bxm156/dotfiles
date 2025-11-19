@@ -4,6 +4,11 @@ set -euo pipefail
 # Install system dependencies required by mise-managed tools
 # This script runs once before external binaries are installed
 
+# FFMPEG Build Opts
+#export ASDF_FFMPEG_ENABLE="libaom fontconfig freetype frei0r lame libass libvorbis libvpx opus rtmpdump sdl2 snappy theora x264 x265 xz"
+#export CFLAGS="$CFLAGS -I$(brew --prefix)/include"
+#export LDFLAGS="$LDFLAGS -L$(brew --prefix)/lib"
+
 # Dependencies Overview:
 #
 # ffmpeg (mise-managed, all platforms):
