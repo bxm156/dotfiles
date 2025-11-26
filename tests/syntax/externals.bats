@@ -77,4 +77,16 @@ setup() {
     assert_output --partial ".local/bin/asciinema"
 }
 
+@test ".chezmoiexternal.toml.tmpl configures todoist binary" {
+    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
+    assert_success
+    assert_output --partial ".local/bin/todoist"
+}
+
+@test ".chezmoiexternal.toml.tmpl configures lazyjournal binary" {
+    run chezmoi execute-template < .chezmoiexternal.toml.tmpl
+    assert_success
+    assert_output --partial ".local/bin/lazyjournal"
+}
+
 # Note: starship is installed via run_once scripts, not external configuration

@@ -244,3 +244,46 @@
     path = "rumdl"
 {{- end }}
 {{- end }}
+
+# todoist - CLI client for Todoist task management
+{{- $todoistOS := "" }}
+{{- if eq .chezmoi.os "linux" }}
+{{-   $todoistOS = "Linux" }}
+{{- else if eq .chezmoi.os "darwin" }}
+{{-   $todoistOS = "Darwin" }}
+{{- end }}
+{{- $todoistArch := "" }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $todoistArch = "x86_64" }}
+{{- else if eq .chezmoi.arch "arm64" }}
+{{-   $todoistArch = "arm64" }}
+{{- end }}
+{{- if and (ne $todoistOS "") (ne $todoistArch "") }}
+[".local/bin/todoist"]
+    type = "archive-file"
+    url = "https://github.com/sachaos/todoist/releases/download/v0.22.0/todoist_{{ $todoistOS }}_{{ $todoistArch }}.tar.gz"
+    executable = true
+    refreshPeriod = "672h"
+    path = "todoist"
+{{- end }}
+
+# lazyjournal - TUI for reading logs (journald, docker, k8s, files)
+{{- $lazyjournalOS := .chezmoi.os }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   $lazyjournalOS = "darwin" }}
+{{- else if eq .chezmoi.os "linux" }}
+{{-   $lazyjournalOS = "linux" }}
+{{- end }}
+{{- $lazyjournalArch := .chezmoi.arch }}
+{{- if eq .chezmoi.arch "amd64" }}
+{{-   $lazyjournalArch = "amd64" }}
+{{- else if eq .chezmoi.arch "arm64" }}
+{{-   $lazyjournalArch = "arm64" }}
+{{- end }}
+{{- if and (ne $lazyjournalOS "") (ne $lazyjournalArch "") }}
+[".local/bin/lazyjournal"]
+    type = "file"
+    url = "https://github.com/Lifailon/lazyjournal/releases/download/0.8.1/lazyjournal-0.8.1-{{ $lazyjournalOS }}-{{ $lazyjournalArch }}"
+    executable = true
+    refreshPeriod = "672h"
+{{- end }}
