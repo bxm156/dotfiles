@@ -51,7 +51,7 @@ rcode() {
     if [[ -z "$host" ]]; then
         if (( ! $+commands[gum] )); then
             echo "Usage: rcode <host> [path]" >&2
-            echo "Example: rcode engineering-bay projects/dotfiles" >&2
+            echo "Example: rcode engineering-bay.vms.bryanmarty.me projects/dotfiles" >&2
             echo "Install gum for interactive selection" >&2
             return 1
         fi
