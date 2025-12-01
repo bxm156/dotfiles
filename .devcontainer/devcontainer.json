@@ -15,16 +15,14 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-python.python",
         "redhat.vscode-yaml",
         "Catppuccin.catppuccin-vsc",
-        "thang-nm.catppuccin-perfect-icons",
-        "tamasfe.even-better-toml"
+        "thang-nm.catppuccin-perfect-icons"
       ]
     }
   },
   "postCreateCommand": "mise install",
-  "runArgs": ["--network=vm_net", "--ip=192.168.6.81"]
+  "shutdownAction": "stopContainer"
   // DoD can access host, wouldn't need to waste ips "runArgs": ["--add-host=host.docker.internal:host-gateway"]
 
   //"workspaceFolder": "/workspace",

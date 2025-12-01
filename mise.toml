@@ -5,6 +5,8 @@ chezmoi = "latest"
 bats = "latest"
 "npm:bats-support" = "latest"
 "npm:bats-assert" = "latest"
+act = "latest"
+gh = "latest"
 
 [env]
 # Use native architecture for Docker test containers
