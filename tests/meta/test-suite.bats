@@ -180,3 +180,60 @@ setup() {
 @test "test documentation exists" {
     [ -f "tests/README.md" ]
 }
+
+@test "external binary verification script includes all binaries from .chezmoiexternal.toml.tmpl" {
+    # Extract all binaries from .chezmoiexternal.toml.tmpl
+    local external_binaries
+    external_binaries=$(grep -oP '^\[".local/bin/\K[^"]+' .chezmoiexternal.toml.tmpl | sort)
+
+    # Extract binaries from verification script
+    local verification_script=".chezmoiscripts/run_after_verify-external-binaries.sh.tmpl"
+    local verified_binaries
+    verified_binaries=$(grep -A 100 'binaries=(' "$verification_script" | \
+                       grep -oP '^\s*"\K[^"]+' | \
+                       grep -v 'taskwarrior-tui' | \
+                       sort)
+
+    # Add taskwarrior-tui separately since it's conditional
+    local taskwarrior_tui_in_verification
+    taskwarrior_tui_in_verification=$(grep -q 'binaries+=("taskwarrior-tui")' "$verification_script" && echo "taskwarrior-tui" || echo "")
+
+    # Known exceptions (binaries that don't need verification)
+    local exceptions=()
+
+    # Check each binary from .chezmoiexternal.toml.tmpl
+    local missing_from_verification=""
+    for binary in $external_binaries; do
+        # Skip exceptions
+        local is_exception=false
+        for exception in "${exceptions[@]}"; do
+            if [ "$binary" = "$exception" ]; then
+                is_exception=true
+                break
+            fi
+        done
+
+        if [ "$is_exception" = true ]; then
+            continue
+        fi
+
+        # Check if binary is in verification script
+        if [ "$binary" = "taskwarrior-tui" ]; then
+            if [ -z "$taskwarrior_tui_in_verification" ]; then
+                missing_from_verification="${missing_from_verification}  - $binary\n"
+            fi
+        else
+            if ! echo "$verified_binaries" | grep -q "^${binary}$"; then
+                missing_from_verification="${missing_from_verification}  - $binary\n"
+            fi
+        fi
+    done
+
+    if [ -n "$missing_from_verification" ]; then
+        echo -e "Binaries in .chezmoiexternal.toml.tmpl but missing from verification script:\n${missing_from_verification}"
+        echo ""
+        echo "Add these binaries to the binaries=() array in:"
+        echo "  $verification_script"
+        return 1
+    fi
+}

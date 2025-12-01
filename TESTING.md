@@ -58,11 +58,13 @@ mise run test:github:interactive  # GitHub test + interactive shell
 - Covers: jq, fzf, zoxide, bat, gitui, gum, starship, glow, mods
 - **Requires dotfiles to be applied**
 
-### 4. Integration Tests (`tests/integration.bats`)
+### 4. Integration Tests (`tests/integration/*.bats`)
+
 - Tests oh-my-zsh installation and plugins
 - Verifies zsh configuration loads without errors
 - Checks git configuration integration
 - Validates directory structure
+- **Claude wrapper tests** (`claude-wrapper.bats`) - comprehensive testing of secret injection, bypass whitelist, and fallback behavior
 - **Requires dotfiles to be applied**
 
 ### 5. Install Script Tests (`tests/install.bats`)
@@ -122,6 +124,82 @@ See `.github/workflows/test.yml` for details.
 mise run clean             # Remove test containers/volumes
 mise run clean:full        # Remove everything (forces rebuild)
 ```
+
+## Claude Wrapper Tests
+
+The `tests/integration/claude-wrapper.bats` file contains comprehensive tests for the claude command wrapper (`dot_config/zsh/tools/claude.zsh.tmpl`).
+
+### What's Tested
+
+**Bypass Whitelist**:
+
+- Built-in commands (`--help`, `-h`, `help`, `--version`, `-v`, `version`)
+- Custom bypass commands from `~/.config/claude/bypass-commands`
+- Comment and empty line handling in bypass config
+
+**Op Failure Fallback**:
+
+- Graceful fallback when `op run` fails (e.g., not signed in)
+- Warning messages about op:// references not resolving
+- Correct variable sourcing in fallback mode
+
+**Secret Injection**:
+
+- Global `.env` file (`~/.config/claude/claude.env`)
+- Project `.env` file (`./.env` in current directory)
+- Merge behavior (project overrides global)
+- Works with both `op run` and direct sourcing
+
+**Custom Instructions (custom.d)**:
+
+- Loads `*.md` files from `~/.config/claude/custom.d/` in alphabetical order
+- Verifies correct sorting (05 before 10 before 99)
+- Concatenates files with double newline spacing (markdown section separation)
+- Passes via single `--append-system-prompt` flag
+- Ignores non-markdown files (.txt, README, etc.)
+- Works with empty/missing custom.d directory
+- Works alongside `.env` file injection
+- Compatible with both op run and fallback modes
+- Bypassed by whitelist commands (--help, etc.)
+
+**Environment Isolation**:
+
+- Variables don't leak to parent shell
+- Subshell execution is properly contained
+
+**Edge Cases**:
+
+- Empty .env files
+- Comments-only .env files
+- Missing files
+- Special characters in arguments
+
+### Running Tests
+
+```bash
+# Run all claude wrapper tests
+bats tests/integration/claude-wrapper.bats
+
+# Run all integration tests
+mise run test:bats:integration
+
+# Full test suite
+mise run test:ci
+```
+
+All 33 claude wrapper tests use mocked binaries (`claude` and `op`) to ensure:
+
+- No dependency on actual 1Password installation
+- Fast execution (< 5 seconds)
+- Reliable CI/CD compatibility
+
+Tests verify:
+
+- 6 bypass whitelist scenarios
+- 6 op/fallback scenarios
+- 9 .env secret injection scenarios
+- 11 custom.d markdown injection scenarios
+- 1 environment isolation test
 
 ## Documentation
 

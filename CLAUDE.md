@@ -1,8 +1,7 @@
 # CLAUDE.md - Quick Reference for AI Agents
 
-**IMPORTANT: Read AGENTS.md for comprehensive workflows and implementation details FIRST.**
+**IMPORTANT: Read AGENTS.md for comprehensive workflows and implementation details, including those in subdirectories (e.g., tests/AGENTS.md).**
 **IMPORTANT: Read TESTING.md for comprehensive workflows on writing and running tests**
-
 
 This repository uses **chezmoi** to manage dotfiles across machines with templating support.
 
@@ -39,7 +38,10 @@ This repository uses **chezmoi** to manage dotfiles across machines with templat
 4. **NEVER hardcode mise installation paths** - always use `mise where tool-name` to get dynamic paths
 5. **NEVER hardcode mise backends** - let mise auto-detect from registry (use `mise use bats@latest`, not `mise use aqua:bats-core/bats-core`)
 6. **Use `mise activate bash --shims` for non-interactive contexts** - CI, Docker, scripts; use `mise activate bash` for interactive shells
-7. **Both mise activation modes can coexist** - `mise activate` removes shims from PATH, safe to have both in .bash_profile and .bashrc
+1. **Both mise activation modes can coexist** - `mise activate` removes shims from PATH, safe to have both in .bash_profile and .bashrc
+1. **Never use `path` as a variable name in zsh** - it's a special tied array that mirrors `PATH`; declaring `local path` clears your entire PATH
+2. **Declare `local` variables outside loops in zsh** - `local`/`typeset` prints existing variable values; inside loops this causes trace-like output on subsequent iterations
+3. **When debugging issues, assume bugs are in your code first** - investigate and test your own code before suggesting the user's environment or setup is the problem
 
 ## Quick Reference
 
@@ -81,6 +83,12 @@ See AGENTS.md "Making Changes to Existing Dotfiles" for local machine workflows.
 
 **Git configuration:** Uses `[include]` mechanism, setup is automatic via `run_once_after` script
 
+**Claude Code custom instructions:** Located in `dot_config/claude/custom.d/`, deployed to `~/.config/claude/custom.d/`
+
+- Files loaded in alphabetical order (00-, 01-, 02- prefixes control order)
+- Automatically injected via wrapper when running `claude` command
+- See dot_config/zsh/tools/claude.zsh.tmpl for wrapper implementation
+
 **Productivity tools:** glow (markdown viewer), mods (AI CLI), taskwarrior + taskwarrior-tui (task management)
 
 **Quick commands:**
@@ -112,6 +120,7 @@ research "topic"          # AI research → markdown
 ## See Also
 
 - **[AGENTS.md](AGENTS.md)** - Detailed workflows, troubleshooting, implementation patterns
+- **[tests/AGENTS.md](tests/AGENTS.md)** - CRITICAL: Test environment guide (devcontainer vs test container)
 - **[MISE-USAGE.md](MISE-USAGE.md)** - Tool version management with mise (read before installing packages)
 - **[EXTERNAL.md](EXTERNAL.md)** - External packages reference and instructions for adding packages
 - **[TESTING.md](TESTING.md)** - Testing workflow and commands

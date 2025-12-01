@@ -2,9 +2,15 @@
 # Do not edit directly - edit source and run: chezmoi apply
 
 [user]
-	email = bryan@bryanmarty.com
 	name = Bryan Marty
+{{- if .isWork }}
+	email = bmarty@yelp.com
+	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNpsUlmghNuOIIpgiPnNWPJ3G1k1F/HjV4Ev+mIMk6dG6XeBhRLIr6C9nK30Iz5ddkul91QYmZLFKu3qjCcTT6bg9wQgIB86nRtbhnz53dPOQofuKk5zYssy5sgdAMvUkIMzxUVaFkxJGTLTCWxLrTR7YgVnlMugqMjH6nGtiQ8M3QNNeFm765obRisAQIpHNmlGhrwYoD/DNLZHSEflVbhnAOtkgFBTudAMfWImdEm8cgZi7/kRizlr67WbXm2kycaKL2hHFZC1Xp60YEL9Q5MFW/lCoYm++9MWjN4pJ5UoYszkoIEMgRyACbaA5vH9QH+HAQP+JleMC9Wu2vQ2+zjFEB0QfM+AB7YecNDACOJK4tPQVihBwH51KeIau2caepiZlKK4j0bpG4v8NdFOORHyIC+9podEToAtnQpDFuN+Vb/sT506ryrF1Z37sVGG29YdNhRQ0UG7wIus1hhdf+FktlAL23dbu5gX+oVlykBdYNU5nrEkBwLzdWqdKvKlrxT8wLC1JQPqd87vLMWIKRmYSxJLomzYLdhVci5RXzElZ32TpM/ev6IaSzP6LmYxpWLbbtL9hp4gR9zf2ccHbcuZQOiR3MFTPy2t/7Gp3eLC9rDKSGwTJGT8+pNrlyF2TvdTwM2b70LHQT1DklidZ8XxuFM+9tUzIiuAYwm0Kauw==
+{{- else }}
+	email = bryan@bryanmarty.com
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF0APKaYNcaQTl6d7uHLdkJDb+fIGBx9ay83MO7Mb3WW
+{{- end }}
+
 
 [gpg]
 	format = ssh

@@ -1,6 +1,6 @@
 [tools]
 node = "24"
 claude = "latest"
-{{- if .isWork }}
-ffmpeg = "latest"
+{{- if or (eq .chezmoi.os "linux") (and (eq .chezmoi.os "windows") (eq .chezmoi.arch "amd64")) }}
+ttyd = "latest"
 {{- end }}

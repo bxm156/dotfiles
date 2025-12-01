@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 # Productivity and content tools tests
-# Tests: glow, mods
+# Tests: glow, mods, vhs, asciinema, todoist
 
 setup() {
     # Load bats helpers
@@ -60,5 +60,53 @@ skip_if_not_installed() {
 @test "mods is functional" {
     skip_if_not_installed mods
     run "$HOME/.local/bin/mods" --version
+    assert_success
+}
+
+# vhs - Terminal recorder
+@test "vhs is installed as executable file" {
+    run check_binary "vhs"
+    assert_success
+}
+
+@test "vhs is functional" {
+    skip_if_not_installed vhs
+    run "$HOME/.local/bin/vhs" --version
+    assert_success
+}
+
+# asciinema - Terminal session recorder
+@test "asciinema is installed as executable file" {
+    run check_binary "asciinema"
+    assert_success
+}
+
+@test "asciinema is functional" {
+    skip_if_not_installed asciinema
+    run "$HOME/.local/bin/asciinema" --version
+    assert_success
+}
+
+# todoist - CLI client for Todoist
+@test "todoist is installed as executable file" {
+    run check_binary "todoist"
+    assert_success
+}
+
+@test "todoist is functional" {
+    skip_if_not_installed todoist
+    run "$HOME/.local/bin/todoist" --version
+    assert_success
+}
+
+# lazyjournal - Log viewer TUI
+@test "lazyjournal is installed as executable file" {
+    run check_binary "lazyjournal"
+    assert_success
+}
+
+@test "lazyjournal is functional" {
+    skip_if_not_installed lazyjournal
+    run "$HOME/.local/bin/lazyjournal" --version
     assert_success
 }

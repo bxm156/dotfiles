@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Install system dependencies required by mise-managed tools
+# This script runs once before external binaries are installed
+
+# brew epicenter-whispering
+
+# brew intall ffmpeg dependencies on macOS
+# or compile from source
+
+# FFMPEG Build Opts
+#export ASDF_FFMPEG_ENABLE="libaom fontconfig libfreetype frei0r libmp3lame libass libvorbis libvpx libopus sdl2 libsnappy libtheora libx264 libx265 gpl"
+#export CFLAGS="$CFLAGS -I$(brew --prefix)/include"
+#export LDFLAGS="$LDFLAGS -L$(brew --prefix)/lib"
+
+# Dependencies Overview:
+#
+# ffmpeg (mise-managed, all platforms):
+#   Compliled from https://github.com/mise-plugins/mise-ffmpeg
+#   System dependencies:
+#     - Mac:
+#         - brew install fdk-aac git lame libass libtool libvorbis libvpx \
+#		    opus sdl2 shtool texi2html theora wget x264 x265 xvid nasm zimg frei0r aom pkgconf
+#		  - export CFLAGS="$CFLAGS -I$(brew --prefix)/include"
+#			export LDFLAGS="$LDFLAGS -L$(brew --prefix)/lib"
+#		  - export ASDF_FFMPEG_ENABLE="libaom fontconfig freetype frei0r lame libass libvorbis libvpx opus rtmpdump sdl2 snappy theora x264 x265 xz"
+
+#	 - Linux (Ubuntu/Debian):
+#	     - sudo apt-get update -qq && sudo apt-get -y install \
+#			autoconf automake build-essential cmake git-core libass-dev \
+#  			libfreetype6-dev libgnutls28-dev libmp3lame-dev libsdl2-dev libtool \
+#  			libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev \
+#  			libxcb-xfixes0-dev meson ninja-build pkg-config texinfo wget yasm \
+#   		lib1g-dev
+#   Notes:
+#     - Used by VHS for video/GIF rendering
+#     - Installed on all machines (Linux, macOS, Windows)
+#
+# ttyd (mise-managed, Linux/Windows only):
+#   System dependencies:
+#     - None (mise installs self-contained ttyd binary)
+#   Platform support:
+#     - Linux: All architectures (amd64, arm64, etc.)
+#     - Windows: amd64 only
+#     - macOS: Not supported (not available in mise registry)
+#   Notes:
+#     - Required by VHS for certain recording modes
+#     - Optional for basic VHS usage
+#
+# VHS (chezmoi external, all platforms):
+#   Dependencies:
+#     - ffmpeg (required, managed by mise)
+#     - ttyd (optional, managed by mise, Linux/Windows only)
+#   Platform support: Linux amd64/arm64, macOS Intel/Apple Silicon
+#
+# asciinema (chezmoi external, all platforms):
+#   System dependencies:
+#     - None (self-contained Rust binary)
+#   Platform support: Linux amd64/arm64, macOS Intel/Apple Silicon
+
+# Future: This script will install system dependencies if needed
+# For now, it serves as documentation only
+
+# Exit successfully (nothing to install yet)
+exit 0
