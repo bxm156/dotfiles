@@ -1,3 +1,6 @@
+{{ if .isWork }}
+Include /Users/bmarty/.colima/ssh_config
+{{- endif }}
 {{ if eq .chezmoi.os "darwin" -}}
 Include ~/.ssh/1Password/config
 
