@@ -1,0 +1,8 @@
+[init]
+  defaultBranch = main
+
+[core]
+  sshCommand = ssh.exe
+
+[gpg "ssh"]
+  program = "/mnt/c/Users/bryan/AppData/Local/Microsoft/WindowsApps/op-ssh-sign-wsl.exe"
