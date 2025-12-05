@@ -18,10 +18,10 @@
         "redhat.vscode-yaml",
         "Catppuccin.catppuccin-vsc",
         "thang-nm.catppuccin-perfect-icons"
+        //"hverlin.mise-vscode"
       ]
     }
   },
-  "postCreateCommand": "mise install",
   "shutdownAction": "stopContainer"
   // DoD can access host, wouldn't need to waste ips "runArgs": ["--add-host=host.docker.internal:host-gateway"]
 
@@ -32,7 +32,7 @@
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
+  // "forwardPorts": []>
   // Use 'postCreateCommand' to run commands after the container is created.
   // Dependencies managed by mise - see .mise.toml for installation hooks
 
