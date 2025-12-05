@@ -1,17 +1,25 @@
 {
-{{- if .isWork }}
   "model": "sonnet-latest[1M]",
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "{{ .authToken }}",
-    "ANTHROPIC_BEDROCK_BASE_URL": "https://chatproxy.yelpcorp.com/bedrock",
-    "CLAUDE_CODE_SKIP_BEDROCK_AUTH": "1",
-    "CLAUDE_CODE_USE_BEDROCK": "1",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "sonnet-latest",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "opus-latest",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "haiku-latest",
-    "OPENAI_API_KEY": "{{ .authToken }}",
-    "LITELLM_BASE_URL": "https://chatproxy.yelpcorp.com"
+      "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    {{- if .isWork }}
+        "ANTHROPIC_AUTH_TOKEN": "{{ .authToken }}",
+        "ANTHROPIC_BEDROCK_BASE_URL": "https://chatproxy.yelpcorp.com/bedrock",
+        "CLAUDE_CODE_SKIP_BEDROCK_AUTH": "1",
+        "CLAUDE_CODE_USE_BEDROCK": "1",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "sonnet-latest",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "opus-latest",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "haiku-latest",
+        "OPENAI_API_KEY": "{{ .authToken }}",
+        "LITELLM_BASE_URL": "https://chatproxy.yelpcorp.com"
+    {{ else }}
+      "ANTHROPIC_BASE_URL": "http://litellm.vms.bryanmarty.me",
+      "ANTHROPIC_AUTH_TOKEN": "sk-NnW0BWqgdkoexzd-OTt2BQ",
+      "ANTHROPIC_DEFAULT_MODEL": "claude-sonnet-4",
+      "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4",
+      "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4",
+      "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4"
+    {{ end }}
   },
 {{- end }}
   "extraKnownMarketplaces": {

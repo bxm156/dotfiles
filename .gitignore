@@ -2,3 +2,6 @@
 # Ignore built directories in repo root, not chezmoi source directories (dot_*)
 /.local/
 /bin/
+
+mise.local.toml
+mise.*.local.toml

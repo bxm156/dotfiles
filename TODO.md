@@ -14,6 +14,8 @@
 
 - [ ] Add Atuin - Magical shell history with full-text search and sync across machines
 - [ ] Add Git Delta - Syntax-highlighted git diffs with side-by-side view
+- [ ] Mise offers examples for how to boostrap github actions, using `mise generate bootstrap -l -w`
+- [ ] Apply improvements made in Work dotfiles to personal
 
 ### Medium Priority
 
@@ -21,6 +23,8 @@
 - [ ] Add eza - Better ls with git integration and tree view
 - [ ] Add useful oh-my-zsh plugins: sudo, extract, copypath, copybuffer
 - [ ] Configure Starship to show command duration in prompt
+- [ ] Both mise and chezmoi offer a way to generate an install.sh file, this is better for security, than downloading and running .sh files
+- [ ] Automatically manage and handle https://mise.jdx.dev/direnv.html
 
 ### Nice to Have
 
