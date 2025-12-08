@@ -4,6 +4,3 @@ ignored_config_paths = ["~/.local/share/chezmoi/"]
 [tools]
 node = "24"
 claude = "latest"
-{{- if or (eq .chezmoi.os "linux") (and (eq .chezmoi.os "windows") (eq .chezmoi.arch "amd64")) }}
-ttyd = "latest"
-{{- end }}
