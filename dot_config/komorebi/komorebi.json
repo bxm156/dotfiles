@@ -6,7 +6,7 @@
   "default_workspace_padding": 20,
   "default_container_padding": 20,
   "border": true,
-  "border_width": 4,
+  "border_width": 3,
   "border_offset": -1,
   "border_style": "System",
   "theme": {
@@ -19,14 +19,18 @@
   },
   "animation": {
     "enabled": true,
-    "duration": 175,
+    "duration": 450,
     "fps": 120,
-    "style": "EaseInOutSine"
+    "style": {
+      "movement": "EaseOutExpo",
+      "transparency": "Linear"
+    }
   },
   "display_index_preferences": {
     "0": "HCST401786",
     "1": "HNTY800802"
   },
+  "floating_window_aspect_ratio": "Widescreen",
   "transparency": true,
   "transparency_alpha": 240,
   "stackbar": {
