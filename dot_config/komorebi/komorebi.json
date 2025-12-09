@@ -1,0 +1,74 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.38/schema.json",
+  "app_specific_configuration_path": "$Env:KOMOREBI_CONFIG_HOME/applications.json",
+  "window_hiding_behaviour": "Cloak",
+  "cross_monitor_move_behaviour": "Insert",
+  "default_workspace_padding": 20,
+  "default_container_padding": 20,
+  "border": true,
+  "border_width": 4,
+  "border_offset": -1,
+  "border_style": "System",
+  "theme": {
+    "palette": "Catppuccin",
+    "name": "Mocha",
+    "unfocused_border": "Base",
+    "bar_accent": "Peach",
+    "single_border": "Peach",
+    "monocle_border": "Rosewater"
+  },
+  "animation": {
+    "enabled": true,
+    "duration": 175,
+    "fps": 120,
+    "style": "EaseInOutSine"
+  },
+  "display_index_preferences": {
+    "0": "HCST401786",
+    "1": "HNTY800802"
+  },
+  "transparency": true,
+  "transparency_alpha": 240,
+  "stackbar": {
+    "height": 40,
+    "mode": "OnStack",
+    "tabs": {
+      "width": 300,
+      "focused_text": "#00a542",
+      "unfocused_text": "#b3b3b3",
+      "background": "#141414"
+    }
+  },
+  "ignore_rules": [
+    {
+      "id": "Brother iPrint Monitoring Service",
+      "kind": "Exe",
+      "value": "iPSMonitor.exe",
+      "matching_strategy": "Equals"
+    },
+    {
+      "id": "Pushbullet Client",
+      "kind": "Exe",
+      "value": "pushbullet_client.exe",
+      "matching_strategy": "Equals"
+    }
+  ],
+  "monitors": [
+    {
+      "workspaces": [
+        {
+          "name": "Default0",
+          "layout": "UltrawideVerticalStack"
+        }
+      ]
+    },
+    {
+      "workspaces": [
+        {
+          "name": "Default1",
+          "layout": "UltrawideVerticalStack"
+        }
+      ]
+    }
+  ]
+}

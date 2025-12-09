@@ -1,0 +1,1 @@
+komorebic.exe stop --whkd --bar
