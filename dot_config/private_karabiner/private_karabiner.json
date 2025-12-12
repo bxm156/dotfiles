@@ -1,0 +1,953 @@
+{
+  "profiles": [
+    {
+      "name": "Bryan",
+      "selected": true,
+      "virtual_hid_keyboard": {
+        "keyboard_type_v2": "ansi"
+      },
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Swap Command and Option keys",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "left_command"
+                },
+                "to": [
+                  {
+                    "key_code": "left_option"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "device_if",
+                    "identifiers": [
+                      {
+                        "product_id": 20565,
+                        "vendor_id": 12815
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "left_option"
+                },
+                "to": [
+                  {
+                    "key_code": "left_command"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "device_if",
+                    "identifiers": [
+                      {
+                        "product_id": 20565,
+                        "vendor_id": 12815
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Focus windows",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus left"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus down"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus up"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus right"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "open_bracket",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic cycle-focus previous"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "close_bracket",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic cycle-focus next"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Move windows",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "h",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move left"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "j",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move down"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "k",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move up"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move right"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "return_or_enter",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic promote"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Stack windows",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "left_arrow",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic stack left"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "down_arrow",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic stack down"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "up_arrow",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic stack up"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "right_arrow",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "control"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic stack right"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "semicolon",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic unstack"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "open_bracket",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic cycle-stack previous"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "close_bracket",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic cycle-stack next"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Workspace layer",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "semicolon",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic toggle-workspace-layer"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Resize",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "equal_sign",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic resize-axis horizontal increase"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "hyphen",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic resize-axis horizontal decrease"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "equal_sign",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic resize-axis vertical increase"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "hyphen",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic resize-axis vertical decrease"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Manipulate windows",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic toggle-float"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "t",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic toggle-workspace-float-override"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "f",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic toggle-monocle"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Window manager options",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "r",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic retile"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "p",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic toggle-pause"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "0",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic toggle-window-container-behaviour"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Layouts",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "x",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic flip-layout horizontal"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "y",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic flip-layout vertical"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "x",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic session-float-rule"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Workspaces",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 0"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 1"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 2"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "4",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 3"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 4"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 5"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "7",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 6"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "8",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 7"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "9",
+                  "modifiers": {
+                    "mandatory": [
+                      "option"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic focus-workspace 8"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Komorebi: Move to workspace",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 0"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 1"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 2"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "4",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 3"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 4"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 5"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "7",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 6"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "8",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 7"
+                  }
+                ]
+              },
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "9",
+                  "modifiers": {
+                    "mandatory": [
+                      "option",
+                      "shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "shell_command": "/Users/bmarty/.local/bin/komorebic move-to-workspace 8"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "parameters": {
+          "basic.to_if_alone_timeout_milliseconds": 1000,
+          "basic.to_if_held_down_threshold_milliseconds": 500,
+          "basic.to_delayed_action_delay_milliseconds": 500,
+          "basic.simultaneous_threshold_milliseconds": 50,
+          "mouse_motion_to_scroll.speed": 100
+        }
+      }
+    }
+  ],
+  "global": {
+    "check_for_updates_on_startup": true,
+    "show_in_menu_bar": false,
+    "show_profile_name_in_menu_bar": false
+  }
+}
