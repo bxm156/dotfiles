@@ -12,9 +12,9 @@ export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agen
   export path
   {{- end }}
 
-# Homebrew initialization (Mac only)
-if [[ -z "$HOMEBREW_PREFIX" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+  # Homebrew initialization (Mac only)
+  if [[ -z "$HOMEBREW_PREFIX" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
 
 {{- end }}
