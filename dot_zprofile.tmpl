@@ -5,8 +5,16 @@ export path
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
 {{ if eq .chezmoi.os "darwin" }}
-# Homebrew initialization (work Mac only)
+
+  {{- if .isWork }}
+  # Rancher Desktop PATH addition for work Mac
+  path+=(~/.rd/bin)
+  export path
+  {{- end }}
+
+# Homebrew initialization (Mac only)
 if [[ -z "$HOMEBREW_PREFIX" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
+
 {{- end }}
