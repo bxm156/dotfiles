@@ -1,1 +1,6 @@
+{{- if and .isWork (eq .chezmoi.os "darwin") }}
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/bmarty/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+{{- end }}
 eval "$(mise activate bash --shims)"

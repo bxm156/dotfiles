@@ -1,7 +1,19 @@
-{{- if and .isWork (eq .chezmoi.os "darwin") }}
-# Homebrew initialization (work Mac only)
 # Sourced by all zsh shells (interactive, non-interactive, login, non-login)
-if [[ -z "$HOMEBREW_PREFIX" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+
+
+# WARNING!
+# MacOS overrides the PATH order to put sytem /etc/zshenv PATH entries first.
+# https://unix.stackexchange.com/questions/246751/how-to-know-why-and-where-the-path-env-variable-is-set
+# https://billglover.me/2024/02/08/setting-the-path-variable-on-macos-with-zsh/
+
+# macOS Login Shell Order (simplified):
+#       /etc/zshenv -> /etc/zprofile (runs path_helper here) -> ~/.zprofile -> ~/.zshrc (if interactive).
+
+# Additionally, on Mac, new shell windows are login shells. So for Mac: prefer to set $PATH in ~/.zprofile
+# Background / Non-Interactive go into ~/.zprofile and interative into ~/.zshrc
+
+{{ if eq .chezmoi.os "linux" }}
+typeset -U path
+path=($HOME/.local/bin $HOME/bin /usr/local/bin $path)
+export path
 {{- end }}
