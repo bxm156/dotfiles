@@ -1,7 +1,7 @@
 # Sourced by all zsh shells (interactive, non-interactive, login, non-login)
-typeset -U PATH
-PATH=($HOME/.local/bin $HOME/bin /usr/local/bin $path)
-export PATH
+typeset -U path
+path=(~/.local/bin ~/bin /usr/local/bin $path)
+export path
 export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
 {{ if eq .chezmoi.os "darwin" }}
