@@ -1,6 +1,3 @@
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/.local/bin:$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
 # XDG Base Directory Specification
 export XDG_CONFIG_HOME="$HOME/.config"
 
@@ -140,6 +137,7 @@ fi
 
 # Quick access to engineering-bay projects
 alias proj='rcode engineering-bay --path=projects'
+alias km='komorebic'
 
 # ═══════════════════════════════════════════════════════════════
 # Productivity Tool Integrations
@@ -261,11 +259,3 @@ viewnotes() {
 
 #Star ship
 eval "$(starship init zsh)"
-
-
-{{- if .isWork }}
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/bmarty/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-{{- end }}
-
