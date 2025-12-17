@@ -1,0 +1,1 @@
+kanata.exe -c "$Env:USERPROFILE\.config\kanata\kanata.kbd"
