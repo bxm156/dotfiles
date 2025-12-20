@@ -1,8 +1,11 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/bin/zsh
-
+{{- if lookPath "op" -}}
 HOMEBREW_GITHUB_API_TOKEN = {{ onepasswordRead "op://Personal/GitHub Metadata Read-Only Access Token/credential" }}
+{{- end }}
 brew bundle --file=/dev/stdin <<EOF
+brew "kanata"
+brew "git"
 tap "lgug2z/tap/komorebi-for-mac-nightly"
 EOF
 {{ end -}}
