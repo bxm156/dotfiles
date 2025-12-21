@@ -1,0 +1,1 @@
+sudo kanata -c ~/.config/kanata/kanata.kbd 
