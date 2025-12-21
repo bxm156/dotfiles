@@ -25,7 +25,8 @@
   process-unmapped-keys yes
 )
 (defsrc
-  a   s   d   f   j   k   l   ;
+  a   s   d   f   g  h  j   k   l   ;
+  lsft spc
 )
 (defvar
   ;; Note: consider using different time values for your different fingers.
@@ -46,11 +47,16 @@
   )
 )
 (deflayer base
-  @a  @s  @d  @f  @j  @k  @l  @;
+  @a  @s  @d  @f _ _ @j  @k  @l  @;
+  lsft @space-nav
 )
-
 (deflayer nomods
-  a   s   d   f   j   k   l   ;
+  a   s   d  f  _ _ j   k   l   ;
+  _ _
+)
+(deflayer nav
+  lrld _ _ _ _ left down up right _
+  _ _
 )
 (deffakekeys
   to-base (layer-switch base)
@@ -60,13 +66,32 @@
     (layer-switch nomods)
     (on-idle-fakekey to-base tap 20)
   )
+  space-nav (
+    tap-hold $tap-time $hold-time spc (layer-while-held nav)
+  )
 
   a (tap-hold-release-keys $tap-time $hold-time (multi a @tap) lmet $left-hand-keys)
   s (tap-hold-release-keys $tap-time $hold-time (multi s @tap) lalt $left-hand-keys)
   d (tap-hold-release-keys $tap-time $hold-time (multi d @tap) lctl $left-hand-keys)
   f (tap-hold-release-keys $tap-time $hold-time (multi f @tap) lsft $left-hand-keys)
-  j (tap-hold-release-keys $tap-time $hold-time (multi j @tap) rsft $right-hand-keys)
-  k (tap-hold-release-keys $tap-time $hold-time (multi k @tap) rctl $right-hand-keys)
-  l (tap-hold-release-keys $tap-time $hold-time (multi l @tap) ralt $right-hand-keys)
-  ; (tap-hold-release-keys $tap-time $hold-time (multi ; @tap) rmet $right-hand-keys)
+  j (tap-hold-release-keys $tap-time $hold-time (multi j @tap) lsft $right-hand-keys)
+  k (tap-hold-release-keys $tap-time $hold-time (multi k @tap) lctl $right-hand-keys)
+  l (tap-hold-release-keys $tap-time $hold-time (multi l @tap) lalt $right-hand-keys)
+  ; (tap-hold-release-keys $tap-time $hold-time (multi ; @tap) lmet $right-hand-keys)
+)
+;; will make these configuration only active on a specific platform.
+(platform (macos)
+  ;; Only on macos, use command instead of control for certain things
+  (defoverrides
+    (lmet bspc)  (lalt bspc)
+    (lmet left)  (lalt left)
+    (lmet right) (lalt right)
+
+    ;; Left Hand Copy Paste select All
+    (lctl c)    (lmet c) ;; copy
+    (lctl x)    (lmet x);; select all
+    (lctl v)    (lmet v);; paste
+    (lctl a)    (lmet a);; select all
+
+  )
 )
