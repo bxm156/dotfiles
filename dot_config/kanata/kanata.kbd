@@ -87,11 +87,27 @@
     (lmet left)  (lalt left)
     (lmet right) (lalt right)
 
-    ;; Left Hand Copy Paste select All
-    (lctl c)    (lmet c) ;; copy
+    ;; Ctrl to Command key mappings
+    ;; Mac use command for many shortcuts, and Ctrl for little, so by
+    ;; mapping them here we can keep the same finger movements as other
+    ;; platforms but have them work correctly on macOS.
+    ;; List: https://support.apple.com/en-us/102650
     (lctl x)    (lmet x);; select all
+    (lctl c)    (lmet c) ;; copy
     (lctl v)    (lmet v);; paste
+    (lctl z)    (lmet z);; undo
     (lctl a)    (lmet a);; select all
-
+    (lctl f)    (lmet f);; find
+    (lctl g)    (lmet g);; find next
+    (lctl h)    (lmet h);; Hide the windows of the front app
+    (lctl m)    (lmet m);; minimize window
+    (lctl o)    (lmet o);; open
+    (lctl p)    (lmet p);; print
+    (lctl q)    (lmet q);; quit app
+    (lctl s)    (lmet s);; save
+    (lctl t)    (lmet t);; new tab
+    (lctl w)    (lmet w);; close window
+    ;;
+    (lctl y)    (lmet y);; redo?
   )
 )
