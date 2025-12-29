@@ -4,7 +4,7 @@
 export HOMEBREW_GITHUB_API_TOKEN={{ onepasswordRead "op://Home Lab/Gitea - github-mirrors /password" | trim }}
 brew bundle --file=/dev/stdin <<EOF
 tap "lgug2z/tap"
-brew "komorebi-for-mac-nightly"
+brew "lgug2z/tap/komorebi-for-mac-nightly"
 EOF
 {{ end }}
 {{ end }}
